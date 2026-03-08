@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Starrush - Infinito Estelar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f2a, #1a1f3a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: manipulation;
+            position: relative;
+        }
+
+        #gameContainer {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        #statsBar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            padding: 12px 10px;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85em;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            margin-top: 3px;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            aspect-ratio: 1;
+            background: radial-gradient(circle at 30% 30%, #2a2f4a, #0f142a);
+            border-radius: 20px;
+            display: block;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        #comboBar {
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            height: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #comboFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ffd700, #ffa500);
+            transition: width 0.3s;
+            border-radius: 30px;
+        }
+
+        #comboText {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            line-height: 20px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        #controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+            flex: 1 1 auto;
+            min-width: 90px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            transform: none;
+            pointer-events: none;
+        }
+
+        #shareButtons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .share-btn {
+            flex: 1;
+            min-width: 60px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
+        }
+
+        .share-btn svg {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.2s;
+        }
+
+        .share-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        .share-btn:active svg {
+            transform: scale(0.95);
+        }
+
+        #x-icon { fill: #000000; }
+        #facebook-icon { fill: #1877f2; }
+        #whatsapp-icon { fill: #25d366; }
+
+        #achievementsBar {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-top: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: #ffd700 #2a2f4a;
+        }
+
+        #achievementsBar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        #achievementsBar::-webkit-scrollbar-track {
+            background: #2a2f4a;
+            border-radius: 10px;
+        }
+
+        #achievementsBar::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .achievement-icon {
+            min-width: 50px;
+            height: 50px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .achievement-icon.locked {
+            opacity: 0.5;
+            filter: grayscale(0.8);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .achievement-icon span {
+            font-size: 0.5em;
+            position: absolute;
+            bottom: -15px;
+            white-space: nowrap;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 5px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .achievement-icon:hover span {
+            display: block;
+        }
+
+        #messageBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1f3a;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        #bonusIndicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            z-index: 100;
+            pointer-events: none;
+            animation: floatBonus 1.5s ease-out forwards;
+        }
+
+        @keyframes floatBonus {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -70%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -150%) scale(0.8); }
+        }
+
+        #dailyChallenge {
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-size: 0.9em;
+        }
+
+        .challenge-item {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            padding: 5px 0;
+        }
+
+        .challenge-progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 2px 10px;
+        }
+
+        #rankingBtn, #skinBtn {
+            background: linear-gradient(45deg, #4a90e2, #9b59b6);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2a2f4a, #1a1f3a);
+            border-radius: 30px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid rgba(255,215,0,0.3);
+            color: white;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .ranking-position {
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        /* Overlay de consentimento (NON-PERSONALIZED ADS) */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .consent-card {
+            background: linear-gradient(135deg, #2a2f4a, #1a1f3a);
+            border-radius: 30px;
+            padding: 25px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .consent-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .consent-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .consent-section {
+            margin-bottom: 20px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        .consent-section h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .consent-text {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            max-height: 150px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .consent-text::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .consent-text::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .consent-text::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .consent-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .consent-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s;
+        }
+
+        .consent-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .consent-btn.accept {
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            color: #1a1f3a;
+            border: none;
+        }
+
+        .consent-btn.accept:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .region-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 480px) {
+            #statsBar { font-size: 0.7em; }
+            button { padding: 8px 10px; font-size: 0.8em; }
+            .stat span { font-size: 0.9em; }
+            .share-btn svg { width: 35px; height: 35px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="statsBar">
+            <div class="stat">⭐ Estrelas<span id="scoreDisplay">0</span></div>
+            <div class="stat">🔥 Combo<span id="comboDisplay">x1</span></div>
+            <div class="stat">💫 Recorde<span id="recordDisplay">0</span></div>
+            <div class="stat">🎯 Desafio<span id="challengeDisplay">0/5</span></div>
+        </div>
+
+        <div id="comboBar">
+            <div id="comboFill"></div>
+            <div id="comboText">🔥 COMBO x1</div>
+        </div>
+
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+        <div id="controls">
+            <button id="newGameBtn">🔄 Nova Partida</button>
+            <button id="rankingBtn" onclick="window.showRanking?.()">🏆 Ranking</button>
+            <button id="skinBtn" onclick="window.showSkins?.()">🎨 Skins</button>
+            <button id="musicBtn">🎵 Música</button>
+        </div>
+
+        <div id="dailyChallenge">
+            <div style="color:#ffd700; text-align:center; margin-bottom:5px;">📅 Desafios de Hoje</div>
+            <div class="challenge-item" id="challenge1">
+                <span>🌟 Coletar 30 estrelas</span>
+                <span class="challenge-progress" id="challenge1Progress">0/30</span>
+            </div>
+            <div class="challenge-item" id="challenge2">
+                <span>🔥 Combo x5</span>
+                <span class="challenge-progress" id="challenge2Progress">0/5</span>
+            </div>
+            <div class="challenge-item" id="challenge3">
+                <span>📱 Compartilhar 1 vez</span>
+                <span class="challenge-progress" id="challenge3Progress">0/1</span>
+            </div>
+        </div>
+
+        <!-- Botões de compartilhamento com LOGOS -->
+        <div id="shareButtons">
+            <button class="share-btn" id="shareX" title="Compartilhar no X">
+                <svg viewBox="0 0 24 24" id="x-icon">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+            </button>
+            <button class="share-btn" id="shareFacebook" title="Compartilhar no Facebook">
+                <svg viewBox="0 0 24 24" id="facebook-icon">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+            </button>
+            <button class="share-btn" id="shareWhatsApp" title="Compartilhar no WhatsApp">
+                <svg viewBox="0 0 24 24" id="whatsapp-icon">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.084.534 4.046 1.472 5.768L.058 23.226c-.099.396.248.743.644.644l5.458-1.414C7.954 23.466 9.92 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.85 0-3.602-.511-5.119-1.407l-.367-.22-3.388.877.877-3.388-.22-.367C2.511 15.602 2 13.85 2 12 2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div id="achievementsBar"></div>
+    </div>
+
+    <div id="messageBox"></div>
+
+    <!-- Container para o popup de consentimento -->
+    <div id="consentPopup"></div>
+
+    <!-- Container para modals -->
+    <div id="modalContainer"></div>
+
+    <!-- CookieScript CMP (CERTIFICADA) - ID fornecido: a5ddd7f51732195dcdcbe09b599b2e0c -->
+    <script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/a5ddd7f51732195dcdcbe09b599b2e0c.js"></script>
+
+    <script>
+        (function() {
+            // ==================== CONFIGURAÇÃO DE CONSENTIMENTO NON-PERSONALIZED ====================
+            const CONSENT_KEY = 'starrush_consent_v2';
+            const CONSENT_LOG_KEY = 'starrush_consent_log';
+            
+            // Lista de países GDPR (EEE + Reino Unido + Suíça)
+            const gdprCountries = [
+                'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 
+                'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 
+                'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB', 'CH', 'NO', 
+                'IS', 'LI'
+            ];
+            
+            // Estados com leis de privacidade nos EUA
+            const usPrivacyStates = ['CA', 'VA', 'CO', 'CT', 'UT'];
+
+            // ==================== GEOLOCALIZAÇÃO ====================
+            async function detectUserLocation() {
+                // Verificar cache (24 horas)
+                const cached = localStorage.getItem('user_location_cached');
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (Date.now() - data.timestamp < 86400000) { // 24h
+                        return data.location;
+                    }
+                }
+                
+                try {
+                    // Usando ipapi.co (gratuito, sem necessidade de API key)
+                    const response = await fetch('https://ipapi.co/json/');
+                    const data = await response.json();
+                    
+                    const location = {
+                        country: data.country_code || 'unknown',
+                        region: data.region_code || 'unknown',
+                        city: data.city || 'unknown',
+                        inEEA: gdprCountries.includes(data.country_code) || false,
+                        ip: data.ip || 'unknown',
+                        timestamp: Date.now()
+                    };
+                    
+                    // Salvar cache
+                    localStorage.setItem('user_location_cached', JSON.stringify({
+                        location: location,
+                        timestamp: Date.now()
+                    }));
+                    
+                    return location;
+                } catch (e) {
+                    console.log('Erro ao detectar localização:', e);
+                    // Fallback: localização desconhecida
+                    return { 
+                        country: 'unknown', 
+                        region: 'unknown', 
+                        inEEA: false,
+                        ip: 'unknown',
+                        timestamp: Date.now()
+                    };
+                }
+            }
+
+            // ==================== REGISTRO DE CONSENTIMENTO ====================
+            function logConsent(choices, location, context) {
+                const consentLog = JSON.parse(localStorage.getItem(CONSENT_LOG_KEY)) || [];
+                
+                const logEntry = {
+                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                    timestamp: new Date().toISOString(),
+                    choices: choices,
+                    location: location,
+                    context: context,
+                    userAgent: navigator.userAgent,
+                    screenSize: `${window.screen.width}x${window.screen.height}`,
+                    language: navigator.language,
+                    // Prova do consentimento
+                    proof: {
+                        consentText: context.messageShown,
+                        buttonClicked: context.button,
+                        version: '2.0'
+                    }
+                };
+                
+                consentLog.push(logEntry);
+                // Manter apenas os últimos 100 registros
+                if (consentLog.length > 100) consentLog.shift();
+                
+                localStorage.setItem(CONSENT_LOG_KEY, JSON.stringify(consentLog));
+                
+                // Em produção, você enviaria isso para seu servidor
+                console.log('✅ Consentimento registrado:', logEntry);
+            }
+
+            // ==================== POPUP DE CONSENTIMENTO (NON-PERSONALIZED) ====================
+            async function showConsentPopup() {
+                const location = await detectUserLocation();
+                const popupContainer = document.getElementById('consentPopup');
+                
+                // Texto específico por região
+                let regionText = '';
+                if (location.inEEA) {
+                    regionText = '🌍 Detectamos que você está na Europa. Seus direitos GDPR são respeitados.';
+                } else if (usPrivacyStates.includes(location.region)) {
+                    regionText = `🇺🇸 Detectamos que você está em ${location.region} (EUA). Seus direitos CCPA/CPRA são respeitados.`;
+                } else if (location.country === 'BR') {
+                    regionText = '🇧🇷 Detectamos que você está no Brasil. Seus direitos LGPD são respeitados.';
+                } else {
+                    regionText = '🌎 Obrigado por jogar Starrush!';
+                }
+                
+                const popupHTML = `
+                    <div class="overlay" id="consentOverlay">
+                        <div class="consent-card">
+                            <div class="consent-header">
+                                <div class="stars">✨ 🌟 ✨</div>
+                                <h2>Starrush Infinito</h2>
+                                <p>Suas preferências de privacidade</p>
+                                <div class="region-badge">${regionText}</div>
+                            </div>
+                            
+                            <div class="consent-section">
+                                <h3>📋 Política de Privacidade</h3>
+                                <div class="consent-text">
+                                    <p><strong>Modo Non-Personalized Ads:</strong> Este jogo exibe apenas anúncios não personalizados (contextuais). Não usamos cookies de marketing para rastrear seu comportamento.</p>
+                                    <p>Ainda assim, precisamos do seu consentimento para cookies essenciais e para armazenar suas preferências.</p>
+                                    <p><strong>Dados coletados:</strong> Progresso do jogo (localStorage), localização aproximada (país/estado) para conformidade legal, e registro de consentimento.</p>
+                                    <p><strong>Seus direitos:</strong> Você pode retirar seu consentimento a qualquer momento limpando o cache do navegador.</p>
+                                    <p>Para mais detalhes, consulte nossa <a href="#" onclick="alert('Política completa disponível em: https://starrush.game/privacy')" style="color:#ffd700;">Política de Privacidade</a>.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="consent-buttons">
+                                <button class="consent-btn" id="rejectBtn">✖️ Recusar</button>
+                                <button class="consent-btn accept" id="acceptBtn">✅ Aceitar</button>
+                            </div>
+                            
+                            <p style="text-align:center; font-size:0.8em; margin-top:10px; color:rgba(255,255,255,0.5);">
+                                Detectamos sua localização: ${location.country} - ${location.region}
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                popupContainer.innerHTML = popupHTML;
+                
+                document.getElementById('acceptBtn').addEventListener('click', () => {
+                    saveConsent({ essential: true, marketing: false }, location, { 
+                        button: 'accept', 
+                        messageShown: 'Non-personalized ads mode' 
+                    });
+                    document.getElementById('consentOverlay').remove();
+                    initGameAfterConsent();
+                });
+                
+                document.getElementById('rejectBtn').addEventListener('click', () => {
+                    saveConsent({ essential: false, marketing: false }, location, { 
+                        button: 'reject', 
+                        messageShown: 'Non-personalized ads mode' 
+                    });
+                    document.getElementById('consentOverlay').remove();
+                    // Mesmo rejeitando, ainda pode jogar (sem salvar progresso)
+                    showMessage('⚠️ Você recusou cookies. O progresso não será salvo.');
+                    initGameAfterConsent();
+                });
+            }
+
+            function saveConsent(choices, location, context) {
+                const consentData = {
+                    choices: choices,
+                    timestamp: new Date().toISOString(),
+                    version: '2.0',
+                    location: location
+                };
+                
+                localStorage.setItem(CONSENT_KEY, JSON.stringify(consentData));
+                
+                // Registrar o consentimento
+                logConsent(choices, location, context);
+                
+                // Configurar Google Consent Mode (non-personalized)
+                if (typeof gtag !== 'undefined') {
+                    gtag('consent', 'update', {
+                        'ad_storage': 'denied',
+                        'ad_user_data': 'denied',
+                        'ad_personalization': 'denied',
+                        'analytics_storage': choices.essential ? 'granted' : 'denied'
+                    });
+                }
+            }
+
+            function checkConsent() {
+                const saved = localStorage.getItem(CONSENT_KEY);
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        // Verificar se não expirou (6 meses)
+                        const sixMonthsAgo = new Date();
+                        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+                        
+                        if (new Date(data.timestamp) > sixMonthsAgo) {
+                            return true;
+                        }
+                    } catch (e) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+
+            // ==================== ÁUDIO ====================
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+
+            function createCollectSound() {
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            }
+
+            function createComboBreakSound() {
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(220, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+
+            function createAchievementSound() {
+                const oscillator1 = audioCtx.createOscillator();
+                const oscillator2 = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator1.type = 'triangle';
+                oscillator2.type = 'triangle';
+                oscillator1.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                oscillator2.frequency.setValueAtTime(659.25, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator1.connect(gainNode);
+                oscillator2.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator1.start();
+                oscillator2.start();
+                oscillator1.stop(audioCtx.currentTime + 0.4);
+                oscillator2.stop(audioCtx.currentTime + 0.4);
+            }
+
+            // ==================== MÚSICA IDEAL - 3 CAMADAS PROGRESSIVAS ====================
+            let musicSystem = {
+                context: null,
+                layers: {
+                    pad: null,      // Camada base (sempre presente)
+                    melody: null,   // Melodia principal (aumenta com combo)
+                    arpeggio: null, // Arpejos (aumenta com pontuação)
+                    bass: null      // Baixo suave (constante)
+                },
+                gains: {},
+                isPlaying: false,
+                loopInterval: null,
+                currentSpeed: 800
+            };
+
+            function initAdaptiveMusic() {
+                if (musicSystem.context || !gameState.gameActive) return;
+                
+                // Criar contexto de áudio
+                musicSystem.context = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Notas da escala pentatônica (relaxante)
+                const pentatonic = [261.63, 293.66, 329.63, 392.00, 440.00]; // Dó, Ré, Mi, Sol, Lá
+                
+                // ===== CAMADA 1: PAD (HARMONIA BASE) =====
+                // Sempre presente, volume constante, muito suave
+                const padOsc = musicSystem.context.createOscillator();
+                const padGain = musicSystem.context.createGain();
+                padOsc.type = 'sine';
+                padOsc.frequency.value = 220; // Lá2
+                padGain.gain.value = 0.02; // Volume muito baixo
+                
+                // Segundo oscilador para fazer acorde
+                const padOsc2 = musicSystem.context.createOscillator();
+                const padGain2 = musicSystem.context.createGain();
+                padOsc2.type = 'sine';
+                padOsc2.frequency.value = 329.63; // Mi3
+                padGain2.gain.value = 0.015;
+                
+                padOsc.connect(padGain);
+                padOsc2.connect(padGain2);
+                padGain.connect(musicSystem.context.destination);
+                padGain2.connect(musicSystem.context.destination);
+                
+                musicSystem.layers.pad = { osc1: padOsc, osc2: padOsc2 };
+                musicSystem.gains.pad = [padGain, padGain2];
+                
+                // ===== CAMADA 2: MELODIA PRINCIPAL =====
+                // Aumenta com o combo
+                const melodyOsc = musicSystem.context.createOscillator();
+                const melodyGain = musicSystem.context.createGain();
+                melodyOsc.type = 'triangle'; // Som mais suave que sawtooth
+                melodyGain.gain.value = 0.01; // Começa baixo
+                
+                melodyOsc.connect(melodyGain);
+                melodyGain.connect(musicSystem.context.destination);
+                
+                musicSystem.layers.melody = melodyOsc;
+                musicSystem.gains.melody = melodyGain;
+                
+                // ===== CAMADA 3: ARPEGGIOS =====
+                // Aumenta com pontuação
+                const arpOsc = musicSystem.context.createOscillator();
+                const arpGain = musicSystem.context.createGain();
+                arpOsc.type = 'sine';
+                arpGain.gain.value = 0.005; // Muito baixo inicialmente
+                
+                arpOsc.connect(arpGain);
+                arpGain.connect(musicSystem.context.destination);
+                
+                musicSystem.layers.arpeggio = arpOsc;
+                musicSystem.gains.arpeggio = arpGain;
+                
+                // ===== CAMADA 4: BAIXO SUAVE =====
+                // Constante, dá profundidade
+                const bassOsc = musicSystem.context.createOscillator();
+                const bassGain = musicSystem.context.createGain();
+                bassOsc.type = 'sine';
+                bassOsc.frequency.value = 110; // Lá1
+                bassGain.gain.value = 0.01;
+                
+                bassOsc.connect(bassGain);
+                bassGain.connect(musicSystem.context.destination);
+                
+                musicSystem.layers.bass = bassOsc;
+                musicSystem.gains.bass = bassGain;
+                
+                // Iniciar osciladores
+                const now = musicSystem.context.currentTime;
+                padOsc.start(now);
+                padOsc2.start(now);
+                melodyOsc.start(now);
+                arpOsc.start(now);
+                bassOsc.start(now);
+                
+                // Loop da melodia
+                startMelodyLoop(pentatonic);
+                
+                musicSystem.isPlaying = true;
+                document.getElementById('musicBtn').textContent = '🔊 Música';
+            }
+
+            function startMelodyLoop(scale) {
+                if (musicSystem.loopInterval) clearInterval(musicSystem.loopInterval);
+                
+                let noteIndex = 0;
+                let arpIndex = 0;
+                
+                musicSystem.loopInterval = setInterval(() => {
+                    if (!musicSystem.isPlaying || !gameState.gameActive) return;
+                    
+                    const now = musicSystem.context.currentTime;
+                    
+                    // MELODIA (baseada no combo)
+                    if (gameState.combo >= 2) {
+                        // Toca nota da melodia
+                        let melodyNote = scale[noteIndex % scale.length];
+                        if (gameState.combo >= 5) {
+                            melodyNote *= 2; // Oitava acima quando combo alto
+                        }
+                        
+                        // Volume aumenta com combo
+                        let melodyVolume = 0.01 + (gameState.combo * 0.002);
+                        musicSystem.layers.melody.frequency.setValueAtTime(melodyNote, now);
+                        musicSystem.gains.melody.gain.setValueAtTime(melodyVolume, now);
+                        musicSystem.gains.melody.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                        
+                        noteIndex++;
+                    }
+                    
+                    // ARPEGGIOS (baseado na pontuação)
+                    if (gameState.score > 50) {
+                        let arpNote = scale[arpIndex % scale.length] * 1.5;
+                        let arpVolume = 0.005 + (gameState.score / 5000);
+                        musicSystem.layers.arpeggio.frequency.setValueAtTime(arpNote, now);
+                        musicSystem.gains.arpeggio.gain.setValueAtTime(arpVolume, now);
+                        musicSystem.gains.arpeggio.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                        
+                        arpIndex++;
+                    }
+                    
+                    // BAIXO (constante, mas muda a nota ocasionalmente)
+                    if (Math.random() < 0.2) {
+                        let bassNote = scale[noteIndex % scale.length] / 2;
+                        musicSystem.layers.bass.frequency.setValueAtTime(bassNote, now);
+                    }
+                    
+                }, musicSystem.currentSpeed);
+            }
+
+            function updateMusicSpeed() {
+                // Velocidade aumenta com combo
+                let newSpeed = Math.max(300, 800 - (gameState.combo * 40));
+                if (newSpeed !== musicSystem.currentSpeed && musicSystem.isPlaying) {
+                    musicSystem.currentSpeed = newSpeed;
+                    if (musicSystem.loopInterval) {
+                        // Reiniciar loop com nova velocidade
+                        clearInterval(musicSystem.loopInterval);
+                        startMelodyLoop([261.63, 293.66, 329.63, 392.00, 440.00]);
+                    }
+                }
+            }
+
+            function stopAdaptiveMusic() {
+                if (musicSystem.loopInterval) {
+                    clearInterval(musicSystem.loopInterval);
+                    musicSystem.loopInterval = null;
+                }
+                
+                if (musicSystem.context) {
+                    try {
+                        musicSystem.context.close();
+                    } catch (e) {}
+                }
+                
+                musicSystem.isPlaying = false;
+                musicSystem.context = null;
+                
+                const musicBtn = document.getElementById('musicBtn');
+                if (musicBtn) musicBtn.textContent = '🎵 Música';
+            }
+
+            function toggleMusic() {
+                if (!gameState.gameActive) {
+                    showMessage('⚠️ Inicie uma partida primeiro!');
+                    return;
+                }
+                
+                if (musicSystem.isPlaying) {
+                    stopAdaptiveMusic();
+                    showMessage('🔇 Música desligada');
+                } else {
+                    initAdaptiveMusic();
+                    showMessage('🎵 Música adaptativa ligada');
+                }
+            }
+
+            // ==================== VARIÁVEIS DO JOGO ====================
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const comboDisplay = document.getElementById('comboDisplay');
+            const recordDisplay = document.getElementById('recordDisplay');
+            const comboFill = document.getElementById('comboFill');
+            const comboText = document.getElementById('comboText');
+            const newGameBtn = document.getElementById('newGameBtn');
+            const messageBox = document.getElementById('messageBox');
+            
+            const shareXBtn = document.getElementById('shareX');
+            const shareFacebookBtn = document.getElementById('shareFacebook');
+            const shareWhatsAppBtn = document.getElementById('shareWhatsApp');
+            const musicBtn = document.getElementById('musicBtn');
+
+            // ==================== NOVO: SISTEMA DE NOME PERMANENTE ====================
+            const PLAYER_NAME_KEY = 'starrush_player_name';
+            
+            function getPlayerName() {
+                let name = localStorage.getItem(PLAYER_NAME_KEY);
+                if (!name) {
+                    name = prompt("👋 Bem-vindo ao Starrush! Digite seu nome para aparecer no ranking:");
+                    if (name && name.trim() !== '') {
+                        name = name.substring(0, 15).trim();
+                        localStorage.setItem(PLAYER_NAME_KEY, name);
+                        showMessage(`✅ Nome salvo: ${name}`);
+                    } else {
+                        name = "Jogador";
+                        localStorage.setItem(PLAYER_NAME_KEY, name);
+                    }
+                }
+                return name;
+            }
+
+            let gameState = {
+                score: 0,
+                record: parseInt(localStorage.getItem('record')) || 0,
+                stars: [],
+                obstacles: [],
+                player: { x: 200, y: 200, radius: 15 },
+                gameActive: true,
+                baseSpeed: 1,
+                combo: 1,
+                maxCombo: 1,
+                comboTimeout: null,
+                starsCollected: 0,
+                totalStars: parseInt(localStorage.getItem('totalStars')) || 0,
+                bonusAvailable: true,
+                totalShares: parseInt(localStorage.getItem('totalShares')) || 0,
+                perfectLevels: 0,
+                currentSkin: localStorage.getItem('skin') || 'classico',
+                playerName: getPlayerName() // Nome salvo uma vez
+            };
+
+            // Conquistas
+            const achievements = {
+                firstStar: { id: 'firstStar', name: '🌟 Primeira Estrela', desc: 'Coletou sua primeira estrela', icon: '⭐', unlocked: false },
+                collector10: { id: 'collector10', name: '💫 Iniciante', desc: 'Coletou 10 estrelas', icon: '✨', unlocked: false },
+                collector50: { id: 'collector50', name: '💫 Aprendiz', desc: 'Coletou 50 estrelas', icon: '🌟', unlocked: false },
+                collector100: { id: 'collector100', name: '💫 Colecionador', desc: 'Coletou 100 estrelas', icon: '💫', unlocked: false },
+                combo5: { id: 'combo5', name: '🔥 Em Fogo', desc: 'Combo x5', icon: '🔥', unlocked: false },
+                combo10: { id: 'combo10', name: '⚡ Infernal', desc: 'Combo x10', icon: '⚡', unlocked: false },
+                sharer1: { id: 'sharer1', name: '📱 Social', desc: 'Compartilhou 1 vez', icon: '📱', unlocked: false },
+                sharer5: { id: 'sharer5', name: '📱 Influenciador', desc: 'Compartilhou 5 vezes', icon: '🔥', unlocked: false }
+            };
+
+            let playerAchievements = JSON.parse(localStorage.getItem('achievements')) || [];
+
+            // Skins
+            const skins = {
+                classico: { 
+                    player: '#4a90e2', 
+                    playerGradient: ['#4a90e2', '#9b59b6'],
+                    stars: '#ffd700',
+                    name: 'Clássico',
+                    unlocked: true
+                },
+                neon: { 
+                    player: '#ff00ff', 
+                    playerGradient: ['#ff00ff', '#00ffff'],
+                    stars: '#00ffff',
+                    name: 'Neon',
+                    unlocked: playerAchievements.includes('collector50')
+                },
+                cosmos: { 
+                    player: '#8e44ad', 
+                    playerGradient: ['#8e44ad', '#2c3e50'],
+                    stars: '#f1c40f',
+                    name: 'Cósmico',
+                    unlocked: playerAchievements.includes('collector100')
+                },
+                arcoiris: { 
+                    player: 'linear-gradient', 
+                    playerGradient: ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#8f00ff'],
+                    stars: 'multicolor',
+                    name: 'Arco-Íris',
+                    unlocked: playerAchievements.includes('combo10')
+                }
+            };
+
+            // Desafios diários
+            let dailyChallenges = {
+                stars: { current: 0, target: 30, completed: false, reward: 100 },
+                combo: { current: 0, target: 5, completed: false, reward: 50 },
+                share: { current: 0, target: 1, completed: false, reward: 75 }
+            };
+
+            // Ranking
+            let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+
+            // ==================== FUNÇÕES DO JOGO ====================
+            function showMessage(text, duration = 2000) {
+                messageBox.style.opacity = '1';
+                messageBox.textContent = text;
+                setTimeout(() => {
+                    messageBox.style.opacity = '0';
+                }, duration);
+            }
+
+            function showBonusAnimation(text) {
+                const bonus = document.createElement('div');
+                bonus.id = 'bonusIndicator';
+                bonus.textContent = text;
+                document.body.appendChild(bonus);
+                setTimeout(() => bonus.remove(), 1500);
+            }
+
+            function updateCombo() {
+                comboDisplay.textContent = `x${gameState.combo}`;
+                comboText.textContent = `🔥 COMBO x${gameState.combo}`;
+                let percent = Math.min(100, (gameState.combo / 10) * 100);
+                comboFill.style.width = `${percent}%`;
+                
+                if (gameState.combo > gameState.maxCombo) {
+                    gameState.maxCombo = gameState.combo;
+                    checkAchievements();
+                }
+            }
+
+            function resetCombo() {
+                if (gameState.combo > 1) {
+                    createComboBreakSound();
+                    showMessage(`💔 Combo quebrado! Você estava em x${gameState.combo}`);
+                }
+                gameState.combo = 1;
+                updateCombo();
+            }
+
+            function createStar() {
+                return {
+                    x: Math.random() * (canvas.width - 40) + 20,
+                    y: Math.random() * (canvas.height - 40) + 20,
+                    radius: 10,
+                    collected: false,
+                    pulsePhase: Math.random() * Math.PI * 2
+                };
+            }
+
+            function createObstacle() {
+                let obstacleCount = Math.floor(gameState.score / 30) + 1;
+                if (gameState.stars.length > 0 && Math.random() < 0.2 + (obstacleCount * 0.05)) {
+                    return {
+                        x: Math.random() * (canvas.width - 30) + 15,
+                        y: Math.random() * (canvas.height - 30) + 15,
+                        radius: 12,
+                        speedX: (Math.random() - 0.5) * gameState.baseSpeed * (1 + obstacleCount * 0.2),
+                        speedY: (Math.random() - 0.5) * gameState.baseSpeed * (1 + obstacleCount * 0.2)
+                    };
+                }
+                return null;
+            }
+
+            function initGame() {
+                gameState.stars = [];
+                gameState.obstacles = [];
+                gameState.score = 0;
+                gameState.combo = 1;
+                gameState.maxCombo = 1;
+                gameState.gameActive = true;
+                gameState.starsCollected = 0;
+                
+                for (let i = 0; i < 5; i++) {
+                    gameState.stars.push(createStar());
+                }
+                
+                gameState.player.x = canvas.width / 2;
+                gameState.player.y = canvas.height / 2;
+                
+                updateDisplay();
+                updateCombo();
+                loadDailyChallenges();
+                
+                // Reiniciar música se estava tocando
+                if (musicSystem.isPlaying) {
+                    stopAdaptiveMusic();
+                    setTimeout(() => initAdaptiveMusic(), 100);
+                }
+            }
+
+            function updateDisplay() {
+                scoreDisplay.textContent = gameState.score;
+                recordDisplay.textContent = gameState.record;
+                
+                document.getElementById('challenge1Progress').textContent = `${dailyChallenges.stars.current}/${dailyChallenges.stars.target}`;
+                document.getElementById('challenge2Progress').textContent = `${dailyChallenges.combo.current}/${dailyChallenges.combo.target}`;
+                document.getElementById('challenge3Progress').textContent = `${dailyChallenges.share.current}/${dailyChallenges.share.target}`;
+                
+                updateAchievementsBar();
+            }
+
+            function updateAchievementsBar() {
+                const bar = document.getElementById('achievementsBar');
+                bar.innerHTML = '';
+                
+                Object.values(achievements).forEach(ach => {
+                    const unlocked = playerAchievements.includes(ach.id);
+                    const div = document.createElement('div');
+                    div.className = `achievement-icon ${unlocked ? '' : 'locked'}`;
+                    div.innerHTML = `${ach.icon}<span>${ach.name}: ${ach.desc}</span>`;
+                    bar.appendChild(div);
+                });
+            }
+
+            function checkAchievements() {
+                let newUnlock = false;
+                
+                if (!playerAchievements.includes('firstStar') && gameState.totalStars >= 1) {
+                    playerAchievements.push('firstStar');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('collector10') && gameState.totalStars >= 10) {
+                    playerAchievements.push('collector10');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('collector50') && gameState.totalStars >= 50) {
+                    playerAchievements.push('collector50');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('collector100') && gameState.totalStars >= 100) {
+                    playerAchievements.push('collector100');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('combo5') && gameState.maxCombo >= 5) {
+                    playerAchievements.push('combo5');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('combo10') && gameState.maxCombo >= 10) {
+                    playerAchievements.push('combo10');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('sharer1') && gameState.totalShares >= 1) {
+                    playerAchievements.push('sharer1');
+                    newUnlock = true;
+                }
+                if (!playerAchievements.includes('sharer5') && gameState.totalShares >= 5) {
+                    playerAchievements.push('sharer5');
+                    newUnlock = true;
+                }
+                
+                if (newUnlock) {
+                    createAchievementSound();
+                    showMessage('🏆 Nova conquista desbloqueada!');
+                    localStorage.setItem('achievements', JSON.stringify(playerAchievements));
+                    updateAchievementsBar();
+                }
+            }
+
+            function loadDailyChallenges() {
+                const today = new Date().toDateString();
+                const saved = localStorage.getItem('dailyChallenges');
+                
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.date === today) {
+                        dailyChallenges = data.challenges;
+                    } else {
+                        resetDailyChallenges();
+                    }
+                } else {
+                    resetDailyChallenges();
+                }
+                updateDisplay();
+            }
+
+            function resetDailyChallenges() {
+                dailyChallenges = {
+                    stars: { current: 0, target: 30, completed: false, reward: 100 },
+                    combo: { current: 0, target: 5, completed: false, reward: 50 },
+                    share: { current: 0, target: 1, completed: false, reward: 75 }
+                };
+                saveDailyChallenges();
+            }
+
+            function saveDailyChallenges() {
+                localStorage.setItem('dailyChallenges', JSON.stringify({
+                    date: new Date().toDateString(),
+                    challenges: dailyChallenges
+                }));
+            }
+
+            function updateDailyChallenges(type, value) {
+                if (!dailyChallenges[type].completed) {
+                    dailyChallenges[type].current += value;
+                    
+                    if (dailyChallenges[type].current >= dailyChallenges[type].target) {
+                        dailyChallenges[type].completed = true;
+                        gameState.score += dailyChallenges[type].reward;
+                        showBonusAnimation(`+${dailyChallenges[type].reward} DESAFIO!`);
+                        createAchievementSound();
+                    }
+                    
+                    saveDailyChallenges();
+                    updateDisplay();
+                }
+            }
+
+            function addToRanking() {
+                // Usa o nome já salvo (não pergunta de novo)
+                const playerName = gameState.playerName;
+                
+                // Verificar se já existe um registro com pontuação menor
+                const existingIndex = ranking.findIndex(r => r.name === playerName);
+                
+                if (existingIndex >= 0) {
+                    // Já existe, atualizar se a pontuação for maior
+                    if (gameState.record > ranking[existingIndex].score) {
+                        ranking[existingIndex] = {
+                            name: playerName,
+                            score: gameState.record,
+                            date: new Date().toLocaleDateString()
+                        };
+                        showMessage(`📊 Recorde atualizado no ranking!`);
+                    }
+                } else {
+                    // Novo jogador
+                    ranking.push({
+                        name: playerName,
+                        score: gameState.record,
+                        date: new Date().toLocaleDateString()
+                    });
+                    showMessage(`🎉 Você entrou no ranking!`);
+                }
+                
+                // Ordenar e limitar
+                ranking.sort((a,b) => b.score - a.score);
+                ranking = ranking.slice(0, 20);
+                localStorage.setItem('ranking', JSON.stringify(ranking));
+            }
+
+            window.showRanking = function() {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                
+                let rankingHTML = '<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🏆 Ranking</h2>';
+                
+                if (ranking.length === 0) {
+                    rankingHTML += '<p style="text-align:center; margin:20px;">Nenhum recorde ainda. Jogue e seja o primeiro!</p>';
+                } else {
+                    ranking.forEach((item, index) => {
+                        // Destacar o jogador atual
+                        const isCurrentPlayer = item.name === gameState.playerName;
+                        rankingHTML += `
+                            <div class="ranking-item" style="${isCurrentPlayer ? 'background: rgba(255,215,0,0.2); border-radius: 10px;' : ''}">
+                                <span class="ranking-position">#${index+1}</span>
+                                <span>${item.name} ${isCurrentPlayer ? '👑' : ''}</span>
+                                <span>${item.score} ⭐</span>
+                                <span style="font-size:0.8em;">${item.date}</span>
+                            </div>
+                        `;
+                    });
+                }
+                
+                rankingHTML += '<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest(\'.modal\').remove()">Fechar</button></div>';
+                
+                modal.innerHTML = rankingHTML;
+                document.body.appendChild(modal);
+            };
+
+            window.showSkins = function() {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                
+                let skinsHTML = '<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🎨 Skins</h2>';
+                
+                Object.entries(skins).forEach(([key, skin]) => {
+                    skinsHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">
+                            <div>
+                                <span style="font-size:1.5em; margin-right:10px;">${skin.unlocked ? '✅' : '🔒'}</span>
+                                <span>${skin.name}</span>
+                            </div>
+                            ${skin.unlocked ? 
+                                `<button class="consent-btn" style="padding:5px 15px;" onclick="selectSkin('${key}')">Selecionar</button>` : 
+                                `<span style="color:#888;">${getUnlockRequirement(key)}</span>`}
+                        </div>
+                    `;
+                });
+                
+                skinsHTML += '<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest(\'.modal\').remove()">Fechar</button></div>';
+                
+                modal.innerHTML = skinsHTML;
+                document.body.appendChild(modal);
+            };
+
+            function getUnlockRequirement(skinKey) {
+                switch(skinKey) {
+                    case 'neon': return 'Colete 50 estrelas';
+                    case 'cosmos': return 'Colete 100 estrelas';
+                    case 'arcoiris': return 'Combo x10';
+                    default: return '';
+                }
+            }
+
+            window.selectSkin = function(skinKey) {
+                if (skins[skinKey].unlocked) {
+                    gameState.currentSkin = skinKey;
+                    localStorage.setItem('skin', skinKey);
+                    showMessage(`✨ Skin ${skins[skinKey].name} selecionada!`);
+                    document.querySelector('.modal').remove();
+                }
+            };
+
+            function checkCollisions() {
+                gameState.stars.forEach(star => {
+                    if (!star.collected) {
+                        const dx = gameState.player.x - star.x;
+                        const dy = gameState.player.y - star.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < gameState.player.radius + star.radius) {
+                            star.collected = true;
+                            
+                            let points = 10 * gameState.combo;
+                            gameState.score += points;
+                            gameState.totalStars++;
+                            gameState.starsCollected++;
+                            
+                            if (gameState.comboTimeout) clearTimeout(gameState.comboTimeout);
+                            gameState.combo++;
+                            updateCombo();
+                            
+                            gameState.comboTimeout = setTimeout(() => resetCombo(), 3000);
+                            
+                            if (gameState.score > gameState.record) {
+                                gameState.record = gameState.score;
+                                localStorage.setItem('record', gameState.record);
+                                showBonusAnimation('🏆 NOVO RECORDE!');
+                                addToRanking();
+                            }
+                            
+                            if (gameState.stars.length < 10) {
+                                gameState.stars.push(createStar());
+                            }
+                            
+                            createCollectSound();
+                            
+                            updateDailyChallenges('stars', 1);
+                            
+                            localStorage.setItem('totalStars', gameState.totalStars);
+                            checkAchievements();
+                            updateDisplay();
+                        }
+                    }
+                });
+
+                gameState.stars = gameState.stars.filter(star => !star.collected);
+                while (gameState.stars.length < 5 + Math.floor(gameState.score / 20)) {
+                    gameState.stars.push(createStar());
+                }
+
+                while (gameState.obstacles.length < Math.floor(gameState.score / 30)) {
+                    const obs = createObstacle();
+                    if (obs) gameState.obstacles.push(obs);
+                }
+
+                gameState.obstacles.forEach(obs => {
+                    const dx = gameState.player.x - obs.x;
+                    const dy = gameState.player.y - obs.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < gameState.player.radius + obs.radius && gameState.gameActive) {
+                        gameState.gameActive = false;
+                        createComboBreakSound();
+                        stopAdaptiveMusic(); // <-- PARA A MÚSICA NO GAME OVER
+                        showMessage(`💫 Game Over! Pontuação: ${gameState.score}`);
+                        
+                        // Non-personalized ads - só mensagem
+                        showMessage('📺 Anúncio não personalizado');
+                    }
+                });
+            }
+
+            function updateObstacles() {
+                gameState.obstacles.forEach(obs => {
+                    obs.x += obs.speedX;
+                    obs.y += obs.speedY;
+                    
+                    if (obs.x < obs.radius || obs.x > canvas.width - obs.radius) {
+                        obs.speedX *= -1;
+                    }
+                    if (obs.y < obs.radius || obs.y > canvas.height - obs.radius) {
+                        obs.speedY *= -1;
+                    }
+                });
+            }
+
+            // ==================== COMPARTILHAMENTO ====================
+            function getShareText() {
+                const frases = [
+                    `✨ ${gameState.playerName} fez ${gameState.score} pontos no Starrush Infinito! Consegue superar? 🌟`,
+                    `🔥 ${gameState.playerName} conseguiu combo x${gameState.maxCombo} no Starrush! 🎮`,
+                    `🏆 ${gameState.playerName} bateu recorde: ${gameState.record} estrelas! Vem jogar 💫`,
+                    `🌟 ${gameState.playerName} já coletei ${gameState.totalStars} estrelas no Starrush!`,
+                    `⚡ ${gameState.playerName} conquistou ${playerAchievements.length} conquistas! E você?`
+                ];
+                return encodeURIComponent(frases[Math.floor(Math.random() * frases.length)]);
+            }
+
+            function getGameUrl() {
+                return encodeURIComponent(window.location.href);
+            }
+
+            function handleShare(platform) {
+                if (!gameState.bonusAvailable) {
+                    showMessage('⏳ Aguarde 30s para outro bônus!');
+                    return;
+                }
+
+                let shareUrl = '';
+                const text = getShareText();
+                const url = getGameUrl();
+
+                switch(platform) {
+                    case 'x':
+                        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+                        break;
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+                        break;
+                }
+
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                    
+                    let bonus = 25 * gameState.combo;
+                    gameState.score += bonus;
+                    gameState.totalShares++;
+                    gameState.bonusAvailable = false;
+                    
+                    updateDailyChallenges('share', 1);
+                    
+                    createAchievementSound();
+                    showBonusAnimation(`+${bonus} COMPARTILHOU!`);
+                    showMessage(`🎁 Bônus de ${bonus} pontos!`);
+                    
+                    localStorage.setItem('totalShares', gameState.totalShares);
+                    checkAchievements();
+                    updateDisplay();
+                    
+                    setTimeout(() => {
+                        gameState.bonusAvailable = true;
+                        showMessage('✨ Novo bônus disponível!');
+                    }, 30000);
+                }
+            }
+
+            // ==================== CONTROLES ====================
+            let mouseDown = false;
+
+            function handleStart(e) {
+                e.preventDefault();
+                mouseDown = true;
+                if (!gameState.gameActive) return;
+                
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                updatePlayerPosition(e);
+            }
+
+            function handleMove(e) {
+                e.preventDefault();
+                if (!mouseDown || !gameState.gameActive) return;
+                updatePlayerPosition(e);
+            }
+
+            function handleEnd(e) {
+                e.preventDefault();
+                mouseDown = false;
+            }
+
+            function updatePlayerPosition(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                
+                let clientX, clientY;
+                
+                if (e.touches) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                
+                let x = (clientX - rect.left) * scaleX;
+                let y = (clientY - rect.top) * scaleY;
+                
+                gameState.player.x = Math.max(gameState.player.radius, Math.min(canvas.width - gameState.player.radius, x));
+                gameState.player.y = Math.max(gameState.player.radius, Math.min(canvas.height - gameState.player.radius, y));
+            }
+
+            // ==================== RENDERIZAÇÃO ====================
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                for (let i = 0; i < 50; i++) {
+                    ctx.beginPath();
+                    ctx.arc((i * 37) % canvas.width, (i * 23) % canvas.height, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.shadowColor = '#ff6b6b';
+                ctx.shadowBlur = 15;
+                gameState.obstacles.forEach(obs => {
+                    ctx.beginPath();
+                    ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 100, 100, 0.8)';
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+                
+                ctx.shadowColor = '#ffd700';
+                ctx.shadowBlur = 20;
+                const currentSkin = skins[gameState.currentSkin];
+                
+                gameState.stars.forEach(star => {
+                    const scale = 1 + Math.sin(Date.now() * 0.005 + star.pulsePhase) * 0.1;
+                    
+                    ctx.save();
+                    ctx.translate(star.x, star.y);
+                    ctx.scale(scale, scale);
+                    
+                    if (currentSkin.stars === 'multicolor') {
+                        ctx.fillStyle = `hsl(${Date.now() * 0.1 % 360}, 100%, 50%)`;
+                    } else {
+                        ctx.fillStyle = currentSkin.stars;
+                    }
+                    
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        const angle = (i * 72 - 90) * Math.PI / 180;
+                        const x1 = Math.cos(angle) * star.radius;
+                        const y1 = Math.sin(angle) * star.radius;
+                        const x2 = Math.cos(angle + 36 * Math.PI / 180) * (star.radius * 0.4);
+                        const y2 = Math.sin(angle + 36 * Math.PI / 180) * (star.radius * 0.4);
+                        
+                        if (i === 0) ctx.moveTo(x1, y1);
+                        else ctx.lineTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                    }
+                    ctx.closePath();
+                    
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    
+                    ctx.restore();
+                });
+                
+                ctx.shadowColor = '#4a90e2';
+                ctx.shadowBlur = 25;
+                ctx.beginPath();
+                ctx.arc(gameState.player.x, gameState.player.y, gameState.player.radius, 0, Math.PI * 2);
+                
+                if (currentSkin.player === 'linear-gradient') {
+                    const gradient = ctx.createRadialGradient(
+                        gameState.player.x - 5, gameState.player.y - 5, 5,
+                        gameState.player.x, gameState.player.y, gameState.player.radius + 5
+                    );
+                    currentSkin.playerGradient.forEach((color, i) => {
+                        gradient.addColorStop(i / (currentSkin.playerGradient.length - 1), color);
+                    });
+                    ctx.fillStyle = gradient;
+                } else {
+                    const gradient = ctx.createRadialGradient(
+                        gameState.player.x - 5, gameState.player.y - 5, 5,
+                        gameState.player.x, gameState.player.y, gameState.player.radius + 5
+                    );
+                    gradient.addColorStop(0, currentSkin.playerGradient[0]);
+                    gradient.addColorStop(1, currentSkin.playerGradient[1]);
+                    ctx.fillStyle = gradient;
+                }
+                
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(gameState.player.x - 5, gameState.player.y - 5, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(gameState.player.x + 5, gameState.player.y - 5, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(gameState.player.x - 6, gameState.player.y - 6, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(gameState.player.x + 4, gameState.player.y - 6, 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
+                ctx.shadowColor = 'transparent';
+                
+                if (!gameState.gameActive) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 24px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('💫 GAME OVER', canvas.width/2, canvas.height/2);
+                    ctx.font = '16px Arial';
+                    ctx.fillText(`Pontuação: ${gameState.score}`, canvas.width/2, canvas.height/2 + 40);
+                }
+            }
+
+            function gameLoop() {
+                if (gameState.gameActive) {
+                    updateObstacles();
+                    checkCollisions();
+                    updateMusicSpeed(); // <-- ATUALIZA VELOCIDADE DA MÚSICA
+                }
+                draw();
+                requestAnimationFrame(gameLoop);
+            }
+
+            // ==================== INICIALIZAÇÃO ====================
+            function initGameAfterConsent() {
+                // Verificar se pode salvar progresso
+                const consent = localStorage.getItem(CONSENT_KEY);
+                if (consent) {
+                    const data = JSON.parse(consent);
+                    if (data.choices.essential) {
+                        // Carregar saves apenas se consentiu
+                        gameState.record = parseInt(localStorage.getItem('record')) || 0;
+                        gameState.totalStars = parseInt(localStorage.getItem('totalStars')) || 0;
+                        gameState.totalShares = parseInt(localStorage.getItem('totalShares')) || 0;
+                        playerAchievements = JSON.parse(localStorage.getItem('achievements')) || [];
+                        ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+                    }
+                }
+                
+                initGame();
+                gameLoop();
+                
+                canvas.addEventListener('mousedown', handleStart);
+                canvas.addEventListener('mousemove', handleMove);
+                canvas.addEventListener('mouseup', handleEnd);
+                canvas.addEventListener('mouseleave', handleEnd);
+                
+                canvas.addEventListener('touchstart', handleStart, { passive: false });
+                canvas.addEventListener('touchmove', handleMove, { passive: false });
+                canvas.addEventListener('touchend', handleEnd);
+                canvas.addEventListener('touchcancel', handleEnd);
+
+                newGameBtn.addEventListener('click', () => {
+                    gameState.gameActive = true;
+                    initGame();
+                    showMessage('🌟 Nova jornada infinita!');
+                    showMessage('📺 Anúncio não personalizado');
+                });
+
+                shareXBtn.addEventListener('click', () => handleShare('x'));
+                shareFacebookBtn.addEventListener('click', () => handleShare('facebook'));
+                shareWhatsAppBtn.addEventListener('click', () => handleShare('whatsapp'));
+
+                // Botão de música
+                musicBtn.addEventListener('click', toggleMusic);
+
+                document.body.addEventListener('click', function initAudio() {
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                }, { once: true });
+            }
+
+            // Fallback caso CookieScript não carregue
+            window.__cmpLoaded = false;
+            
+            // Detectar se CookieScript carregou
+            if (typeof cookieScript !== 'undefined') {
+                window.__cmpLoaded = true;
+            }
+            
+            // Verificar consentimento e iniciar
+            (async function init() {
+                if (!checkConsent() && !window.__cmpLoaded) {
+                    await showConsentPopup();
+                } else if (!checkConsent()) {
+                    // CookieScript vai gerenciar
+                    console.log('CookieScript gerenciando consentimento');
+                    // Aguardar CookieScript carregar
+                    setTimeout(() => {
+                        if (!checkConsent()) {
+                            initGameAfterConsent();
+                        }
+                    }, 2000);
+                } else {
+                    initGameAfterConsent();
+                }
+            })();
+        })();
+    </script>
+</body>
+</html>
