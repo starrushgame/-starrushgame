@@ -1,0 +1,4 @@
+# ads.txt para Google AdSense H5 Games
+# Starrush - Configurado e pronto!
+
+google.com, pub-2829168537612201, DIRECT, f08c47fec0942fa0
