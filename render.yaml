@@ -1,17 +1,6 @@
-# Render Deployment Configuration for Static HTML Site
-
-This file is used to deploy a static HTML site on Render using Python's HTTP server.
-
-## Build Command
-```
-# No build command needed for static HTML sites.
-```
-
-## Start Command
-```
-python -m http.server 8000
-```
-
-## Environment Variables
-
-# Specify any environment variables here, if needed.
+services:
+  - type: web
+    name: starrushgame
+    runtime: python
+    buildCommand: ""
+    startCommand: "python -m http.server 8000"
