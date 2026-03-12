@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: starrushgame
-    runtime: python
-    buildCommand: ""
-    startCommand: "python -m http.server 8000"
