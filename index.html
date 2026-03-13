@@ -1209,7 +1209,7 @@
     <!-- Links legais no rodapé (mais visíveis para CCPA) -->
     <div class="legal-links">
         <a href="#" onclick="showPrivacyPolicyModal();return false;">📄 Política de Privacidade</a>
-        <a href="#" id="open_preferences_center">⚙️ Cookies</a>
+        <a href="#" id="open_preferences_center">⚙️ Não vender minhas informações</a>
     </div>
 
     <!-- SCRIPTS DO JOGO (100% PRESERVADOS) -->
@@ -2904,9 +2904,9 @@
             function getPlayerName() {
                 let name = localStorage.getItem(PLAYER_NAME_KEY);
                 if (!name) {
-                    name = prompt("👋 Bem-vindo! Digite seu nome para aparecer no ranking:");
+                    name = prompt("👋 Bem-vindo! Digite seu nome (máximo 10 caracteres) para aparecer no ranking:");
                     if (name && name.trim() !== '') {
-                        name = name.substring(0, 10).trim();
+                        name = name.substring(0, 10).trim(); // ALTERADO: de 15 para 10
                         localStorage.setItem(PLAYER_NAME_KEY, name);
                         showMessage(`✅ Nome salvo: ${name}`);
                     } else {
@@ -4196,4 +4196,4 @@
     <!-- Link da política de privacidade no rodapé (já incluso no CSS acima) -->
     <!-- O link está no estilo .legal-links definido no CSS -->
 </body>
-</html>namen
+</html>
