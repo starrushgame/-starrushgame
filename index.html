@@ -2151,20 +2151,20 @@
 
             function getRewardDescription(type) {
                 const desc = {
-                    'continue': 'CONTINUAR JOGANDO',
+                    'continue': 'TRIPLICAR PONTOS ATUAIS',
                     'doublePoints': 'DOBRAR PONTUAÇÃO ATUAL',
                     'extraLife': 'UMA ESTRELA DA VIDA EXTRA',
-                    'speedBoost': 'DESACELERAR OBSTÁCULOS POR 10s'
+                    'speedBoost': 'SUMIR BOLAS VERMELHAS POR 30s'
                 };
                 return desc[type] || 'BÔNUS ESPECIAL';
             }
 
             function getRewardName(type) {
                 const name = {
-                    'continue': 'CONTINUAR',
+                    'continue': 'TRIPLO',
                     'doublePoints': 'DOBRO',
                     'extraLife': '🌟 ESTRELA',
-                    'speedBoost': 'FOCO'
+                    'speedBoost': 'SEM BOLAS'
                 };
                 return name[type] || 'BÔNUS';
             }
@@ -2172,26 +2172,32 @@
             let activeBoosts = {
                 doublePoints: false,
                 speedBoost: false,
-                extraLife: false
+                extraLife: false,
+                hideObstacles: false
             };
 
             function giveReward(type) {
                 switch(type) {
                     case 'continue':
+                        gameState.score *= 3;
                         gameState.gameActive = true;
-                        gameState.player.x = canvas.width / 2;
-                        gameState.player.y = canvas.height / 2;
-                        gameState.obstacles = [];
-                        showMessage('✨ Continue sua jornada estelar!');
+                        if (gameState.score > gameState.record) {
+                            gameState.record = gameState.score;
+                            addToRanking();
+                        }
+                        updateDisplay();
+                        showMessage('🔥 PONTOS TRIPLICADOS!');
                         break;
                         
                     case 'doublePoints':
                         activeBoosts.doublePoints = true;
                         gameState.score *= 2;
+                        gameState.gameActive = true;
                         if (gameState.score > gameState.record) {
                             gameState.record = gameState.score;
                             addToRanking();
                         }
+                        updateDisplay();
                         showMessage('🎯 PONTOS EM DOBRO!');
                         break;
                         
@@ -2200,14 +2206,13 @@
                         break;
                         
                     case 'speedBoost':
-                        activeBoosts.speedBoost = true;
-                        const originalSpeed = gameState.baseSpeed;
-                        gameState.baseSpeed = 0.3;
+                        activeBoosts.hideObstacles = true;
+                        gameState.obstacles.forEach(obs => { obs.visible = false; if (obs.blinkTimer) { clearTimeout(obs.blinkTimer); obs.blinkTimer = null; } });
                         setTimeout(() => {
-                            gameState.baseSpeed = originalSpeed;
-                            activeBoosts.speedBoost = false;
-                        }, 10000);
-                        showMessage('🐢 Obstáculos mais lentos!');
+                            activeBoosts.hideObstacles = false;
+                            gameState.obstacles.forEach(obs => obs.visible = true);
+                        }, 60000);
+                        showMessage('👻 Bolas vermelhas sumindo por 1 minuto!');
                         break;
                 }
                 saveGameProgress();
@@ -2409,7 +2414,7 @@
                         <p style="margin:20px 0;">Assista um vídeo e escolha:</p>
                         <div style="display:grid; gap:15px; margin:20px 0;">
                             <button class="consent-btn" id="bonusContinue" style="background:#4a90e2; padding:15px;">
-                                ❤️ Continuar após Game Over
+                                🔥 Triplicar pontos atuais
                             </button>
                             <button class="consent-btn" id="bonusDouble" style="background:#9b59b6; padding:15px;">
                                 🎯 Dobrar pontos atuais
@@ -2418,7 +2423,7 @@
                                 🌟 Ganhar uma estrela da vida
                             </button>
                             <button class="consent-btn" id="bonusSpeed" style="background:#f39c12; padding:15px;">
-                                🐢 Desacelerar obstáculos
+                                👻 Sumir bolas vermelhas por 30s
                             </button>
                         </div>
                         <button class="consent-btn" onclick="this.closest('.modal').remove()">Fechar</button>
@@ -3121,13 +3126,14 @@
                     if (!gameState.gameActive || gameState.obstacles.length === 0) return;
                     
                     gameState.obstacles.forEach(obs => {
+                        if (activeBoosts.hideObstacles) return;
                         if (Math.random() < 0.2) {
                             obs.visible = !obs.visible;
                             
                             if (!obs.visible) {
                                 if (obs.blinkTimer) clearTimeout(obs.blinkTimer);
                                 obs.blinkTimer = setTimeout(() => {
-                                    if (obs) obs.visible = true;
+                                    if (obs && !activeBoosts.hideObstacles) obs.visible = true;
                                 }, 800 + Math.random() * 1500);
                             }
                         }
@@ -3618,7 +3624,10 @@
 
                 while (gameState.obstacles.length < Math.min(MAX_OBSTACLES, Math.floor(gameState.score / 100) + 1)) {
                     const obs = createObstacle();
-                    if (obs) gameState.obstacles.push(obs);
+                    if (obs) {
+                        if (activeBoosts.hideObstacles) obs.visible = false;
+                        gameState.obstacles.push(obs);
+                    }
                 }
 
                 gameState.obstacles.forEach(obs => {
