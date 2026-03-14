@@ -1245,7 +1245,7 @@
                         }, { onConflict: 'player_id' });
                 } catch (error) {}
             }
-            setInterval(updateLastActive, 60000);
+            setInterval(updateLastActive, 30000);
             
             // ==================== SCREENSHOT AUTOMÁTICO DE RECORDES ====================
             function captureRecordScreenshot() {
@@ -3461,6 +3461,8 @@
                 }
 
                 try {
+                    await updateLastActive();
+
                     const { data: rankData, error: rankError } = await supabase
                         .from('rankings')
                         .select('player_name, score, max_combo, created_at')
@@ -3469,11 +3471,11 @@
 
                     if (rankError) throw rankError;
 
-                    const twoMinutesAgo = new Date(Date.now() - 2 * 60000).toISOString();
+                    const fiveMinutesAgo = new Date(Date.now() - 5 * 60000).toISOString();
                     const { data: onlineData } = await supabase
                         .from('players')
                         .select('player_name')
-                        .gt('last_active', twoMinutesAgo);
+                        .gt('last_active', fiveMinutesAgo);
 
                     const onlineNames = new Set((onlineData || []).map(p => p.player_name));
                     const onlineCount = onlineNames.size;
@@ -4160,6 +4162,6 @@
     </script>
     
     <!-- Link da política de privacidade no rodapé (já incluso no CSS acima) -->
-    <!-- O link está no estilo .legal-links definidoo no CSS -->
+    <!-- O link está no estilo .legal-links definido no CSS -->
 </body>
 </html>
