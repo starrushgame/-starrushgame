@@ -2207,9 +2207,11 @@
                         
                     case 'speedBoost':
                         activeBoosts.hideObstacles = true;
+                        gameState.hideObstaclesEnd = Date.now() + 60000;
                         gameState.obstacles.forEach(obs => { obs.visible = false; if (obs.blinkTimer) { clearTimeout(obs.blinkTimer); obs.blinkTimer = null; } });
                         setTimeout(() => {
                             activeBoosts.hideObstacles = false;
+                            gameState.hideObstaclesEnd = null;
                             gameState.obstacles.forEach(obs => obs.visible = true);
                         }, 60000);
                         showMessage('👻 Bolas vermelhas sumindo por 1 minuto!');
@@ -2503,6 +2505,28 @@
                 oscillator2.start();
                 oscillator1.stop(audioCtx.currentTime + 0.4);
                 oscillator2.stop(audioCtx.currentTime + 0.4);
+            }
+
+            function createGameOverSound() {
+                if (audioCtx.state !== 'running') return;
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc1.type = 'sawtooth';
+                osc2.type = 'sawtooth';
+                osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
+                osc1.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.8);
+                osc2.frequency.setValueAtTime(330, audioCtx.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(82, audioCtx.currentTime + 0.8);
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+                osc1.connect(gainNode);
+                osc2.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                osc1.start();
+                osc2.start();
+                osc1.stop(audioCtx.currentTime + 1.0);
+                osc2.stop(audioCtx.currentTime + 1.0);
             }
 
             let musicSystem = {
@@ -3650,17 +3674,22 @@
                         if (activeBoosts.extraLife) {
                             activeBoosts.extraLife = false;
                             showMessage('💫 Escudo ativado!');
+                            gameState.hitFlash = 6;
                             gameState.player.x = Math.random() * (canvas.width - 40) + 20;
                             gameState.player.y = Math.random() * (canvas.height - 40) + 20;
                         } 
                         else if (LIFE_SYSTEM.lose()) {
+                            gameState.hitFlash = 8;
                             gameState.player.x = canvas.width / 2;
                             gameState.player.y = canvas.height / 2;
                             gameState.obstacles = [];
                         }
                         else {
+                            gameState.hitFlash = 12;
+                            gameState.gameOverTime = Date.now();
                             gameState.gameActive = false;
                             createComboBreakSound();
+                            createGameOverSound();
                             stopAdaptiveMusic();
                             
                             if (obstacleTimer) {
@@ -4052,17 +4081,49 @@
                 
                 ctx.shadowBlur = 0;
                 ctx.shadowColor = 'transparent';
+
+                // Hit flash
+                if (gameState.hitFlash > 0) {
+                    const alpha = (gameState.hitFlash / 12) * 0.45;
+                    ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    gameState.hitFlash--;
+                }
+
+                // Bonus ativo: indicador de tempo restante
+                if (activeBoosts.hideObstacles && gameState.hideObstaclesEnd) {
+                    const remaining = Math.max(0, Math.ceil((gameState.hideObstaclesEnd - Date.now()) / 1000));
+                    ctx.save();
+                    ctx.font = 'bold 13px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.fillRect(6, 6, 118, 22);
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(`👻 Sem bolas: ${remaining}s`, 10, 21);
+                    ctx.restore();
+                }
                 
                 if (!gameState.gameActive && !gameState.adPaused) {
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     
+                    // Animação de entrada do GAME OVER
+                    const elapsed = Date.now() - (gameState.gameOverTime || Date.now());
+                    const scale = elapsed < 400 ? 0.4 + (elapsed / 400) * 0.6 : 1.0;
+                    const alpha = elapsed < 400 ? elapsed / 400 : 1.0;
+
+                    ctx.save();
+                    ctx.globalAlpha = alpha;
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.scale(scale, scale);
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 24px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('💫 GAME OVER', canvas.width/2, canvas.height/2);
+                    ctx.fillText('💫 GAME OVER', 0, 0);
                     ctx.font = '16px Arial';
-                    ctx.fillText(`Pontuação: ${gameState.score.toFixed(2)}`, canvas.width/2, canvas.height/2 + 40);
+                    ctx.fillText(`Pontuação: ${gameState.score.toFixed(2)}`, 0, 40);
+                    ctx.restore();
+                    ctx.globalAlpha = 1.0;
                 }
             }
 
