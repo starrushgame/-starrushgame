@@ -2264,6 +2264,7 @@
                 const wasPlaying = musicSystem.isPlaying;
                 if (wasActive) {
                     gameState.gameActive = false;
+                    gameState.adPaused = true;
                     if (wasPlaying) stopAdaptiveMusic();
                 }
                 
@@ -2291,6 +2292,7 @@
                         showMessage('🎥 Carregando anúncio...');
 
                         function onAdFinished(rewarded) {
+                            gameState.adPaused = false;
                             if (rewarded) {
                                 registerAdEvent('rewarded', rewardType, true);
                                 giveReward(rewardType);
@@ -2353,6 +2355,7 @@
                     
                     document.getElementById('cancelAd').onclick = () => {
                         modal.remove();
+                        gameState.adPaused = false;
                         showMessage('❌ Você não ganhou o bônus');
                         
                         if (wasActive) {
@@ -4050,7 +4053,7 @@
                 ctx.shadowBlur = 0;
                 ctx.shadowColor = 'transparent';
                 
-                if (!gameState.gameActive) {
+                if (!gameState.gameActive && !gameState.adPaused) {
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     
