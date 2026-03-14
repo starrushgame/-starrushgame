@@ -3445,10 +3445,11 @@
                         ranking.forEach((item, index) => {
                             const isCurrentPlayer = item.name === gameState.playerName;
                             const isGolden = localStorage.getItem('golden_name_' + item.name) === 'true';
+                            const crown = index === 0 ? ' 👑' : '';
                             html += `
                                 <div class="ranking-item" style="${isCurrentPlayer ? 'background: rgba(255,215,0,0.2); border-radius: 10px;' : ''}">
                                     <span class="ranking-position" style="${isGolden ? 'color:#ffd700;' : ''}">#${index+1}</span>
-                                    <span style="${isGolden ? 'color:#ffd700; font-weight:bold;' : ''}">${item.name} ${isCurrentPlayer ? '👑' : ''} ${isGolden ? '✨' : ''}</span>
+                                    <span style="${isGolden ? 'color:#ffd700; font-weight:bold;' : ''}">${item.name}${crown} ${isGolden ? '✨' : ''}</span>
                                     <span>${item.score} ⭐</span>
                                     <span style="font-size:0.8em;">${item.date}</span>
                                 </div>`;
@@ -3487,12 +3488,15 @@
                             const isCurrentPlayer = item.player_name === gameState.playerName;
                             const isOnline = onlineNames.has(item.player_name);
                             const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                            const onlineDot = isOnline
+                                ? '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2ecc71;margin-left:6px;vertical-align:middle;" title="Online agora"></span>'
+                                : '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#888;margin-left:6px;vertical-align:middle;" title="Offline"></span>';
+                            const crown = index === 0 ? ' 👑' : '';
                             html += `
                                 <div class="ranking-item" style="${isCurrentPlayer ? 'background: rgba(255,215,0,0.2); border-radius: 10px;' : ''}">
                                     <span class="ranking-position">${medal} #${index+1}</span>
                                     <span style="${index < 3 ? 'font-weight:bold; color:#ffd700;' : ''}">
-                                        ${item.player_name} ${isCurrentPlayer ? '👑' : ''}
-                                        ${isOnline ? '<span style="color:#2ecc71; margin-left:5px;" title="Online agora">🟢</span>' : ''}
+                                        ${item.player_name}${crown}${onlineDot}
                                     </span>
                                     <span>${item.score} ⭐</span>
                                     <span style="font-size:0.8em;">${new Date(item.created_at).toLocaleDateString()}</span>
