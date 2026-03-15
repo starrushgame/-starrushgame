@@ -1040,6 +1040,120 @@
             }
         }
 
+
+        /* ===== PÁGINA DA HISTÓRIA ===== */
+        #storyPage {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #0a0f2a, #1a1f3a);
+            z-index: 100000;
+            padding: 20px;
+            display: none;
+        }
+        .story-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 40px 30px;
+            border: 2px solid rgba(255,215,0,0.3);
+            color: white;
+        }
+        .story-title {
+            font-size: 2em;
+            text-align: center;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        .story-subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .story-text { line-height: 1.8; margin-bottom: 20px; }
+        .story-chapter {
+            font-size: 1.3em;
+            color: #ffd700;
+            margin: 25px 0 10px;
+            font-weight: bold;
+        }
+        .story-dialogue {
+            font-style: italic;
+            color: #4a90e2;
+            margin: 12px 0;
+            padding-left: 18px;
+            border-left: 3px solid #ffd700;
+        }
+        .story-start-btn {
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            color: #1a1f3a;
+            border: 3px solid white;
+            padding: 18px 35px;
+            border-radius: 60px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 35px auto 20px;
+            display: block;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+            transition: transform 0.3s;
+            text-align: center;
+            width: fit-content;
+            max-width: 100%;
+        }
+        .story-start-btn:hover { transform: scale(1.05); }
+        .legal-links-story {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0 30px;
+            flex-wrap: wrap;
+        }
+        .legal-links-story a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,215,0,0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .legal-links-story a:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        /* ===== SELETOR DE IDIOMA ===== */
+        #langSelector {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 100002;
+        }
+        .lang-btn {
+            background: #ffd700;
+            color: #1a1f3a;
+            border: 2px solid white;
+            padding: 7px 13px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .lang-btn:hover { transform: scale(1.05); }
+        .lang-btn.active { background: #ffa500; border-color: #ffd700; }
+
         @keyframes pulse {
             0% { transform: translateX(-50%) scale(1); }
             50% { transform: translateX(-50%) scale(1.05); }
@@ -1087,6 +1201,43 @@
     </style>
 </head>
 <body>
+
+    <!-- SELETOR DE IDIOMA -->
+    <div id="langSelector">
+        <button class="lang-btn active" id="btnPT" onclick="setLanguage('pt')">🇧🇷 PT</button>
+        <button class="lang-btn" id="btnEN" onclick="setLanguage('en')">🇺🇸 EN</button>
+    </div>
+
+    <!-- PÁGINA DA HISTÓRIA -->
+    <div id="storyPage">
+        <div class="story-container">
+            <div class="story-title" id="storyTitle">🌟 STARRUSH: A SUA CONSTELAÇÃO 🌟</div>
+            <div class="story-subtitle" id="storySubtitle">Uma aventura mágica onde VOCÊ é a estrela principal</div>
+
+            <div id="storyBody"></div>
+
+            <div style="text-align:center;"><button class="story-start-btn" id="storyStartBtn" onclick="hideStoryPage()">✨ COMEÇAR MINHA AVENTURA EM CONSTELÂNDIA ✨</button></div>
+
+            <div class="legal-links-story">
+                <a onclick="showPrivacyPolicyModal(); return false;" href="#" id="linkPrivacy">📄 Política de Privacidade</a>
+                <a onclick="document.getElementById('open_preferences_center') && document.getElementById('open_preferences_center').click(); return false;" href="#" id="linkCookies">⚙️ Configurar Cookies</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP DE NOME -->
+    <div id="namePopup" class="modal" style="display:none; z-index:100001;">
+        <div class="modal-content" style="text-align:center;">
+            <div style="font-size:2.5em; margin-bottom:10px;">🌟</div>
+            <h2 id="namePopupTitle" style="color:#ffd700; margin-bottom:10px;">BEM-VINDO A CONSTELÂNDIA!</h2>
+            <p id="namePopupSubtitle" style="margin-bottom:20px; color:rgba(255,255,255,0.8);">Digite seu nome para começar sua jornada</p>
+            <input type="text" id="playerNameInput" maxlength="10"
+                placeholder="Seu nome (máx. 10 caracteres)"
+                style="width:100%; padding:14px; border-radius:50px; background:rgba(0,0,0,0.3); border:2px solid #ffd700; color:white; font-size:1.1em; text-align:center; margin-bottom:20px; box-sizing:border-box; outline:none;">
+            <button id="submitNameBtn" class="consent-btn accept" style="width:100%; background:linear-gradient(45deg,#ffd700,#ffa500); color:#1a1f3a; font-size:1.1em;">✨ COMEÇAR AVENTURA ✨</button>
+        </div>
+    </div>
+
     <div id="gameContainer">
         <div id="livesSection">
             <div id="livesLabel">✨ SUAS ESTRELAS DA VIDA ✨</div>
@@ -1218,6 +1369,278 @@
     <!-- SCRIPTS DO JOGO (100% PRESERVADOS) -->
     <script>
         (function() {
+
+            // ===== INTERNACIONALIZAÇÃO PT/EN =====
+            let currentLanguage = 'pt';
+
+            const translations = {
+                pt: {
+                    storyTitle: "🌟 STARRUSH: A SUA CONSTELAÇÃO 🌟",
+                    storySubtitle: "Uma aventura mágica onde VOCÊ é a estrela principal",
+                    startButton: "✨ COMEÇAR MINHA AVENTURA EM CONSTELÂNDIA ✨",
+                    privacyLink: "📄 Política de Privacidade",
+                    cookieLink: "⚙️ Configurar Cookies",
+                    namePopupTitle: "BEM-VINDO A CONSTELÂNDIA!",
+                    namePopupSubtitle: "Digite seu nome para começar sua jornada",
+                    nameInputPlaceholder: "Seu nome (máx. 10 caracteres)",
+                    nameSubmitButton: "✨ COMEÇAR AVENTURA ✨",
+                    nameSaved: "✅ Nome salvo: {name}. A Brilha te reconheceu!",
+                    livesLabel: "✨ SUAS ESTRELAS DA VIDA ✨",
+                    statStars: "⭐ Estrelas",
+                    statCombo: "🔥 Combo",
+                    statRecord: "💫 Recorde",
+                    statChallenges: "📅 Desafios",
+                    statAchievements: "✨ Conquistas",
+                    challengeTitle: "📅 Desafios Épicos de Hoje",
+                    challenge1Label: "🌟 Coletar",
+                    challenge1Suffix: "estrelas",
+                    challenge2Label: "🔥 Combo x",
+                    challenge3Label: "📱 Compartilhar 30 vezes",
+                    btnNewGame: "🔄 Nova Partida",
+                    btnRanking: "🏆 Ranking",
+                    btnSkins: "🎨 Skins",
+                    btnBonus: "🎁 Bônus",
+                    btnMusic: "🎵 Música",
+                    btnHistory: "📅 Histórico",
+                    musicOn: "🔊 Música",
+                    musicOff: "🎵 Música",
+                    rankingGlobal: "🏆 Ranking Global",
+                    rankingLocal: "🏆 Ranking Local",
+                    rankingEmpty: "Nenhum recorde ainda. Jogue e seja o primeiro!",
+                    rankingGlobalEmpty: "Seja o primeiro no ranking global!",
+                    rankingOnline: "🌍 Jogadores do mundo todo",
+                    historyTitle: "📅 Histórico Mensal",
+                    historyPrevious: "📜 Meses Anteriores",
+                    closeBtn: "Fechar",
+                    rewardContinue: "TRIPLICAR PONTOS ATUAIS",
+                    rewardDouble: "DOBRAR PONTUAÇÃO ATUAL",
+                    rewardLife: "UMA ESTRELA DA VIDA EXTRA",
+                    rewardSpeed: "SUMIR BOLAS VERMELHAS POR 1 MIN"
+                },
+                en: {
+                    storyTitle: "🌟 STARRUSH: YOUR CONSTELLATION 🌟",
+                    storySubtitle: "A magical adventure where YOU are the main star",
+                    startButton: "✨ START MY ADVENTURE IN CONSTELANDIA ✨",
+                    privacyLink: "📄 Privacy Policy",
+                    cookieLink: "⚙️ Cookie Settings",
+                    namePopupTitle: "WELCOME TO CONSTELANDIA!",
+                    namePopupSubtitle: "Enter your name to begin your journey",
+                    nameInputPlaceholder: "Your name (max. 10 characters)",
+                    nameSubmitButton: "✨ START ADVENTURE ✨",
+                    nameSaved: "✅ Name saved: {name}. Brilha recognized you!",
+                    livesLabel: "✨ YOUR LIFE STARS ✨",
+                    statStars: "⭐ Stars",
+                    statCombo: "🔥 Combo",
+                    statRecord: "💫 Record",
+                    statChallenges: "📅 Challenges",
+                    statAchievements: "✨ Achievements",
+                    challengeTitle: "📅 Today's Epic Challenges",
+                    challenge1Label: "🌟 Collect",
+                    challenge1Suffix: "stars",
+                    challenge2Label: "🔥 Combo x",
+                    challenge3Label: "📱 Share 30 times",
+                    btnNewGame: "🔄 New Game",
+                    btnRanking: "🏆 Ranking",
+                    btnSkins: "🎨 Skins",
+                    btnBonus: "🎁 Bonus",
+                    btnMusic: "🎵 Music",
+                    btnHistory: "📅 History",
+                    musicOn: "🔊 Music",
+                    musicOff: "🎵 Music",
+                    rankingGlobal: "🏆 Global Ranking",
+                    rankingLocal: "🏆 Local Ranking",
+                    rankingEmpty: "No records yet. Play and be the first!",
+                    rankingGlobalEmpty: "Be the first on the global ranking!",
+                    rankingOnline: "🌍 Players from around the world",
+                    historyTitle: "📅 Monthly History",
+                    historyPrevious: "📜 Previous Months",
+                    closeBtn: "Close",
+                    rewardContinue: "TRIPLE CURRENT POINTS",
+                    rewardDouble: "DOUBLE CURRENT SCORE",
+                    rewardLife: "ONE EXTRA LIFE STAR",
+                    rewardSpeed: "HIDE RED BALLS FOR 1 MIN"
+                }
+            };
+
+            function detectBrowserLanguage() {
+                const savedLang = localStorage.getItem('preferred_language');
+                if (savedLang === 'pt' || savedLang === 'en') return savedLang;
+                try {
+                    const lang = (navigator.language || navigator.userLanguage || 'pt').split('-')[0].toLowerCase();
+                    return lang === 'en' ? 'en' : 'pt';
+                } catch(e) { return 'pt'; }
+            }
+
+            function t(key, params = {}) {
+                let text = (translations[currentLanguage] && translations[currentLanguage][key])
+                    || translations.pt[key] || key;
+                Object.keys(params).forEach(p => { text = text.replace('{' + p + '}', params[p]); });
+                return text;
+            }
+
+            function setLanguage(lang) {
+                if (lang !== 'pt' && lang !== 'en') return;
+                currentLanguage = lang;
+                localStorage.setItem('preferred_language', lang);
+                updateUILanguage();
+            }
+
+            const storyContent = {
+                pt: `
+                    <div class="story-chapter">PRÓLOGO: O DIA QUE AS ESTRELAS FORAM PASSEAR</div>
+                    <div class="story-text">Lá no céu, bem longe daqui, existe um lugar chamado <strong style="color:#ffd700;">Constelândia</strong>.<br><br>
+                    É onde as estrelas moram quando não estão brilhando no céu noturno.<br><br>
+                    Mas Constelândia tinha um problema. As estrelas estavam cansadas. Cansadas de ficar paradas no céu noite após noite.<br><br>
+                    E sabe quem era a mais cansada de todas?</div>
+                    <div class="story-dialogue">"Queridas estrelinhas... estou velha. Estou cansada. E estou com saudade de brilhar por mim mesma." — <strong>Luminara</strong>, a estrela mais velha e sábia</div>
+                    <div class="story-text">E numa fração de segundo, todas as estrelas simplesmente... <strong style="color:#ffd700;">sumiram do céu.</strong></div>
+                    <div class="story-chapter">CAPÍTULO 1: VOCÊ FOI ESCOLHIDO</div>
+                    <div class="story-text">Na Terra, o céu ficou estranhamente escuro. Mas VOCÊ notou algo diferente. No seu celular, uma mensagem apareceu:</div>
+                    <div class="story-dialogue">"As estrelas foram passear. Mas algumas querem voltar. Elas querem fazer parte de <strong>SUA constelação</strong>."</div>
+                    <div class="story-chapter">CAPÍTULO 2: A BRILHA E A FÚRIA</div>
+                    <div class="story-text">Em Constelândia, você conheceu <strong style="color:#ffd700;">Brilha</strong> — a estrela mais nova, cheia de energia — e <strong style="color:#ff6b6b;">Fúria</strong> — uma estrela vermelha e rebelde que não queria que ninguém voltasse.</div>
+                    <div class="story-dialogue">"Se elas querem voltar, que voltem! Mas não vou facilitar. Quem quiser construir uma constelação vai ter que passar por MINHAS sentinelas!" — <strong style="color:#ff6b6b;">Fúria</strong></div>
+                    <div class="story-chapter">CAPÍTULO 3: O COLAR DAS ESTRELAS DA VIDA</div>
+                    <div class="story-text"><strong style="color:#ffd700;">Luminara</strong> entregou a você um colar brilhante com três estrelas da vida.</div>
+                    <div class="story-dialogue">"Cada vez que uma sentinela vermelha te acertar, uma estrela se apaga. Se as três se apagarem... SUA constelação nunca vai existir." — <strong>Luminara</strong></div>
+                    <div class="story-chapter">CAPÍTULO FINAL: A REDENÇÃO DA FÚRIA</div>
+                    <div class="story-text">No final, você descobriu que Fúria só queria <strong>fazer parte de algo especial</strong>. Você estendeu a mão:</div>
+                    <div class="story-dialogue">"MINHA constelação não estaria completa sem VOCÊ, Fúria."</div>
+                    <div class="story-text" style="text-align:center; color:#ffd700; font-size:1.2em; margin-top:20px;">
+                        ✨ E assim nasceu a sua constelação. ✨<br>
+                        <span style="font-size:0.85em; color:rgba(255,255,255,0.7);">Com estrelas douradas, sentinelas vermelhas... e a Fúria brilhando no centro.</span>
+                    </div>`,
+                en: `
+                    <div class="story-chapter">PROLOGUE: THE DAY THE STARS WENT ON VACATION</div>
+                    <div class="story-text">Far up in the sky, there exists a place called <strong style="color:#ffd700;">Constelandia</strong>.<br><br>
+                    That is where the stars live when they are not shining in the night sky.<br><br>
+                    But Constelandia had a problem. The stars were tired. Tired of staying still in the sky night after night.<br><br>
+                    And who was the most tired of all?</div>
+                    <div class="story-dialogue">"Dear little stars... I am old. I am tired. I miss shining for myself." — <strong>Luminara</strong>, the oldest and wisest star</div>
+                    <div class="story-text">And in a split second, all the stars simply... <strong style="color:#ffd700;">vanished from the sky.</strong></div>
+                    <div class="story-chapter">CHAPTER 1: YOU WERE CHOSEN</div>
+                    <div class="story-text">On Earth, the sky turned strangely dark. But YOU noticed something different. On your phone, a message appeared:</div>
+                    <div class="story-dialogue">"The stars went on vacation. But some want to come back. They want to be part of <strong>YOUR constellation</strong>."</div>
+                    <div class="story-chapter">CHAPTER 2: BRILHA AND FURIA</div>
+                    <div class="story-text">In Constelandia, you met <strong style="color:#ffd700;">Brilha</strong> — the newest star, full of energy — and <strong style="color:#ff6b6b;">Furia</strong> — a red, rebellious star who did not want anyone to return.</div>
+                    <div class="story-dialogue">"If they want to return, let them! But I will not make it easy. Anyone who wants to build a constellation will have to get past MY sentinels!" — <strong style="color:#ff6b6b;">Furia</strong></div>
+                    <div class="story-chapter">CHAPTER 3: THE NECKLACE OF LIFE STARS</div>
+                    <div class="story-text"><strong style="color:#ffd700;">Luminara</strong> handed you a shining necklace with three life stars.</div>
+                    <div class="story-dialogue">"Each time a red sentinel hits you, one star goes out. If all three go out... YOUR constellation will never exist." — <strong>Luminara</strong></div>
+                    <div class="story-chapter">FINAL CHAPTER: FURIA'S REDEMPTION</div>
+                    <div class="story-text">In the end, you discovered that Furia only wanted <strong>to be part of something special</strong>. You extended your hand:</div>
+                    <div class="story-dialogue">"MY constellation would not be complete without YOU, Furia."</div>
+                    <div class="story-text" style="text-align:center; color:#ffd700; font-size:1.2em; margin-top:20px;">
+                        ✨ And so your constellation was born. ✨<br>
+                        <span style="font-size:0.85em; color:rgba(255,255,255,0.7);">With golden stars, red sentinels... and Furia shining at the center.</span>
+                    </div>`
+            };
+
+            function updateUILanguage() {
+                const elMap = {
+                    storyTitle:       'storyTitle',
+                    storySubtitle:    'storySubtitle',
+                    namePopupTitle:   'namePopupTitle',
+                    namePopupSubtitle:'namePopupSubtitle',
+                    nameSubmitButton: 'submitNameBtn',
+                    startButton:      'storyStartBtn',
+                    privacyLink:      'linkPrivacy',
+                    cookieLink:       'linkCookies'
+                };
+                Object.keys(elMap).forEach(key => {
+                    const el = document.getElementById(elMap[key]);
+                    if (el) el.textContent = t(key);
+                });
+                const inp = document.getElementById('playerNameInput');
+                if (inp) inp.placeholder = t('nameInputPlaceholder');
+                // Active lang buttons
+                const btnPT = document.getElementById('btnPT');
+                const btnEN = document.getElementById('btnEN');
+                if (btnPT) btnPT.classList.toggle('active', currentLanguage === 'pt');
+                if (btnEN) btnEN.classList.toggle('active', currentLanguage === 'en');
+                // Update story body
+                const body = document.getElementById('storyBody');
+                if (body) body.innerHTML = storyContent[currentLanguage] || storyContent.pt;
+
+                // Update static game UI elements
+                const staticMap = {
+                    'livesLabel':     t('livesLabel'),
+                    'btnNewGame_el':  null, // handled by button ids below
+                };
+                const el_livesLabel = document.getElementById('livesLabel');
+                if (el_livesLabel) el_livesLabel.textContent = t('livesLabel');
+
+                // Stats bar labels
+                const statsBar = document.getElementById('statsBar');
+                if (statsBar) {
+                    const stats = statsBar.querySelectorAll('.stat');
+                    if (stats[0]) { stats[0].childNodes[0].textContent = t('statStars'); }
+                    if (stats[1]) { stats[1].childNodes[0].textContent = t('statCombo'); }
+                    if (stats[2]) { stats[2].childNodes[0].textContent = t('statRecord'); }
+                    if (stats[3]) { stats[3].childNodes[0].textContent = t('statChallenges'); }
+                    if (stats[4]) { stats[4].childNodes[0].textContent = t('statAchievements'); }
+                }
+
+                // Challenge title & labels
+                const chalTitle = document.querySelector('#dailyChallenge > div:first-child');
+                if (chalTitle) chalTitle.textContent = t('challengeTitle');
+                const ch3 = document.querySelector('#challenge3 > span:first-child');
+                if (ch3) ch3.textContent = t('challenge3Label');
+
+                // Control buttons
+                const btnMap = {
+                    'newGameBtn': 'btnNewGame', 'rankingBtn': 'btnRanking',
+                    'skinBtn': 'btnSkins', 'bonusBtn': 'btnBonus',
+                    'musicBtn': 'btnMusic', 'historyBtn': 'btnHistory'
+                };
+                Object.keys(btnMap).forEach(id => {
+                    const b = document.getElementById(id);
+                    if (b) b.textContent = t(btnMap[id]);
+                });
+            }
+
+            function showStoryPage() {
+                const el = document.getElementById('storyPage');
+                if (el) el.style.display = 'block';
+                updateUILanguage();
+            }
+
+            function hideStoryPage() {
+                const el = document.getElementById('storyPage');
+                if (el) el.style.display = 'none';
+                // Show name popup first if no name saved, then tutorial
+                const hasSavedName = localStorage.getItem('starrush_player_name');
+                if (!hasSavedName) {
+                    showNamePopup().then(() => {
+                        setTimeout(() => { showTutorial(); }, 100);
+                    });
+                } else {
+                    setTimeout(() => { showTutorial(); }, 100);
+                }
+            }
+
+            function showNamePopup() {
+                return new Promise((resolve) => {
+                    const popup  = document.getElementById('namePopup');
+                    const input  = document.getElementById('playerNameInput');
+                    const btn    = document.getElementById('submitNameBtn');
+                    input.value  = '';
+                    input.placeholder = t('nameInputPlaceholder');
+                    popup.style.display = 'flex';
+                    setTimeout(() => input.focus(), 150);
+
+                    function submit() {
+                        let name = input.value.trim().substring(0, 10) || 'Jogador';
+                        localStorage.setItem('starrush_player_name', name);
+                        popup.style.display = 'none';
+                        resolve(name);
+                    }
+                    btn.onclick      = submit;
+                    input.onkeypress = (e) => { if (e.key === 'Enter') submit(); };
+                });
+            }
+            // ===== FIM INTERNACIONALIZAÇÃO =====
+
             // ==================== SUPABASE CONFIGURAÇÃO ====================
             const SUPABASE_URL = 'https://aflypjszvkyrowpzugii.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmbHlwanN6dmt5cm93cHp1Z2lpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MjcyOTgsImV4cCI6MjA4ODQwMzI5OH0.tveCVmmGRvyEiK6YeRUSypOa9PZq_dohTCwCYpcyEGo';
@@ -1279,36 +1702,42 @@
                     ctx.fillText('⭐', 80 + i * 140, 55);
                 }
 
+                const isEN = (typeof currentLanguage !== 'undefined' && currentLanguage === 'en');
+
                 ctx.fillStyle = '#ffd700';
                 ctx.font = 'bold 52px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('✨ MINHA CONSTELAÇÃO BRILHOU! ✨', 600, 100);
+                ctx.fillText(isEN ? '✨ MY CONSTELLATION SHONE! ✨' : '✨ MINHA CONSTELAÇÃO BRILHOU! ✨', 600, 100);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 44px Arial';
-                ctx.fillText(`Eu, ${gameState.playerName}, salvei:`, 600, 175);
+                ctx.fillText(isEN ? `I, ${gameState.playerName}, saved:` : `Eu, ${gameState.playerName}, salvei:`, 600, 175);
 
                 ctx.fillStyle = '#ffd700';
                 ctx.font = 'bold 130px Arial';
                 ctx.fillText(Math.floor(gameState.record), 600, 340);
                 ctx.font = 'bold 38px Arial';
-                ctx.fillText('ESTRELAS EM CONSTELÂNDIA', 600, 390);
+                ctx.fillText(isEN ? 'STARS IN CONSTELANDIA' : 'ESTRELAS EM CONSTELÂNDIA', 600, 390);
 
                 ctx.fillStyle = '#ff6b6b';
                 ctx.font = 'bold 30px Arial';
-                ctx.fillText('🔴 Eu enfrentei a Fúria e venci!', 600, 450);
+                ctx.fillText(isEN ? '🔴 I faced Furia and won!' : '🔴 Eu enfrentei a Fúria e venci!', 600, 450);
 
                 ctx.fillStyle = '#4a90e2';
                 ctx.font = '28px Arial';
-                ctx.fillText(`⭐ ${gameState.starsCollected} estrelas salvas  |  🔥 Combo x${gameState.maxCombo}`, 600, 495);
+                ctx.fillText(isEN
+                    ? `⭐ ${gameState.starsCollected} stars saved  |  🔥 Combo x${gameState.maxCombo}`
+                    : `⭐ ${gameState.starsCollected} estrelas salvas  |  🔥 Combo x${gameState.maxCombo}`, 600, 495);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 34px Arial';
-                ctx.fillText('Vem construir a SUA constelação! 🌟', 600, 545);
+                ctx.fillText(isEN ? 'Come build YOUR constellation! 🌟' : 'Vem construir a SUA constelação! 🌟', 600, 545);
 
                 ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
                 ctx.font = 'bold 26px Arial';
-                ctx.fillText('#EuSalveiAFúria  #ASuaConstelação  starrushgame.vercel.app', 600, 600);
+                ctx.fillText(isEN
+                    ? '#YourConstellation #Starrush #IDefeatedFuria  starrushgame.vercel.app'
+                    : '#EuSalveiAFúria  #ASuaConstelação  starrushgame.vercel.app', 600, 600);
                 
                 return screenshotCanvas.toDataURL('image/png');
             }
@@ -1329,13 +1758,13 @@
                                     url: 'https://starrushgame.vercel.app'
                                 });
                             });
-                        showMessage('📸 Compartilhando minha constelação com o mundo!');
+                        showMessage(tm('📸 Compartilhando minha constelação com o mundo!','📸 Sharing my constellation with the world!'));
                     } else {
                         const link = document.createElement('a');
                         link.download = `starrush-record-${gameState.record}.png`;
                         link.href = imageData;
                         link.click();
-                        showMessage('📸 Imagem da minha constelação salva! Compartilhe!');
+                        showMessage(tm('📸 Imagem da minha constelação salva! Compartilhe!','📸 My constellation image saved! Share it!'));
                     }
                 } catch (error) {
                     console.error('Erro ao gerar screenshot:', error);
@@ -1347,7 +1776,7 @@
                 const challengeUrl = `${window.location.origin}${window.location.pathname}?challenge=${challengeId}`;
                 
                 navigator.clipboard.writeText(challengeUrl).then(() => {
-                    showMessage('🔗 Link copiado! Desafie seus amigos a construírem a constelação deles!');
+                    showMessage(tm('🔗 Link copiado! Desafie seus amigos a construírem a constelação deles!','🔗 Link copied! Challenge your friends to build their own constellation!'));
                 });
                 
                 const shareText = `🎮 ${gameState.playerName} te desafiou no Starrush!\n\n🎯 Meta: Bater ${Math.floor(gameState.record)} pontos\n\nVocê aceita o desafio? 🔥`;
@@ -1373,7 +1802,7 @@
                         const decoded = atob(challengeId);
                         const [challenger, score, timestamp] = decoded.split(':');
                         
-                        showMessage(`🎯 Desafio de ${challenger}: Supere ${score} estrelas em Constelândia!`);
+                        showMessage(tm(`🎯 Desafio de ${challenger}: Supere ${score} estrelas em Constelândia!`,`🎯 Challenge from ${challenger}: Beat ${score} stars in Constelandia!`));
                         localStorage.setItem('active_challenge', JSON.stringify({ challenger, score, timestamp }));
                     } catch (error) {
                         console.error('Desafio inválido');
@@ -1392,10 +1821,10 @@
                     
                     if (daysDiff === 1) {
                         streak++;
-                        showMessage(`🔥 Streak de ${streak} dias! Continue jogando!`);
+                        showMessage(tm(`🔥 Streak de ${streak} dias! Continue jogando!`,`🔥 ${streak}-day streak! Keep playing!`));
                     } else if (daysDiff > 1) {
                         if (streak > 0) {
-                            showMessage(`😢 Streak perdido! Era ${streak} dias...`);
+                            showMessage(tm(`😢 Streak perdido! Era ${streak} dias...`,`😢 Streak lost! It was ${streak} days...`));
                         }
                         streak = 1;
                     }
@@ -1407,7 +1836,7 @@
                 localStorage.setItem('last_play_date', today);
                 
                 if (streak >= 7) {
-                    showMessage('🎁 7 dias seguidos em Constelândia! A Luminara te deu uma skin especial!');
+                    showMessage(tm('🎁 7 dias seguidos em Constelândia! A Luminara te deu uma skin especial!','🎁 7 days in a row in Constelandia! Luminara gave you a special skin!'));
                     localStorage.setItem('streak_skin_unlocked', 'true');
                     if (typeof skins !== 'undefined' && skins.neon) {
                         skins.neon.unlocked = true;
@@ -1424,7 +1853,7 @@
                 
                 if (hour >= 18 && hour < 20) {
                     if (!localStorage.getItem('happy_hour_shown_' + now.toDateString())) {
-                        showMessage('⏰ HORA FELIZ! Pontos em DOBRO até 20h! 🎉');
+                        showMessage(tm('⏰ HORA FELIZ! Pontos em DOBRO até 20h! 🎉','⏰ HAPPY HOUR! Double points until 8PM! 🎉'));
                         localStorage.setItem('happy_hour_shown_' + now.toDateString(), 'true');
                         gameState.eventMultiplier = 2;
                     }
@@ -1432,7 +1861,7 @@
                 
                 if (day === 0 || day === 6) {
                     if (!localStorage.getItem('weekend_shown_' + now.toDateString())) {
-                        showMessage('🎊 WEEKEND ESPECIAL! Estrelas extras! 🌟');
+                        showMessage(tm('🎊 WEEKEND ESPECIAL! Estrelas extras! 🌟','🎊 SPECIAL WEEKEND! Extra stars! 🌟'));
                         localStorage.setItem('weekend_shown_' + now.toDateString(), 'true');
                         gameState.weekendBonus = true;
                     }
@@ -1666,94 +2095,119 @@
                 return false;
             }
 
-            function showTutorial() {
-                const tutorialContainer = document.createElement('div');
-                tutorialContainer.className = 'tutorial-overlay';
-                
-                tutorialContainer.innerHTML = `
+            function buildTutorialHTML() {
+                return `
                     <div class="tutorial-card">
                         <div class="tutorial-header">
                             <h2>🌟 Starrush</h2>
-                            <div class="subtitle">Um jogo calmo e infinito</div>
+                            <div class="subtitle">${tm('Um jogo calmo e infinito','A calm and infinite game')}</div>
                         </div>
-                        
+
                         <div class="tutorial-preview">
                             <div class="preview-canvas-container">
                                 <canvas id="previewCanvas" width="400" height="400"></canvas>
-                                <div class="preview-label">🎮 Prévia do jogo</div>
+                                <div class="preview-label">🎮 ${tm('Prévia do jogo','Game preview')}</div>
                             </div>
                         </div>
-                        
+
                         <div class="tutorial-section">
-                            <h3>🎯 Como jogar</h3>
+                            <h3>🎯 ${tm('Como jogar','How to play')}</h3>
                             <div class="tutorial-grid">
                                 <div class="tutorial-item">
                                     <div class="tutorial-icon">👆</div>
-                                    <h4>Arraste</h4>
-                                    <p>Mova o círculo roxo arrastando o dedo ou mouse</p>
+                                    <h4>${tm('Arraste','Drag')}</h4>
+                                    <p>${tm('Mova o círculo roxo arrastando o dedo ou mouse','Move the circle by dragging your finger or mouse')}</p>
                                 </div>
                                 <div class="tutorial-item">
                                     <div class="tutorial-icon">⭐</div>
-                                    <h4>Colete estrelas</h4>
-                                    <p>Cada estrela vale pontos × combo</p>
+                                    <h4>${tm('Colete estrelas','Collect stars')}</h4>
+                                    <p>${tm('Cada estrela vale pontos × combo','Each star is worth points × combo')}</p>
                                 </div>
                                 <div class="tutorial-item">
                                     <div class="tutorial-icon">🔴</div>
-                                    <h4>Desvie</h4>
-                                    <p>Obstáculos vermelhos aparecem e somem</p>
+                                    <h4>${tm('Desvie','Dodge')}</h4>
+                                    <p>${tm('Obstáculos vermelhos aparecem e somem','Red obstacles appear and disappear')}</p>
                                 </div>
                                 <div class="tutorial-item">
                                     <div class="tutorial-icon">🔥</div>
                                     <h4>Combo</h4>
-                                    <p>Colete rápido para multiplicar pontos</p>
+                                    <p>${tm('Colete rápido para multiplicar pontos','Collect fast to multiply points')}</p>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="tutorial-section">
-                            <h3>✨ Novidades!</h3>
+                            <h3>✨ ${tm('Novidades!','Features!')}</h3>
                             <div class="tutorial-features">
                                 <div class="feature-item">
                                     <div class="feature-icon">✨</div>
                                     <div class="feature-text">
-                                        <strong>Estrelas de Conquistas</strong>
-                                        <span>Cada estrela coletada vale 0.01 para suas conquistas!</span>
+                                        <strong>${tm('Estrelas de Conquistas','Achievement Stars')}</strong>
+                                        <span>${tm('Cada estrela coletada vale 0.01 para suas conquistas!','Each star collected counts 0.01 toward achievements!')}</span>
                                     </div>
                                 </div>
                                 <div class="feature-item">
                                     <div class="feature-icon">🏆</div>
                                     <div class="feature-text">
-                                        <strong>Bônus por Conquistas</strong>
-                                        <span>Ao desbloquear conquistas, ganhe pontos extras!</span>
+                                        <strong>${tm('Bônus por Conquistas','Achievement Bonus')}</strong>
+                                        <span>${tm('Ao desbloquear conquistas, ganhe pontos extras!','Unlock achievements to earn extra points!')}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="tutorial-section">
-                            <h3>🌟 Suas Estrelas da Vida</h3>
+                            <h3>🌟 ${tm('Suas Estrelas da Vida','Your Life Stars')}</h3>
                             <div style="background: rgba(255,215,0,0.1); padding:15px; border-radius:15px;">
                                 <p style="display:flex; align-items:center; gap:10px; margin:5px 0;">
-                                    <span style="font-size:2em;">🌟</span> 
-                                    <span>Estrela brilhante = você tem uma vida extra!</span>
+                                    <span style="font-size:2em;">🌟</span>
+                                    <span>${tm('Estrela brilhante = você tem uma vida extra!','Bright star = you have an extra life!')}</span>
                                 </p>
                                 <p style="display:flex; align-items:center; gap:10px; margin:5px 0;">
-                                    <span style="font-size:2em; opacity:0.3;">⭐</span> 
-                                    <span>Estrela apagada = vida já foi usada</span>
+                                    <span style="font-size:2em; opacity:0.3;">⭐</span>
+                                    <span>${tm('Estrela apagada = vida já foi usada','Dim star = life already used')}</span>
                                 </p>
                             </div>
                         </div>
-                        
-                        <button class="tutorial-start" id="startGameBtn">🚀 COMEÇAR A JOGAR</button>
+
+                        <button class="tutorial-start" id="startGameBtn">🚀 ${tm('COMEÇAR A JOGAR','START PLAYING')}</button>
                     </div>
                 `;
-                
+            }
+
+            function showTutorial() {
+                const tutorialContainer = document.createElement('div');
+                tutorialContainer.className = 'tutorial-overlay';
+                tutorialContainer.id = 'tutorialContainer';
+
+                tutorialContainer.innerHTML = buildTutorialHTML();
+
                 document.body.appendChild(tutorialContainer);
-                
+
                 animateTutorialPreview();
-                
+
+                // Re-render tutorial when language changes while tutorial is open
+                const _origSetLang = setLanguage;
+                setLanguage = function(lang) {
+                    _origSetLang(lang);
+                    const tc = document.getElementById('tutorialContainer');
+                    if (tc) {
+                        tc.innerHTML = buildTutorialHTML();
+                        animateTutorialPreview();
+                        const sbtn = document.getElementById('startGameBtn');
+                        if (sbtn) sbtn.addEventListener('click', () => {
+                            tc.remove();
+                            setLanguage = _origSetLang;
+                            initGameAfterConsent();
+                        });
+                    }
+                };
+                window.setLanguage = setLanguage;
+
                 document.getElementById('startGameBtn').addEventListener('click', () => {
                     tutorialContainer.remove();
+                    setLanguage = _origSetLang;
+                    window.setLanguage = setLanguage;
                     initGameAfterConsent();
                 });
             }
@@ -1897,24 +2351,24 @@
                 gain: function() {
                     if (this.current < this.max) {
                         this.current++;
-                        showMessage('🌟 O colar brilhou! Ganhei mais uma estrela da vida!');
+                        showMessage(tm('🌟 O colar brilhou! Ganhei mais uma estrela da vida!','🌟 The necklace shone! I earned one more life star!'));
                         this.animate();
                         updateLivesDisplay();
                         
                         return true;
                     }
-                    showMessage('✨ Meu colar está completo! A Luminara ficaria orgulhosa!');
+                    showMessage(tm('✨ Meu colar está completo! A Luminara ficaria orgulhosa!','✨ My necklace is full! Luminara would be proud!'));
                     return false;
                 },
                 
                 lose: function() {
                     if (this.current > 0) {
                         this.current--;
-                        showMessage('🔴 A Fúria acertou... uma estrela do meu colar se apagou!');
+                        showMessage(tm('🔴 A Fúria acertou... uma estrela do meu colar se apagou!','🔴 Furia hit me... one star from my necklace went out!'));
                         updateLivesDisplay();
                         
                         if (this.current > 0) {
-                            showMessage(`💪 Ainda tenho ${this.current} estrelas no meu colar! Não vou desistir!`);
+                            showMessage(tm(`💪 Ainda tenho ${this.current} estrelas no meu colar! Não vou desistir!`,`💪 I still have ${this.current} stars on my necklace! I won't give up!`));
                         }
                         return true;
                     }
@@ -2112,12 +2566,12 @@
                 
                 if (now - config.lastTime < config.minInterval) {
                     const secondsLeft = Math.ceil((config.minInterval - (now - config.lastTime)) / 1000);
-                    showMessage(`⏳ Aguarde ${secondsLeft}s para outro anúncio`);
+                    showMessage(tm(`⏳ Aguarde ${secondsLeft}s para outro anúncio`,`⏳ Wait ${secondsLeft}s for another ad`));
                     return false;
                 }
                 
                 if (type === 'rewarded' && config.countThisHour >= config.maxPerHour) {
-                    showMessage('⚠️ Limite de bônus por hora atingido');
+                    showMessage(tm('⚠️ Limite de bônus por hora atingido','⚠️ Hourly bonus limit reached'));
                     return false;
                 }
                 
@@ -2162,7 +2616,7 @@
                 const now = Date.now();
                 
                 if (now - AD_COOLDOWN.button.lastClick < AD_COOLDOWN.button.minInterval) {
-                    showMessage('🐢 Calma! Não clique tão rápido');
+                    showMessage(tm('🐢 Calma! Não clique tão rápido','🐢 Easy! Don\'t click so fast'));
                     return;
                 }
                 
@@ -2207,7 +2661,7 @@
                             addToRanking();
                         }
                         updateDisplay();
-                        showMessage('🔥 Fúria ficou com raiva! Minhas estrelas triplicaram!');
+                        showMessage(tm('🔥 Fúria ficou com raiva! Minhas estrelas triplicaram!','🔥 Furia got angry! My stars tripled!'));
                         break;
                         
                     case 'doublePoints':
@@ -2219,7 +2673,7 @@
                             addToRanking();
                         }
                         updateDisplay();
-                        showMessage('🎯 Poder de Constelândia! Minhas estrelas dobraram!');
+                        showMessage(tm('🎯 Poder de Constelândia! Minhas estrelas dobraram!','🎯 Power of Constelandia! My stars doubled!'));
                         break;
                         
                     case 'extraLife':
@@ -2235,7 +2689,7 @@
                             gameState.hideObstaclesEnd = null;
                             gameState.obstacles.forEach(obs => obs.visible = true);
                         }, 60000);
-                        showMessage('👻 As sentinelas da Fúria fugiram por 1 minuto!');
+                        showMessage(tm('👻 As sentinelas da Fúria fugiram por 1 minuto!','👻 Furia\'s sentinels fled for 1 minute!'));
                         break;
                 }
                 saveGameProgress();
@@ -2295,15 +2749,16 @@
                 
                 const modal = document.createElement('div');
                 modal.className = 'modal';
+                const isEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
                 modal.innerHTML = `
                     <div class="modal-content" style="text-align:center;">
                         <div style="font-size:3em; margin-bottom:10px;">🎬</div>
-                        <h2 style="color:#ffd700;">ASSISTIR VÍDEO?</h2>
-                        <p style="margin:20px 0; font-size:1.2em;">Ganhe: <strong>${getRewardDescription(rewardType)}</strong></p>
-                        <p style="color:#888; margin-bottom:20px;">O vídeo tem ~5 segundos</p>
+                        <h2 style="color:#ffd700;">${isEN ? 'WATCH VIDEO?' : 'ASSISTIR VÍDEO?'}</h2>
+                        <p style="margin:20px 0; font-size:1.2em;">${isEN ? 'Earn:' : 'Ganhe:'} <strong>${getRewardDescription(rewardType)}</strong></p>
+                        <p style="color:#888; margin-bottom:20px;">${isEN ? 'The video is ~5 seconds' : 'O vídeo tem ~5 segundos'}</p>
                         <div style="display:flex; gap:10px;">
-                            <button class="consent-btn" id="cancelAd" style="flex:1;">❌ Não</button>
-                            <button class="consent-btn accept" id="watchAd" style="flex:1;">✅ Assistir</button>
+                            <button class="consent-btn" id="cancelAd" style="flex:1;">❌ ${isEN ? 'No' : 'Não'}</button>
+                            <button class="consent-btn accept" id="watchAd" style="flex:1;">✅ ${isEN ? 'Watch' : 'Assistir'}</button>
                         </div>
                     </div>
                 `;
@@ -2312,7 +2767,7 @@
                 return new Promise((resolve) => {
                     document.getElementById('watchAd').onclick = () => {
                         modal.remove();
-                        showMessage('🎥 Carregando anúncio...');
+                        showMessage(tm('🎥 Carregando anúncio...','🎥 Loading ad...'));
 
                         function onAdFinished(rewarded) {
                             gameState.adPaused = false;
@@ -2324,14 +2779,14 @@
                                     gameState.gameActive = true;
                                     if (wasPlaying) initAdaptiveMusic();
                                 }
-                                showMessage(`🎁 Recompensa: ${getRewardName(rewardType)}!`);
+                                showMessage(tm(`🎁 Recompensa: ${getRewardName(rewardType)}!`,`🎁 Reward: ${getRewardName(rewardType)}!`));
                                 resolve(true);
                             } else {
                                 if (wasActive) {
                                     gameState.gameActive = true;
                                     if (wasPlaying) initAdaptiveMusic();
                                 }
-                                showMessage('❌ Anúncio não disponível no momento');
+                                showMessage(tm('❌ Anúncio não disponível no momento','❌ Ad not available right now'));
                                 resolve(false);
                             }
                         }
@@ -2379,7 +2834,7 @@
                     document.getElementById('cancelAd').onclick = () => {
                         modal.remove();
                         gameState.adPaused = false;
-                        showMessage('❌ Você não ganhou o bônus');
+                        showMessage(tm('❌ Você não ganhou o bônus','❌ You did not get the bonus'));
                         
                         if (wasActive) {
                             gameState.gameActive = true;
@@ -2434,25 +2889,26 @@
                 
                 const menu = document.createElement('div');
                 menu.className = 'modal';
+                const _isEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
                 menu.innerHTML = `
                     <div class="modal-content" style="text-align:center;">
-                        <h2 style="color:#ffd700;">🎁 BÔNUS DISPONÍVEIS</h2>
-                        <p style="margin:20px 0;">Assista um vídeo e escolha:</p>
+                        <h2 style="color:#ffd700;">🎁 ${_isEN ? 'AVAILABLE BONUSES' : 'BÔNUS DISPONÍVEIS'}</h2>
+                        <p style="margin:20px 0;">${_isEN ? 'Watch a video and choose:' : 'Assista um vídeo e escolha:'}</p>
                         <div style="display:grid; gap:15px; margin:20px 0;">
                             <button class="consent-btn" id="bonusContinue" style="background:#4a90e2; padding:15px;">
-                                🔥 Triplicar pontos atuais
+                                🔥 ${_isEN ? 'Triple current points' : 'Triplicar pontos atuais'}
                             </button>
                             <button class="consent-btn" id="bonusDouble" style="background:#9b59b6; padding:15px;">
-                                🎯 Dobrar pontos atuais
+                                🎯 ${_isEN ? 'Double current points' : 'Dobrar pontos atuais'}
                             </button>
                             <button class="consent-btn" id="bonusLife" style="background:#e74c3c; padding:15px;">
-                                🌟 Ganhar uma estrela da vida
+                                🌟 ${_isEN ? 'Earn a life star' : 'Ganhar uma estrela da vida'}
                             </button>
                             <button class="consent-btn" id="bonusSpeed" style="background:#f39c12; padding:15px;">
-                                👻 Sumir bolas vermelhas por 30s
+                                👻 ${_isEN ? 'Hide red balls for 1 min' : 'Sumir bolas vermelhas por 1 min'}
                             </button>
                         </div>
-                        <button class="consent-btn" onclick="this.closest('.modal').remove()">Fechar</button>
+                        <button class="consent-btn" onclick="this.closest('.modal').remove()">${_isEN ? 'Close' : 'Fechar'}</button>
                     </div>
                 `;
                 document.body.appendChild(menu);
@@ -2608,7 +3064,7 @@
                 
                 startMelodyLoop(pentatonic);
                 musicSystem.isPlaying = true;
-                document.getElementById('musicBtn').innerHTML = '🔊 Música';
+                document.getElementById('musicBtn').innerHTML = tm('🔊 Música','🔊 Music');
             }
 
             function startMelodyLoop(scale) {
@@ -2662,22 +3118,22 @@
                 
                 musicSystem.isPlaying = false;
                 musicSystem.context = null;
-                document.getElementById('musicBtn').innerHTML = '🎵 Música';
+                document.getElementById('musicBtn').innerHTML = tm('🎵 Música','🎵 Music');
             }
 
             function toggleMusic() {
                 if (!gameState.gameActive) {
-                    showMessage('⚠️ Inicie uma partida primeiro!');
+                    showMessage(tm('⚠️ Inicie uma partida primeiro!','⚠️ Start a game first!'));
                     return;
                 }
                 
                 if (musicSystem.isPlaying) {
                     stopAdaptiveMusic();
-                    showMessage('🔇 Música desligada');
+                    showMessage(tm('🔇 Música desligada','🔇 Music off'));
                     localStorage.setItem('music_preference', 'off');
                 } else {
                     initAdaptiveMusic();
-                    showMessage('🎵 Música ligada');
+                    showMessage(tm('🎵 Música ligada','🎵 Music on'));
                     localStorage.setItem('music_preference', 'on');
                 }
             }
@@ -2802,7 +3258,7 @@
                     });
                     
                     createStarRainEffect();
-                    showMessage('💫 A Luminara enviou uma chuva de estrelas! Todas as vidas renovadas!');
+                    showMessage(tm('💫 A Luminara enviou uma chuva de estrelas! Todas as vidas renovadas!','💫 Luminara sent a star shower! All lives renewed!'));
                     LIFE_SYSTEM.current = LIFE_SYSTEM.max;
                     updateLivesDisplay();
                 }
@@ -2831,7 +3287,7 @@
                 newAchievements.forEach(ach => {
                     gameState.score += ach.reward;
                     showBonusAnimation(`🏆 ${ach.name}! +${ach.reward} pontos`);
-                    showMessage(`🎉 Meta mensal: ${ach.desc}`);
+                    showMessage(tm(`🎉 Meta mensal: ${ach.desc}`,`🎉 Monthly goal: ${ach.desc}`));
                     
                     const achievementId = `monthly_${month.month}_${month.year}_${ach.name}`;
                     if (!playerAchievements.includes(achievementId)) {
@@ -2852,9 +3308,10 @@
                 const modal = document.createElement('div');
                 modal.className = 'modal';
                 
+                const _hEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
                 let historyHTML = `
                     <div class="modal-content">
-                        <h2 style="color:#ffd700; text-align:center;">📅 Histórico Mensal</h2>
+                        <h2 style="color:#ffd700; text-align:center;">${_hEN ? '📅 Monthly History' : '📅 Histórico Mensal'}</h2>
                 `;
                 
                 const current = challengeHistory.currentMonth;
@@ -2882,7 +3339,7 @@
                 `;
                 
                 if (challengeHistory.months.length > 0) {
-                    historyHTML += '<h3 style="color:#ffd700; margin:15px 0;">📜 Meses Anteriores</h3>';
+                    historyHTML += `<h3 style="color:#ffd700; margin:15px 0;">${_hEN ? '📜 Previous Months' : '📜 Meses Anteriores'}</h3>`;
                     
                     challengeHistory.months.forEach((month, index) => {
                         historyHTML += `
@@ -2910,7 +3367,7 @@
                     });
                 }
                 
-                historyHTML += '<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest(\'.modal\').remove()">Fechar</button></div>';
+                historyHTML += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">${_hEN ? 'Close' : 'Fechar'}</button></div>`;
                 
                 modal.innerHTML = historyHTML;
                 document.body.appendChild(modal);
@@ -2939,19 +3396,18 @@
             const PLAYER_NAME_KEY = 'starrush_player_name';
             
             function getPlayerName() {
-                let name = localStorage.getItem(PLAYER_NAME_KEY);
-                if (!name) {
-                    name = prompt("👋 Bem-vindo! Digite seu nome (máximo 10 caracteres) para aparecer no ranking:");
-                    if (name && name.trim() !== '') {
-                        name = name.substring(0, 10).trim(); // ALTERADO: de 15 para 10
-                        localStorage.setItem(PLAYER_NAME_KEY, name);
-                        showMessage(`✅ Nome salvo: ${name}`);
-                    } else {
-                        name = "Jogador";
-                        localStorage.setItem(PLAYER_NAME_KEY, name);
+                // Retorna nome salvo ou placeholder enquanto popup não aparece
+                return localStorage.getItem(PLAYER_NAME_KEY) || 'Jogador';
+            }
+
+            async function askPlayerNameIfNeeded() {
+                if (!localStorage.getItem(PLAYER_NAME_KEY)) {
+                    const name = await showNamePopup();
+                    gameState.playerName = name;
+                    if (typeof showMessage === 'function') {
+                        showMessage(t('nameSaved', { name }));
                     }
                 }
-                return name;
             }
 
             let gameState = {
@@ -3039,6 +3495,10 @@
             };
 
             let ranking = [];
+
+            function tm(pt, en) {
+                return (typeof currentLanguage !== 'undefined' && currentLanguage === 'en') ? en : pt;
+            }
 
             function showMessage(text, duration = 3000) {
                 messageBox.style.opacity = '1';
@@ -3129,7 +3589,7 @@
                     
                     if (gameState.combo >= 50) {
                         createCometEffect();
-                        showMessage('💫 A Luminara enviou um cometa! +2 estrelas pro meu colar!');
+                        showMessage(tm('💫 A Luminara enviou um cometa! +2 estrelas pro meu colar!','💫 Luminara sent a comet! +2 stars for my necklace!'));
                         LIFE_SYSTEM.current = Math.min(LIFE_SYSTEM.current + 2, LIFE_SYSTEM.max);
                         updateLivesDisplay();
                     }
@@ -3139,7 +3599,7 @@
             function resetCombo() {
                 if (gameState.combo > 1) {
                     createComboBreakSound();
-                    showMessage(`💔 As sentinelas da Fúria quebraram meu combo x${gameState.combo}!`);
+                    showMessage(tm(`💔 As sentinelas da Fúria quebraram meu combo x${gameState.combo}!`,`💔 Furia's sentinels broke my combo x${gameState.combo}!`));
                 }
                 gameState.combo = 1;
                 updateCombo();
@@ -3341,7 +3801,7 @@
                 
                 if (bonusPoints > 0) {
                     gameState.score += bonusPoints;
-                    showMessage(`🏆 Conquistas: +${bonusPoints} pontos!`);
+                    showMessage(tm(`🏆 Conquistas: +${bonusPoints} pontos!`,`🏆 Achievements: +${bonusPoints} points!`));
                 }
                 
                 if (newUnlock) {
@@ -3355,7 +3815,7 @@
                     
                     saveGameProgress();
                     createAchievementSound();
-                    showMessage('🏆 Nova conquista em Constelândia! A Brilha pulou de alegria!');
+                    showMessage(tm('🏆 Nova conquista em Constelândia! A Brilha pulou de alegria!','🏆 New achievement in Constelandia! Brilha jumped for joy!'));
                     localStorage.setItem('achievements', JSON.stringify(playerAchievements));
                     updateAchievementsBar();
                     updateDisplay();
@@ -3462,7 +3922,7 @@
                                 try {
                                     const challenge = JSON.parse(activeChallenge);
                                     if (gameState.record >= parseInt(challenge.score)) {
-                                        showMessage(`🏆 DESAFIO VENCIDO! Eu superei ${challenge.challenger} em Constelândia!`);
+                                        showMessage(tm(`🏆 DESAFIO VENCIDO! Eu superei ${challenge.challenger} em Constelândia!`,`🏆 CHALLENGE WON! I beat ${challenge.challenger} in Constelandia!`));
                                         localStorage.removeItem('active_challenge');
                                         generateChallengeLink();
                                     }
@@ -3485,10 +3945,11 @@
                 document.body.appendChild(modal);
 
                 if (!supabaseInitialized) {
-                    let html = '<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🏆 Ranking Local</h2>';
-                    html += '<p style="text-align:center; margin:10px; color:#888;">📱 Apenas desta máquina</p>';
+                    const _rEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
+                    let html = `<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">${_rEN ? '🏆 Local Ranking' : '🏆 Ranking Local'}</h2>`;
+                    html += `<p style="text-align:center; margin:10px; color:#888;">📱 ${_rEN ? 'This device only' : 'Apenas desta máquina'}</p>`;
                     if (ranking.length === 0) {
-                        html += '<p style="text-align:center; margin:20px;">Nenhum recorde ainda. Jogue e seja o primeiro!</p>';
+                        html += `<p style="text-align:center; margin:20px;">${_rEN ? 'No records yet. Play and be the first!' : 'Nenhum recorde ainda. Jogue e seja o primeiro!'}</p>`;
                     } else {
                         ranking.forEach((item, index) => {
                             const isCurrentPlayer = item.name === gameState.playerName;
@@ -3503,7 +3964,7 @@
                                 </div>`;
                         });
                     }
-                    html += '<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest(\'.modal\').remove()">Fechar</button></div>';
+                    html += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">${_rEN ? 'Close' : 'Fechar'}</button></div>`;
                     modal.innerHTML = html;
                     return;
                 }
@@ -3528,11 +3989,12 @@
                     const onlineNames = new Set((onlineData || []).map(p => p.player_name));
                     const onlineCount = onlineNames.size;
 
-                    let html = '<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🏆 Ranking Global</h2>';
-                    html += `<p style="text-align:center; margin:10px; color:#4a90e2;">🌍 Jogadores do mundo todo • 👥 ${onlineCount} online agora</p>`;
+                    const _gEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
+                    let html = `<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">${_gEN ? '🏆 Global Ranking' : '🏆 Ranking Global'}</h2>`;
+                    html += `<p style="text-align:center; margin:10px; color:#4a90e2;">${_gEN ? '🌍 Players from around the world' : '🌍 Jogadores do mundo todo'} • 👥 ${onlineCount} ${_gEN ? 'online now' : 'online agora'}</p>`;
 
                     if (!rankData || rankData.length === 0) {
-                        html += '<p style="text-align:center; margin:20px;">Seja o primeiro no ranking global!</p>';
+                        html += `<p style="text-align:center; margin:20px;">${_gEN ? 'Be the first on the global ranking!' : 'Seja o primeiro no ranking global!'}</p>`;
                     } else {
                         rankData.forEach((item, index) => {
                             const isCurrentPlayer = item.player_name === gameState.playerName;
@@ -3554,7 +4016,7 @@
                         });
                     }
 
-                    html += '<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest(\'.modal\').remove()">Fechar</button></div>';
+                    html += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">${_gEN ? 'Close' : 'Fechar'}</button></div>`;
                     modal.innerHTML = html;
 
                 } catch (error) {
@@ -3572,7 +4034,8 @@
                 const modal = document.createElement('div');
                 modal.className = 'modal';
                 
-                let skinsHTML = '<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🎨 Skins</h2>';
+                const _sEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
+                let skinsHTML = `<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🎨 Skins</h2>`;
                 
                 Object.entries(skins).forEach(([key, skin]) => {
                     const isUnlocked = skin.unlocked;
@@ -3590,7 +4053,7 @@
                     `;
                 });
                 
-                skinsHTML += '<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest(\'.modal\').remove()">Fechar</button></div>';
+                skinsHTML += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">${_sEN ? 'Close' : 'Fechar'}</button></div>`;
                 
                 modal.innerHTML = skinsHTML;
                 document.body.appendChild(modal);
@@ -3623,7 +4086,7 @@
                     gameState.currentSkin = skinKey;
                     localStorage.setItem('skin', skinKey);
                     saveGameProgress();
-                    showMessage(`✨ Skin ${skins[skinKey].name} selecionada!`);
+                    showMessage(tm(`✨ Skin ${skins[skinKey].name} selecionada!`,`✨ Skin ${skins[skinKey].name} selected!`));
                     document.querySelector('.modal').remove();
                 } else {
                     showMessage(`🔒 Desbloqueie primeiro: ${getUnlockRequirement(skinKey)}`);
@@ -3694,7 +4157,7 @@
                     if (distance < gameState.player.radius + obs.radius && gameState.gameActive) {
                         if (activeBoosts.extraLife) {
                             activeBoosts.extraLife = false;
-                            showMessage('💫 A Brilha me protegeu! Escudo ativado!');
+                            showMessage(tm('💫 A Brilha me protegeu! Escudo ativado!','💫 Brilha protected me! Shield activated!'));
                             gameState.hitFlash = 6;
                             gameState.player.x = Math.random() * (canvas.width - 40) + 20;
                             gameState.player.y = Math.random() * (canvas.height - 40) + 20;
@@ -3718,7 +4181,7 @@
                                 obstacleTimer = null;
                             }
                             
-                            showMessage('🔴 A Fúria venceu... todas as estrelas do meu colar se apagaram...');
+                            showMessage(tm('🔴 A Fúria venceu... todas as estrelas do meu colar se apagaram...','🔴 Furia won... all stars from my necklace went out...'));
                             
                             if (checkAdCooldown('rewarded')) {
                                 const continueBtn = document.createElement('div');
@@ -3738,7 +4201,7 @@
                                     box-shadow: 0 5px 20px rgba(255,215,0,0.5);
                                     animation: pulse 1.5s infinite;
                                 `;
-                                continueBtn.innerHTML = '🌟 A Brilha pode me salvar! Renascer?';
+                                continueBtn.innerHTML = tm('🌟 A Brilha pode me salvar! Renascer?','🌟 Brilha can save me! Reborn?');
                                 
                                 const timer = document.createElement('div');
                                 timer.className = 'countdown-timer';
@@ -3768,7 +4231,7 @@
                                             initGame();
                                         } else {
                                             showInterstitialAd('game_over');
-                                            showMessage(`💫 Fui derrotado em Constelândia com ${Math.floor(gameState.score)} estrelas salvas!`);
+                                            showMessage(tm(`💫 Fui derrotado em Constelândia com ${Math.floor(gameState.score)} estrelas salvas!`,`💫 Defeated in Constelandia with ${Math.floor(gameState.score)} stars saved!`));
                                         }
                                     });
                                 };
@@ -3782,13 +4245,13 @@
                                         
                                         if (!gameState.gameActive) {
                                             showInterstitialAd('game_over');
-                                            showMessage(`💫 Game Over! Pontuação: ${gameState.score}`);
+                                            showMessage(tm(`💫 Game Over! ${Math.floor(gameState.score)} stars saved in Constelandia!`,`💫 Game Over! ${Math.floor(gameState.score)} stars saved in Constelandia!`));
                                         }
                                     }
                                 }, 15000);
                             } else {
                                 showInterstitialAd('game_over');
-                                showMessage(`💫 Game Over! Pontuação: ${gameState.score}`);
+                                showMessage(tm(`💫 Fui derrotado em Constelândia com ${Math.floor(gameState.score)} estrelas!`,`💫 Defeated in Constelandia with ${Math.floor(gameState.score)} stars!`));
                             }
                         }
                     }
@@ -3849,7 +4312,7 @@
 
             function handleShare(platform, customMessage = null) {
                 if (!gameState.bonusAvailable) {
-                    showMessage('⏳ Aguarde 30s para outro bônus!');
+                    showMessage(tm('⏳ Aguarde 30s para outro bônus!','⏳ Wait 30s for another bonus!'));
                     return;
                 }
 
@@ -3903,7 +4366,7 @@
 
                 createAchievementSound();
                 showBonusAnimation(`+${bonus} CONSTELAÇÃO COMPARTILHADA!`);
-                showMessage(`🌟 Brilha comemorou! +${bonus} estrelas por compartilhar!`);
+                showMessage(tm(`🌟 Brilha comemorou! +${bonus} estrelas por compartilhar!`,`🌟 Brilha celebrated! +${bonus} stars for sharing!`));
 
                 checkAchievements();
                 updateDisplay();
@@ -3911,21 +4374,45 @@
 
                 setTimeout(() => {
                     gameState.bonusAvailable = true;
-                    showMessage('✨ A Luminara liberou um novo bônus pra mim!');
+                    showMessage(tm('✨ A Luminara liberou um novo bônus pra mim!','✨ Luminara unlocked a new bonus for me!'));
                 }, 30000);
             }
 
             function getShareText() {
+                const nome = gameState.playerName;
+                const pontos = Math.floor(gameState.score);
+                const combo = gameState.maxCombo;
+                const estrelas = gameState.totalStars;
+                const vidas = LIFE_SYSTEM.current;
+
+                if (currentLanguage === 'en') {
+                    const champion = `🌟 I, ${nome}, built MY constellation in Starrush! Furia tried to stop me with her red sentinels, but I dodged them all and saved ${pontos} stars! Come build YOURS too! #YourConstellation #Starrush`;
+                    const frases = [
+                        champion, champion,
+                        `🌟 I, ${nome}, just saved ${pontos} stars for MY constellation in Starrush! Furia tried to stop me, but I dodged them all! #YourConstellation #Starrush`,
+                        `⚔️ I faced Furia in Constelandia! The red sentinels came, but I, ${nome}, was faster! MY constellation now has ${estrelas} stars! #IDefeatedFuria`,
+                        `🔥 MY combo reached x${combo}! Brilha is dancing with joy! I, ${nome}, am building MY constellation in Constelandia! #Starrush`,
+                        `💫 Luminara said that I, ${nome}, am special for building MY own constellation. Already saved ${estrelas} stars! Come build YOURS! #YourConstellation`,
+                        `✨ I, ${nome}, dodged ALL of Furia's sentinels and saved more stars! MY constellation is getting beautiful! #Starrush`,
+                        `🏆 NEW RECORD! I, ${nome}, just scored ${pontos} points in Constelandia! Furia beware! #IDefeatedFuria`,
+                        `🔴 Furia's red sentinels tried to stop me, but I, ${nome}, got through them all! MY constellation only grows! #IDefeatedFuria #Starrush`
+                    ];
+                    return frases[Math.floor(Math.random() * frases.length)];
+                }
+
+                const campeã = `🌟 EU, ${nome}, construí MINHA constelação no Starrush! A Fúria tentou me parar com as sentinelas vermelhas, mas EU desviei de todas e salvei ${pontos} estrelas! Vem construir a SUA também! #ASuaConstelação #Starrush`;
                 const frases = [
-                    `🌟 Eu, ${gameState.playerName}, salvei ${Math.floor(gameState.score)} estrelas pra MINHA constelação no Starrush! A Fúria tentou me parar mas não conseguiu! Consegue me superar? #EuSalveiAFúria`,
-                    `🔴 Eu enfrentei as sentinelas da Fúria e cheguei ao combo x${gameState.maxCombo}! MINHA constelação está cada vez mais linda! #Starrush #ASuaConstelação`,
-                    `🏆 Eu, ${gameState.playerName}, bati recorde em Constelândia: ${Math.floor(gameState.record)} estrelas salvas! A Brilha ficou orgulhosa! Vem construir a SUA! #Starrush`,
-                    `💫 Eu já salvei ${gameState.totalStars} estrelas pra MINHA constelação! A Luminara disse que sou especial! E você, já construiu a SUA? #ASuaConstelação`,
-                    `⚡ Eu conquistei ${playerAchievements.length} conquistas em Constelândia! A Fúria não esperava por mim! E você? #EuSalveiAFúria`,
-                    `📅 Eu já salvei ${challengeHistory.currentMonth.stars} estrelas esse mês em Constelândia! MINHA constelação nunca foi tão linda! #Starrush`,
-                    `🔥 Eu estou tentando o combo x100 em Constelândia! As sentinelas da Fúria não vão me parar! #ASuaConstelação #Starrush`,
-                    `🌟 Eu tenho ${LIFE_SYSTEM.current} estrelas da vida no meu colar! A Luminara me deu esse presente! Vem construir a SUA constelação! #Starrush`,
-                    getViralMessage('gainLife')
+                    campeã, campeã,
+                    `🌟 EU, ${nome}, acabei de salvar ${pontos} estrelas pra MINHA constelação no Starrush! A Fúria tentou me parar, mas EU desviei de todas! #ASuaConstelação`,
+                    `⚔️ EU enfrentei a Fúria em Constelândia! As bolas vermelhas vieram, mas EU, ${nome}, fui mais rápido! MINHA constelação agora tem ${estrelas} estrelas! #EuSalveiAFúria`,
+                    `🔥 MEU combo chegou em x${combo}! A Brilha tá dançando de alegria! Eu, ${nome}, tô construindo MINHA constelação! #Starrush`,
+                    `💫 A Luminara disse que EU, ${nome}, sou especial! Já salvei ${estrelas} estrelas! Vem construir a SUA também! #ASuaConstelação`,
+                    `✨ EU, ${nome}, desviei de todas as sentinelas da Fúria! MINHA constelação tá ficando linda! #Starrush`,
+                    `🏆 NOVO RECORDE! EU, ${nome}, fiz ${pontos} pontos em Constelândia! A Fúria que se cuide! #EuSalveiAFúria`,
+                    `👵 A Luminara me deu um colar com ${vidas} estrelas da vida! EU, ${nome}, vou honrar esse presente! #ASuaConstelação`,
+                    `🌟 A Brilha tá torcendo por MIM! EU, ${nome}, já salvei ${estrelas} estrelas em Constelândia! #Starrush`,
+                    `🔴 As sentinelas da Fúria tentaram me impedir, mas EU, ${nome}, passei por todas! #EuSalveiAFúria #Starrush`,
+                    `📱 EU, ${nome}, acabei de compartilhar MINHA constelação! A Brilha pulou de alegria! Vem construir a SUA! #ASuaConstelação #Starrush`
                 ];
                 return frases[Math.floor(Math.random() * frases.length)];
             }
@@ -3961,7 +4448,7 @@
 
             function handleLeave(e) {
                 if (mouseDown && gameState.gameActive) {
-                    showMessage('👆 Volte para o canvas para continuar');
+                    showMessage(tm('👆 Volte para o canvas para continuar','👆 Return to the canvas to continue'));
                 }
                 mouseDown = false;
             }
@@ -4199,7 +4686,7 @@
                         LIFE_SYSTEM.reset();
                         gameState.gameActive = true;
                         initGame();
-                        showMessage('🌟 De volta a Constelândia! A Brilha está te esperando!');
+                        showMessage(tm('🌟 De volta a Constelândia! A Brilha está te esperando!','🌟 Back to Constelandia! Brilha is waiting for you!'));
                     });
                 });
 
@@ -4233,16 +4720,21 @@
             }
             
             (async function init() {
-                // TermsFeed já cuida do consentimento automaticamente
-                // Só mostramos o tutorial quando o jogo estiver pronto
-                setTimeout(() => {
-                    showTutorial();
-                }, 1000);
+                // Detectar idioma do navegador
+                currentLanguage = detectBrowserLanguage();
+
+                // Mostrar página da história como primeira tela
+                showStoryPage();
+
+                // TermsFeed continua funcionando normalmente em background
             })();
 
             window.showRanking = showRanking;
             window.showSkins = showSkins;
             window.selectSkin = selectSkin;
+            window.hideStoryPage = hideStoryPage;
+            window.setLanguage = setLanguage;
+            window.showPrivacyPolicyModal = showPrivacyPolicyModal;
         })();
     </script>
     
