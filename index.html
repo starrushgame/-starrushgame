@@ -2936,6 +2936,38 @@
                 return true;
             }
 
+            let _lastRecordAdShown = 0;
+
+            function showRewardedAdRecord() {
+                const now = Date.now();
+                // Show at most once every 3 minutes for record
+                if (now - _lastRecordAdShown < 180000) return;
+                _lastRecordAdShown = now;
+
+                const popup = document.createElement('div');
+                popup.className = 'modal';
+                const _rEN = currentLanguage === 'en';
+                popup.innerHTML = `
+                    <div class="modal-content" style="text-align:center;">
+                        <div style="font-size:3em; margin-bottom:10px;">🏆</div>
+                        <h2 style="color:#ffd700;">${_rEN ? 'NEW RECORD!' : 'NOVO RECORDE!'}</h2>
+                        <p style="margin:15px 0; font-size:1.1em;">${_rEN ? 'Watch a short video to <strong>triple your record</strong>!' : 'Assista um vídeo curto para <strong>triplicar seu recorde</strong>!'}</p>
+                        <p style="color:#ffd700; font-size:1.3em; margin-bottom:20px;">${formatNum(gameState.record)} → ${formatNum(gameState.record * 3)}</p>
+                        <div style="display:flex; gap:10px;">
+                            <button class="consent-btn" id="skipRecordAd" style="flex:1;">❌ ${_rEN ? 'Skip' : 'Pular'}</button>
+                            <button class="consent-btn accept" id="watchRecordAd" style="flex:1; background:linear-gradient(45deg,#ffd700,#ffa500); color:#1a1f3a;">✅ ${_rEN ? 'Watch' : 'Assistir'}</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(popup);
+
+                document.getElementById('skipRecordAd').onclick = () => { popup.remove(); };
+                document.getElementById('watchRecordAd').onclick = () => {
+                    popup.remove();
+                    showRewardedAd('continue');
+                };
+            }
+
             function showBonusMenu() {
                 const menu = document.createElement('div');
                 menu.className = 'modal';
@@ -4242,6 +4274,14 @@
                                 gameState.record = gameState.score;
                                 showBonusAnimation(tm('🏆 NOVO RECORDE!','🏆 NEW RECORD!'));
                                 addToRanking();
+                                // Offer rewarded ad to triple the new record
+                                if (checkAdCooldown('rewarded')) {
+                                    setTimeout(() => {
+                                        if (gameState.gameActive) {
+                                            showRewardedAdRecord();
+                                        }
+                                    }, 1500);
+                                }
                             }
                             
                             manageStars();
@@ -4302,84 +4342,60 @@
                             
                             showMessage(tm('🔴 A Fúria venceu... todas as estrelas do meu colar se apagaram...','🔴 Furia won... all stars from my necklace went out...'));
                             
-                            if (checkAdCooldown('rewarded')) {
-                                const continueBtn = document.createElement('div');
-                                continueBtn.style.cssText = `
-                                    position: fixed;
-                                    bottom: 120px;
-                                    left: 50%;
-                                    transform: translateX(-50%);
-                                    background: linear-gradient(45deg, #ffd700, #ffa500);
-                                    color: #1a1f3a;
-                                    padding: 15px 30px;
-                                    border-radius: 50px;
-                                    font-weight: bold;
-                                    font-size: 1.2em;
-                                    z-index: 1001;
-                                    cursor: pointer;
-                                    box-shadow: 0 5px 20px rgba(255,215,0,0.5);
-                                    animation: pulse 1.5s infinite;
-                                `;
-                                continueBtn.innerHTML = tm('🌟 A Brilha pode me salvar! Renascer?','🌟 Brilha can save me! Reborn?');
-                                
-                                const timer = document.createElement('div');
-                                timer.className = 'countdown-timer';
-                                timer.id = 'continueTimer';
-                                timer.innerHTML = '⏱️ 15s';
-                                document.body.appendChild(timer);
-                                
-                                let secondsLeft = 15;
-                                const timerInterval = setInterval(() => {
-                                    secondsLeft--;
-                                    if (secondsLeft > 0) {
-                                        timer.innerHTML = `⏱️ ${secondsLeft}s`;
-                                    } else {
-                                        clearInterval(timerInterval);
-                                        if (document.body.contains(timer)) timer.remove();
-                                    }
-                                }, 1000);
-                                
-                                continueBtn.onclick = () => {
+                            // Free revive — always available, no ad required
+                            const continueBtn = document.createElement('div');
+                            continueBtn.style.cssText = `
+                                position: fixed;
+                                bottom: 120px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                background: linear-gradient(45deg, #ffd700, #ffa500);
+                                color: #1a1f3a;
+                                padding: 15px 30px;
+                                border-radius: 50px;
+                                font-weight: bold;
+                                font-size: 1.2em;
+                                z-index: 1001;
+                                cursor: pointer;
+                                box-shadow: 0 5px 20px rgba(255,215,0,0.5);
+                                animation: pulseBtn 1.5s infinite;
+                            `;
+                            continueBtn.innerHTML = tm('🌟 A Brilha pode me salvar! Renascer?','🌟 Brilha can save me! Reborn?');
+
+                            const timer = document.createElement('div');
+                            timer.className = 'countdown-timer';
+                            timer.id = 'continueTimer';
+                            timer.innerHTML = '⏱️ 15s';
+                            document.body.appendChild(timer);
+
+                            let secondsLeft = 15;
+                            const timerInterval = setInterval(() => {
+                                secondsLeft--;
+                                if (secondsLeft > 0) {
+                                    timer.innerHTML = `⏱️ ${secondsLeft}s`;
+                                } else {
                                     clearInterval(timerInterval);
                                     if (document.body.contains(timer)) timer.remove();
-                                    if (document.body.contains(continueBtn)) document.body.removeChild(continueBtn);
-                                    safeButtonClick('continueBtn', async () => {
-                                        const watched = await showRewardedAd('extraLife');
-                                        if (watched) {
-                                            // Save current score to ranking before resetting
-                                            if (gameState.score > 0) {
-                                                if (gameState.score > gameState.record) {
-                                                    gameState.record = gameState.score;
-                                                }
-                                                addToRanking();
-                                                saveGameProgress();
-                                            }
-                                            gameState.gameActive = true;
-                                            initGame();
-                                        } else {
-                                            showInterstitialAd('game_over');
-                                            showMessage(tm(`💫 Fui derrotado em Constelândia com ${Math.floor(gameState.score)} estrelas salvas!`,`💫 Defeated in Constelandia with ${Math.floor(gameState.score)} stars saved!`));
-                                        }
-                                    });
-                                };
-                                document.body.appendChild(continueBtn);
-                                
-                                setTimeout(() => {
-                                    clearInterval(timerInterval);
-                                    if (document.body.contains(continueBtn)) {
-                                        document.body.removeChild(continueBtn);
-                                        if (document.body.contains(timer)) timer.remove();
-                                        
-                                        if (!gameState.gameActive) {
-                                            showInterstitialAd('game_over');
-                                            showMessage(tm(`💫 Game Over! ${Math.floor(gameState.score)} stars saved in Constelandia!`,`💫 Game Over! ${Math.floor(gameState.score)} stars saved in Constelandia!`));
-                                        }
-                                    }
-                                }, 15000);
-                            } else {
-                                showInterstitialAd('game_over');
-                                showMessage(tm(`💫 Fui derrotado em Constelândia com ${Math.floor(gameState.score)} estrelas!`,`💫 Defeated in Constelandia with ${Math.floor(gameState.score)} stars!`));
-                            }
+                                    if (document.body.contains(continueBtn)) continueBtn.remove();
+                                    showInterstitialAd('game_over');
+                                }
+                            }, 1000);
+
+                            continueBtn.onclick = () => {
+                                clearInterval(timerInterval);
+                                if (document.body.contains(timer)) timer.remove();
+                                if (document.body.contains(continueBtn)) continueBtn.remove();
+                                // Free revive — restore a life and continue
+                                LIFE_SYSTEM.current = Math.min(LIFE_SYSTEM.current + 1, LIFE_SYSTEM.max);
+                                updateLivesDisplay();
+                                gameState.gameActive = true;
+                                gameState.player.x = canvas.width / 2;
+                                gameState.player.y = canvas.height / 2;
+                                gameState.obstacles = [];
+                                startObstacleBlinking();
+                                showMessage(tm('✨ A Brilha me salvou! MINHA constelação continua!','✨ Brilha saved me! MY constellation continues!'));
+                            };
+                            document.body.appendChild(continueBtn);
                         }
                     }
                 });
