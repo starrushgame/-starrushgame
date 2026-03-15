@@ -1587,6 +1587,14 @@
                 const ch3 = document.querySelector('#challenge3 > span:first-child');
                 if (ch3) ch3.textContent = t('challenge3Label');
 
+                // Challenge 1: "🌟 Coletar X estrelas" — update label and suffix
+                const ch1span = document.querySelector('#challenge1 > span:first-child');
+                if (ch1span) {
+                    const ch1Target = document.getElementById('challenge1Target');
+                    const targetVal = ch1Target ? ch1Target.textContent : '';
+                    ch1span.innerHTML = `${t('challenge1Label')} <span id="challenge1Target">${targetVal}</span> ${t('challenge1Suffix')}`;
+                }
+
                 // Control buttons
                 const btnMap = {
                     'newGameBtn': 'btnNewGame', 'rankingBtn': 'btnRanking',
@@ -1608,10 +1616,13 @@
             function hideStoryPage() {
                 const el = document.getElementById('storyPage');
                 if (el) el.style.display = 'none';
-                // Show name popup first if no name saved, then tutorial
                 const hasSavedName = localStorage.getItem('starrush_player_name');
                 if (!hasSavedName) {
-                    showNamePopup().then(() => {
+                    showNamePopup().then((name) => {
+                        // Update gameState with the typed name before tutorial starts
+                        if (typeof gameState !== 'undefined') {
+                            gameState.playerName = name;
+                        }
                         setTimeout(() => { showTutorial(); }, 100);
                     });
                 } else {
@@ -1630,8 +1641,9 @@
                     setTimeout(() => input.focus(), 150);
 
                     function submit() {
-                        let name = input.value.trim().substring(0, 10) || 'Jogador';
+                        let name = input.value.trim().substring(0, 10) || (currentLanguage === 'en' ? 'Player' : 'Jogador');
                         localStorage.setItem('starrush_player_name', name);
+                        if (typeof gameState !== 'undefined') gameState.playerName = name;
                         popup.style.display = 'none';
                         resolve(name);
                     }
@@ -3518,13 +3530,34 @@
 
             // NOVA FUNÇÃO: Pop-up de compartilhamento para desafios
             function showChallengeSharePopup(challengeType) {
-                const challengeNames = {
+                const _cEN = currentLanguage === 'en';
+                const challengeNames = _cEN ? {
+                    'stars': '🌟 Star Collector',
+                    'combo': '🔥 Combo Master',
+                    'share': '📱 Influencer'
+                } : {
                     'stars': '🌟 Coletor de Estrelas',
                     'combo': '🔥 Mestre do Combo',
                     'share': '📱 Influenciador'
                 };
-                
-                const challengeMessages = {
+
+                const challengeMessages = _cEN ? {
+                    'stars': [
+                        '🌟 I just collected {target} stars in Starrush!',
+                        '✨ Star goal reached! {target} stars!',
+                        '💫 Star challenge complete! {target} stars!'
+                    ],
+                    'combo': [
+                        '🔥 I got combo x{target} in Starrush!',
+                        '⚡ Combo master! x{target} pure energy!',
+                        '💫 Epic combo of x{target}!'
+                    ],
+                    'share': [
+                        '📱 I already shared Starrush {target} times!',
+                        '✨ Stellar influencer! {target} shares!',
+                        '🌟 Spreading the Starrush magic! {target} shares!'
+                    ]
+                } : {
                     'stars': [
                         '🌟 Acabei de coletar {target} estrelas no Starrush!',
                         '✨ Meta de estrelas alcançada! {target} estrelas!',
@@ -3541,23 +3574,23 @@
                         '🌟 Espalhando a magia do Starrush! {target} shares!'
                     ]
                 };
-                
+
                 const target = dailyChallenges[challengeType].target;
                 const title = challengeNames[challengeType];
                 const messages = challengeMessages[challengeType];
                 const randomMessage = messages[Math.floor(Math.random() * messages.length)].replace('{target}', target);
-                
+
                 const shareModal = document.createElement('div');
                 shareModal.className = 'modal';
                 shareModal.innerHTML = `
                     <div class="modal-content" style="text-align:center;">
                         <div style="font-size:3em; margin-bottom:10px;">🏆</div>
-                        <h3 style="color:#ffd700; margin-bottom:5px;">DESAFIO COMPLETO!</h3>
+                        <h3 style="color:#ffd700; margin-bottom:5px;">${_cEN ? 'CHALLENGE COMPLETE!' : 'DESAFIO COMPLETO!'}</h3>
                         <p style="margin-bottom:15px; color:#fff;">${title}</p>
-                        <p style="margin-bottom:20px; font-size:0.9em;">Quer compartilhar essa conquista?</p>
+                        <p style="margin-bottom:20px; font-size:0.9em;">${_cEN ? 'Want to share this achievement?' : 'Quer compartilhar essa conquista?'}</p>
                         <div style="display:flex; gap:10px; margin-top:20px;">
-                            <button class="consent-btn" style="flex:1;" onclick="this.closest('.modal').remove()">Agora não</button>
-                            <button class="consent-btn accept" style="flex:1;" id="challengeShareBtn">Compartilhar</button>
+                            <button class="consent-btn" style="flex:1;" onclick="this.closest('.modal').remove()">${_cEN ? 'Not now' : 'Agora não'}</button>
+                            <button class="consent-btn accept" style="flex:1;" id="challengeShareBtn">${_cEN ? 'Share' : 'Compartilhar'}</button>
                         </div>
                     </div>
                 `;
@@ -4627,9 +4660,9 @@
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 24px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('🔴 A Fúria venceu...', 0, 0);
+                    ctx.fillText(tm('🔴 A Fúria venceu...','🔴 Furia won...'), 0, 0);
                     ctx.font = '16px Arial';
-                    ctx.fillText(`${Math.floor(gameState.score)} estrelas salvas em Constelândia`, 0, 40);
+                    ctx.fillText(tm(`${Math.floor(gameState.score)} estrelas salvas em Constelândia`,`${Math.floor(gameState.score)} stars saved in Constelandia`), 0, 40);
                     ctx.restore();
                     ctx.globalAlpha = 1.0;
                 }
