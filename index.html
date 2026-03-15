@@ -1561,14 +1561,17 @@
                     namePopupTitle:   'namePopupTitle',
                     namePopupSubtitle:'namePopupSubtitle',
                     nameSubmitButton: 'submitNameBtn',
-                    startButton:      'storyStartBtn',
-                    privacyLink:      'linkPrivacy',
-                    cookieLink:       'linkCookies'
+                    startButton:      'storyStartBtn'
                 };
                 Object.keys(elMap).forEach(key => {
                     const el = document.getElementById(elMap[key]);
                     if (el) el.innerHTML = t(key);
                 });
+                // Privacy and cookie links: update text only, preserve onclick
+                const lp = document.getElementById('linkPrivacy');
+                if (lp) lp.textContent = t('privacyLink');
+                const lc = document.getElementById('linkCookies');
+                if (lc) lc.textContent = t('cookieLink');
                 const inp = document.getElementById('playerNameInput');
                 if (inp) inp.placeholder = t('nameInputPlaceholder');
                 // Active lang buttons
