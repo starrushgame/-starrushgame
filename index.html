@@ -1748,8 +1748,8 @@
                 ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
                 ctx.font = 'bold 26px Arial';
                 ctx.fillText(isEN
-                    ? '#YourConstellation #Starrush #IDefeatedFuria  starrushgame.vercel.app'
-                    : '#EuSalveiAFúria  #ASuaConstelação  starrushgame.vercel.app', 600, 600);
+                    ? '#YourConstellation #Starrush #IBeatFuria  starrushgame.vercel.app'
+                    : '#VenciAFúria  #ASuaConstelação  starrushgame.vercel.app', 600, 600);
                 
                 return screenshotCanvas.toDataURL('image/png');
             }
@@ -4072,15 +4072,21 @@
                 
                 Object.entries(skins).forEach(([key, skin]) => {
                     const isUnlocked = skin.unlocked;
+                    const skinNameI18n = {
+                        classico: _sEN ? 'Classic' : 'Clássico',
+                        neon: 'Neon',
+                        cosmos: _sEN ? 'Cosmic' : 'Cósmico',
+                        arcoiris: _sEN ? 'Rainbow' : 'Arco-Íris'
+                    };
                     skinsHTML += `
                         <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">
                             <div>
                                 <span style="font-size:1.5em; margin-right:10px;">${isUnlocked ? '✅' : '🔒'}</span>
-                                <span>${skin.name}</span>
-                                ${!isUnlocked ? `<br><small style="color:#888;">Progresso: ${getSkinProgress(key)}</small>` : ''}
+                                <span>${skinNameI18n[key] || skin.name}</span>
+                                ${!isUnlocked ? `<br><small style="color:#888;">${_sEN ? 'Progress:' : 'Progresso:'} ${getSkinProgress(key)}</small>` : ''}
                             </div>
-                            ${isUnlocked ? 
-                                `<button class="consent-btn" style="padding:5px 15px;" onclick="window.selectSkin('${key}')">Selecionar</button>` : 
+                            ${isUnlocked ?
+                                `<button class="consent-btn" style="padding:5px 15px;" onclick="window.selectSkin('${key}')">${_sEN ? 'Select' : 'Selecionar'}</button>` :
                                 `<span style="color:#888;">${getUnlockRequirement(key)}</span>`}
                         </div>
                     `;
@@ -4093,22 +4099,24 @@
             }
 
             function getSkinProgress(skinKey) {
+                const _pEN = currentLanguage === 'en';
                 switch(skinKey) {
-                    case 'neon': 
-                        return `${gameState.totalStars}/50 estrelas`;
-                    case 'cosmos': 
-                        return `${gameState.totalStars}/100 estrelas`;
-                    case 'arcoiris': 
+                    case 'neon':
+                        return `${gameState.totalStars}/50 ${_pEN ? 'stars' : 'estrelas'}`;
+                    case 'cosmos':
+                        return `${gameState.totalStars}/100 ${_pEN ? 'stars' : 'estrelas'}`;
+                    case 'arcoiris':
                         return `${gameState.maxCombo}/10 combo`;
-                    default: 
+                    default:
                         return '';
                 }
             }
 
             function getUnlockRequirement(skinKey) {
+                const _uEN = currentLanguage === 'en';
                 switch(skinKey) {
-                    case 'neon': return 'Colete 50 estrelas';
-                    case 'cosmos': return 'Colete 100 estrelas';
+                    case 'neon': return _uEN ? 'Collect 50 stars' : 'Colete 50 estrelas';
+                    case 'cosmos': return _uEN ? 'Collect 100 stars' : 'Colete 100 estrelas';
                     case 'arcoiris': return 'Combo x10';
                     default: return '';
                 }
@@ -4122,7 +4130,7 @@
                     showMessage(tm(`✨ Skin ${skins[skinKey].name} selecionada!`,`✨ Skin ${skins[skinKey].name} selected!`));
                     document.querySelector('.modal').remove();
                 } else {
-                    showMessage(`🔒 Desbloqueie primeiro: ${getUnlockRequirement(skinKey)}`);
+                    showMessage(tm(`🔒 Desbloqueie primeiro: ${getUnlockRequirement(skinKey)}`,`🔒 Unlock first: ${getUnlockRequirement(skinKey)}`));
                 }
             }
 
@@ -4325,7 +4333,7 @@
                     loseLife: [
                         `🔴 A Fúria acertou uma das minhas estrelas... mas ainda tenho ${LIFE_SYSTEM.current} brilhando! Não vou desistir da MINHA constelação!`,
                         `⭐ Uma sentinela da Fúria me pegou... mas a Brilha me anima: ainda brilham ${LIFE_SYSTEM.current} estrelas!`,
-                        `💪 Perdi uma estrela do colar... mas MINHA constelação não vai desaparecer! #EuSalveiAFúria`
+                        `💪 Perdi uma estrela do colar... mas MINHA constelação não vai desaparecer! #VenciAFúria`
                     ],
                     cometEvent: [
                         `💫 UM COMETA DE CONSTELÂNDIA PASSOU! Ganhei 2 estrelas extras pra MINHA constelação!`,
@@ -4335,7 +4343,7 @@
                     gameOver: [
                         `💫 A Fúria venceu dessa vez... todas as minhas estrelas se apagaram. Mas vou voltar pra MINHA constelação! #Starrush`,
                         `✨ O colar das estrelas da vida chegou ao fim... Mas a Brilha disse: sempre dá pra recomeçar! #ASuaConstelação`,
-                        `🌟 Constelândia vai me esperar. MINHA constelação não está completa ainda! #EuSalveiAFúria`
+                        `🌟 Constelândia vai me esperar. MINHA constelação não está completa ainda! #VenciAFúria`
                     ]
                 };
                 
@@ -4423,12 +4431,12 @@
                     const frases = [
                         champion, champion,
                         `🌟 I, ${nome}, just saved ${pontos} stars for MY constellation in Starrush! Furia tried to stop me, but I dodged them all! #YourConstellation #Starrush`,
-                        `⚔️ I faced Furia in Constelandia! The red sentinels came, but I, ${nome}, was faster! MY constellation now has ${estrelas} stars! #IDefeatedFuria`,
+                        `⚔️ I faced Furia in Constelandia! The red sentinels came, but I, ${nome}, was faster! MY constellation now has ${estrelas} stars! #IBeatFuria`,
                         `🔥 MY combo reached x${combo}! Brilha is dancing with joy! I, ${nome}, am building MY constellation in Constelandia! #Starrush`,
                         `💫 Luminara said that I, ${nome}, am special for building MY own constellation. Already saved ${estrelas} stars! Come build YOURS! #YourConstellation`,
                         `✨ I, ${nome}, dodged ALL of Furia's sentinels and saved more stars! MY constellation is getting beautiful! #Starrush`,
-                        `🏆 NEW RECORD! I, ${nome}, just scored ${pontos} points in Constelandia! Furia beware! #IDefeatedFuria`,
-                        `🔴 Furia's red sentinels tried to stop me, but I, ${nome}, got through them all! MY constellation only grows! #IDefeatedFuria #Starrush`
+                        `🏆 NEW RECORD! I, ${nome}, just scored ${pontos} points in Constelandia! Furia beware! #IBeatFuria`,
+                        `🔴 Furia's red sentinels tried to stop me, but I, ${nome}, got through them all! MY constellation only grows! #IBeatFuria #Starrush`
                     ];
                     return frases[Math.floor(Math.random() * frases.length)];
                 }
@@ -4437,14 +4445,14 @@
                 const frases = [
                     campeã, campeã,
                     `🌟 EU, ${nome}, acabei de salvar ${pontos} estrelas pra MINHA constelação no Starrush! A Fúria tentou me parar, mas EU desviei de todas! #ASuaConstelação`,
-                    `⚔️ EU enfrentei a Fúria em Constelândia! As bolas vermelhas vieram, mas EU, ${nome}, fui mais rápido! MINHA constelação agora tem ${estrelas} estrelas! #EuSalveiAFúria`,
+                    `⚔️ EU enfrentei a Fúria em Constelândia! As bolas vermelhas vieram, mas EU, ${nome}, fui mais rápido! MINHA constelação agora tem ${estrelas} estrelas! #VenciAFúria`,
                     `🔥 MEU combo chegou em x${combo}! A Brilha tá dançando de alegria! Eu, ${nome}, tô construindo MINHA constelação! #Starrush`,
                     `💫 A Luminara disse que EU, ${nome}, sou especial! Já salvei ${estrelas} estrelas! Vem construir a SUA também! #ASuaConstelação`,
                     `✨ EU, ${nome}, desviei de todas as sentinelas da Fúria! MINHA constelação tá ficando linda! #Starrush`,
-                    `🏆 NOVO RECORDE! EU, ${nome}, fiz ${pontos} pontos em Constelândia! A Fúria que se cuide! #EuSalveiAFúria`,
+                    `🏆 NOVO RECORDE! EU, ${nome}, fiz ${pontos} pontos em Constelândia! A Fúria que se cuide! #VenciAFúria`,
                     `👵 A Luminara me deu um colar com ${vidas} estrelas da vida! EU, ${nome}, vou honrar esse presente! #ASuaConstelação`,
                     `🌟 A Brilha tá torcendo por MIM! EU, ${nome}, já salvei ${estrelas} estrelas em Constelândia! #Starrush`,
-                    `🔴 As sentinelas da Fúria tentaram me impedir, mas EU, ${nome}, passei por todas! #EuSalveiAFúria #Starrush`,
+                    `🔴 As sentinelas da Fúria tentaram me impedir, mas EU, ${nome}, passei por todas! #VenciAFúria #Starrush`,
                     `📱 EU, ${nome}, acabei de compartilhar MINHA constelação! A Brilha pulou de alegria! Vem construir a SUA! #ASuaConstelação #Starrush`
                 ];
                 return frases[Math.floor(Math.random() * frases.length)];
