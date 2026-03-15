@@ -1062,6 +1062,13 @@
             border: 2px solid rgba(255,215,0,0.3);
             color: white;
         }
+        @media (max-width: 480px) {
+            .story-container { padding: 20px 15px; border-radius: 20px; }
+            .story-title { font-size: 1.4em; }
+            .story-chapter { font-size: 1.1em; }
+            .story-start-btn { font-size: 1em; padding: 14px 20px; }
+            #storyPage { padding: 10px; }
+        }
         .story-title {
             font-size: 2em;
             text-align: center;
@@ -1099,7 +1106,7 @@
             cursor: pointer;
             margin: 35px auto 20px;
             display: block;
-            animation: pulse 2s infinite;
+            animation: pulseBtn 2s infinite;
             box-shadow: 0 0 30px rgba(255,215,0,0.5);
             transition: transform 0.3s;
             text-align: center;
@@ -1158,6 +1165,11 @@
             0% { transform: translateX(-50%) scale(1); }
             50% { transform: translateX(-50%) scale(1.05); }
             100% { transform: translateX(-50%) scale(1); }
+        }
+        @keyframes pulseBtn {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .progress-bar {
@@ -1313,11 +1325,17 @@
     <!-- COOKIE CONSENT CONFIGURAÇÃO -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const _ckLang = (function() {
+                const saved = localStorage.getItem('preferred_language');
+                if (saved === 'en') return 'en';
+                const nav = (navigator.language || navigator.userLanguage || 'pt').split('-')[0].toLowerCase();
+                return nav === 'en' ? 'en' : 'pt';
+            })();
             cookieconsent.run({
                 "notice_banner_type": "headline",
                 "consent_type": "express",
                 "palette": "dark",
-                "language": "pt",
+                "language": _ckLang,
                 "page_load_consent_levels": ["strictly-necessary"],
                 "notice_banner_reject_button_hide": false,
                 "preferences_center_close_button_hide": false,
@@ -1549,7 +1567,7 @@
                 };
                 Object.keys(elMap).forEach(key => {
                     const el = document.getElementById(elMap[key]);
-                    if (el) el.textContent = t(key);
+                    if (el) el.innerHTML = t(key);
                 });
                 const inp = document.getElementById('playerNameInput');
                 if (inp) inp.placeholder = t('nameInputPlaceholder');
@@ -1727,7 +1745,7 @@
 
                 ctx.fillStyle = '#ffd700';
                 ctx.font = 'bold 130px Arial';
-                ctx.fillText(Math.floor(gameState.record), 600, 340);
+                ctx.fillText(formatNum(gameState.record), 600, 340);
                 ctx.font = 'bold 38px Arial';
                 ctx.fillText(isEN ? 'STARS IN CONSTELANDIA' : 'ESTRELAS EM CONSTELÂNDIA', 600, 390);
 
@@ -1738,8 +1756,8 @@
                 ctx.fillStyle = '#4a90e2';
                 ctx.font = '28px Arial';
                 ctx.fillText(isEN
-                    ? `⭐ ${gameState.starsCollected} stars saved  |  🔥 Combo x${gameState.maxCombo}`
-                    : `⭐ ${gameState.starsCollected} estrelas salvas  |  🔥 Combo x${gameState.maxCombo}`, 600, 495);
+                    ? `⭐ ${formatNum(gameState.starsCollected)} stars saved  |  🔥 Combo x${formatNum(gameState.maxCombo)}`
+                    : `⭐ ${formatNum(gameState.starsCollected)} estrelas salvas  |  🔥 Combo x${formatNum(gameState.maxCombo)}`, 600, 495);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 34px Arial';
@@ -2022,57 +2040,58 @@
                 m.id = 'privacyModal';
                 m.className = 'modal';
                 m.style.zIndex = '9999';
+                const _ppEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
+                const _dateStr = new Date().toLocaleDateString(_ppEN ? 'en-US' : 'pt-BR');
                 m.innerHTML = `
                     <div class="modal-content" style="max-height:85vh;overflow-y:auto;font-size:0.9em;line-height:1.6;">
-                        <h2 style="color:#ffd700;text-align:center;margin-bottom:20px;">📄 Política de Privacidade</h2>
-                        <p style="color:#aaa;text-align:center;margin-bottom:20px;">Última atualização: ${new Date().toLocaleDateString('pt-BR')}</p>
+                        <h2 style="color:#ffd700;text-align:center;margin-bottom:20px;">${_ppEN ? '📄 Privacy Policy' : '📄 Política de Privacidade'}</h2>
+                        <p style="color:#aaa;text-align:center;margin-bottom:20px;">${_ppEN ? 'Last updated:' : 'Última atualização:'} ${_dateStr}</p>
 
-                        <h3 style="color:#ffd700;">1. Responsável pelo Tratamento</h3>
+                        <h3 style="color:#ffd700;">1. ${_ppEN ? 'Data Controller' : 'Responsável pelo Tratamento'}</h3>
                         <p>Starrush Game — starrushgame.vercel.app</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">2. Dados Coletados</h3>
-                        <p>• <strong>Nome de jogador:</strong> escolhido por você, armazenado localmente e no ranking global.<br>
-                           • <strong>Progresso do jogo:</strong> pontuação, conquistas, skins — armazenados no seu dispositivo (localStorage).<br>
-                           • <strong>Dados de uso:</strong> cookies do Google AdSense para exibição de anúncios personalizados.<br>
-                           • <strong>Dados técnicos:</strong> idioma do navegador, tamanho de tela — usados apenas para adequar o consentimento à sua região.</p>
+                        <h3 style="color:#ffd700;margin-top:15px;">2. ${_ppEN ? 'Data Collected' : 'Dados Coletados'}</h3>
+                        <p>• <strong>${_ppEN ? 'Player name:' : 'Nome de jogador:'}</strong> ${_ppEN ? 'chosen by you, stored locally and in the global ranking.' : 'escolhido por você, armazenado localmente e no ranking global.'}<br>
+                           • <strong>${_ppEN ? 'Game progress:' : 'Progresso do jogo:'}</strong> ${_ppEN ? 'score, achievements, skins — stored on your device (localStorage).' : 'pontuação, conquistas, skins — armazenados no seu dispositivo (localStorage).'}<br>
+                           • <strong>${_ppEN ? 'Usage data:' : 'Dados de uso:'}</strong> ${_ppEN ? 'Google AdSense cookies for personalized ads.' : 'cookies do Google AdSense para exibição de anúncios personalizados.'}<br>
+                           • <strong>${_ppEN ? 'Technical data:' : 'Dados técnicos:'}</strong> ${_ppEN ? 'browser language, screen size — used only to adapt consent to your region.' : 'idioma do navegador, tamanho de tela — usados apenas para adequar o consentimento à sua região.'}</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">3. Finalidade e Base Legal (LGPD)</h3>
-                        <p>• <strong>Funcionamento do jogo</strong> — base legal: execução de contrato (art. 7º, V).<br>
-                           • <strong>Anúncios personalizados</strong> — base legal: consentimento (art. 7º, I). Você pode revogar a qualquer momento.<br>
-                           • <strong>Ranking global</strong> — base legal: legítimo interesse (art. 7º, IX).</p>
+                        <h3 style="color:#ffd700;margin-top:15px;">3. ${_ppEN ? 'Purpose and Legal Basis' : 'Finalidade e Base Legal (LGPD)'}</h3>
+                        <p>• <strong>${_ppEN ? 'Game operation' : 'Funcionamento do jogo'}</strong> — ${_ppEN ? 'legal basis: contract execution.' : 'base legal: execução de contrato (art. 7º, V).'}<br>
+                           • <strong>${_ppEN ? 'Personalized ads' : 'Anúncios personalizados'}</strong> — ${_ppEN ? 'legal basis: consent. You may withdraw at any time.' : 'base legal: consentimento (art. 7º, I). Você pode revogar a qualquer momento.'}<br>
+                           • <strong>${_ppEN ? 'Global ranking' : 'Ranking global'}</strong> — ${_ppEN ? 'legal basis: legitimate interest.' : 'base legal: legítimo interesse (art. 7º, IX).'}</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">4. Compartilhamento</h3>
-                        <p>Seus dados podem ser compartilhados com:<br>
-                           • <strong>Google AdSense</strong> — para exibição de anúncios (se consentido).<br>
-                           • <strong>Supabase</strong> — banco de dados do ranking global (nome e pontuação apenas).<br>
-                           Não vendemos seus dados a terceiros.</p>
+                        <h3 style="color:#ffd700;margin-top:15px;">4. ${_ppEN ? 'Data Sharing' : 'Compartilhamento'}</h3>
+                        <p>${_ppEN ? 'Your data may be shared with:' : 'Seus dados podem ser compartilhados com:'}<br>
+                           • <strong>Google AdSense</strong> — ${_ppEN ? 'for ad display (if consented).' : 'para exibição de anúncios (se consentido).'}<br>
+                           • <strong>Supabase</strong> — ${_ppEN ? 'global ranking database (name and score only).' : 'banco de dados do ranking global (nome e pontuação apenas).'}<br>
+                           ${_ppEN ? 'We do not sell your data to third parties.' : 'Não vendemos seus dados a terceiros.'}</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">5. Seus Direitos</h3>
-                        <p>Você tem direito a: acessar, corrigir, excluir seus dados e revogar o consentimento.
-                        Para exercer esses direitos, entre em contato pelo e-mail: <strong style="color:#ffd700;">starrushcontact@gmail.com</strong> ou limpe os dados do site no seu navegador.</p>
+                        <h3 style="color:#ffd700;margin-top:15px;">5. ${_ppEN ? 'Your Rights' : 'Seus Direitos'}</h3>
+                        <p>${_ppEN ? 'You have the right to: access, correct, delete your data and withdraw consent. To exercise these rights, contact us at:' : 'Você tem direito a: acessar, corrigir, excluir seus dados e revogar o consentimento. Para exercer esses direitos, entre em contato pelo e-mail:'}
+                        <strong style="color:#ffd700;">starrushcontact@gmail.com</strong> ${_ppEN ? 'or clear the site data in your browser.' : 'ou limpe os dados do site no seu navegador.'}</p>
 
                         <h3 style="color:#ffd700;margin-top:15px;">6. California / CCPA (US Residents)</h3>
                         <p>California residents have the right to know what personal data is collected, to delete it,
                         and to opt out of its sale. We do not sell personal information.
                         To exercise your rights, contact us at: <strong style="color:#ffd700;">starrushcontact@gmail.com</strong> or clear your browser's site data for this page.</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">7. Retenção de Dados</h3>
-                        <p>Dados locais (localStorage): até você limpar manualmente.<br>
-                        Dados no ranking global: mantidos enquanto o serviço existir. Você pode solicitar a exclusão a qualquer momento pelo e-mail acima.</p>
+                        <h3 style="color:#ffd700;margin-top:15px;">7. ${_ppEN ? 'Data Retention' : 'Retenção de Dados'}</h3>
+                        <p>${_ppEN ? 'Local data (localStorage): until you clear it manually.<br>Global ranking data: kept while the service exists. You may request deletion at any time via the email above.' : 'Dados locais (localStorage): até você limpar manualmente.<br>Dados no ranking global: mantidos enquanto o serviço existir. Você pode solicitar a exclusão a qualquer momento pelo e-mail acima.'}</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">8. Cookies Utilizados</h3>
-                        <p>• <strong>Essenciais:</strong> starrush_save, ranking, dailyChallenges (funcionamento do jogo).<br>
-                           • <strong>Publicidade:</strong> cookies do Google AdSense (somente se aceito).<br>
-                           • <strong>Consentimento:</strong> starrush_consent_v2 (registra sua escolha por 6 meses).</p>
+                        <h3 style="color:#ffd700;margin-top:15px;">8. ${_ppEN ? 'Cookies Used' : 'Cookies Utilizados'}</h3>
+                        <p>• <strong>${_ppEN ? 'Essential:' : 'Essenciais:'}</strong> starrush_save, ranking, dailyChallenges (${_ppEN ? 'game operation' : 'funcionamento do jogo'}).<br>
+                           • <strong>${_ppEN ? 'Advertising:' : 'Publicidade:'}</strong> ${_ppEN ? 'Google AdSense cookies (only if accepted).' : 'cookies do Google AdSense (somente se aceito).'}<br>
+                           • <strong>${_ppEN ? 'Consent:' : 'Consentimento:'}</strong> starrush_consent_v2 (${_ppEN ? 'records your choice for 6 months' : 'registra sua escolha por 6 meses'}).</p>
 
-                        <h3 style="color:#ffd700;margin-top:15px;">9. Anúncios Baseados em Interesse</h3>
-                        <p>Este jogo utiliza o Google AdSense para exibir anúncios. O Google pode usar cookies para exibir anúncios personalizados com base em suas visitas a este e outros sites.<br><br>
-                        Você pode optar por não receber anúncios personalizados acessando:<br>
+                        <h3 style="color:#ffd700;margin-top:15px;">9. ${_ppEN ? 'Interest-Based Ads' : 'Anúncios Baseados em Interesse'}</h3>
+                        <p>${_ppEN ? 'This game uses Google AdSense to display ads. Google may use cookies to show personalized ads based on your visits to this and other sites.' : 'Este jogo utiliza o Google AdSense para exibir anúncios. O Google pode usar cookies para exibir anúncios personalizados com base em suas visitas a este e outros sites.'}<br><br>
+                        ${_ppEN ? 'You can opt out of personalized ads at:' : 'Você pode optar por não receber anúncios personalizados acessando:'}<br>
                         <a href="https://www.aboutads.info" target="_blank" style="color:#ffd700; font-weight:bold;">www.aboutads.info</a><br><br>
-                        Para mais informações sobre como o Google usa seus dados, acesse:<br>
+                        ${_ppEN ? 'For more information on how Google uses your data:' : 'Para mais informações sobre como o Google usa seus dados, acesse:'}<br>
                         <a href="https://policies.google.com/privacy" target="_blank" style="color:#ffd700;">policies.google.com/privacy</a></p>
 
-                        <button class="consent-btn" style="margin-top:25px;width:100%;" onclick="document.getElementById('privacyModal').remove()">Fechar</button>
+                        <button class="consent-btn" style="margin-top:25px;width:100%;" onclick="document.getElementById('privacyModal').remove()">${_ppEN ? 'Close' : 'Fechar'}</button>
                     </div>`;
                 document.body.appendChild(m);
             }
@@ -2467,6 +2486,7 @@
                     dailyChallenges: dailyChallenges,
                     musicPreference: musicSystem.isPlaying ? 'on' : 'off',
                     extraLives: LIFE_SYSTEM.current,
+                    totalChallengesCompleted: gameState.totalChallengesCompleted || 0,
                     timestamp: Date.now()
                 };
                 localStorage.setItem('starrush_save', JSON.stringify(saveData));
@@ -2497,6 +2517,9 @@
                     
                     if (data.extraLives) {
                         LIFE_SYSTEM.current = data.extraLives;
+                    }
+                    if (data.totalChallengesCompleted) {
+                        gameState.totalChallengesCompleted = data.totalChallengesCompleted;
                     }
                     
                     updateSkinsUnlocked();
@@ -2637,23 +2660,35 @@
             }
 
             function getRewardDescription(type) {
-                const desc = {
+                const _dEN = currentLanguage === 'en';
+                const desc = _dEN ? {
+                    'continue': 'TRIPLE CURRENT POINTS',
+                    'doublePoints': 'DOUBLE CURRENT SCORE',
+                    'extraLife': 'ONE EXTRA LIFE STAR',
+                    'speedBoost': 'NO FURIA FOR 1 MINUTE'
+                } : {
                     'continue': 'TRIPLICAR PONTOS ATUAIS',
                     'doublePoints': 'DOBRAR PONTUAÇÃO ATUAL',
                     'extraLife': 'UMA ESTRELA DA VIDA EXTRA',
-                    'speedBoost': 'SUMIR BOLAS VERMELHAS POR 30s'
+                    'speedBoost': 'SEM FÚRIA POR 1 MINUTO'
                 };
-                return desc[type] || 'BÔNUS ESPECIAL';
+                return desc[type] || (_dEN ? 'SPECIAL BONUS' : 'BÔNUS ESPECIAL');
             }
 
             function getRewardName(type) {
-                const name = {
+                const _nEN = currentLanguage === 'en';
+                const name = _nEN ? {
+                    'continue': 'TRIPLE',
+                    'doublePoints': 'DOUBLE',
+                    'extraLife': '🌟 STAR',
+                    'speedBoost': 'NO FURIA'
+                } : {
                     'continue': 'TRIPLO',
                     'doublePoints': 'DOBRO',
                     'extraLife': '🌟 ESTRELA',
-                    'speedBoost': 'SEM BOLAS'
+                    'speedBoost': 'SEM FÚRIA'
                 };
-                return name[type] || 'BÔNUS';
+                return name[type] || (_nEN ? 'BONUS' : 'BÔNUS');
             }
 
             let activeBoosts = {
@@ -2667,7 +2702,6 @@
                 switch(type) {
                     case 'continue':
                         gameState.score *= 3;
-                        gameState.gameActive = true;
                         if (gameState.score > gameState.record) {
                             gameState.record = gameState.score;
                             addToRanking();
@@ -2675,11 +2709,10 @@
                         updateDisplay();
                         showMessage(tm('🔥 Fúria ficou com raiva! Minhas estrelas triplicaram!','🔥 Furia got angry! My stars tripled!'));
                         break;
-                        
+
                     case 'doublePoints':
                         activeBoosts.doublePoints = true;
                         gameState.score *= 2;
-                        gameState.gameActive = true;
                         if (gameState.score > gameState.record) {
                             gameState.record = gameState.score;
                             addToRanking();
@@ -2687,15 +2720,18 @@
                         updateDisplay();
                         showMessage(tm('🎯 Poder de Constelândia! Minhas estrelas dobraram!','🎯 Power of Constelandia! My stars doubled!'));
                         break;
-                        
+
                     case 'extraLife':
                         LIFE_SYSTEM.gain();
                         break;
-                        
+
                     case 'speedBoost':
                         activeBoosts.hideObstacles = true;
                         gameState.hideObstaclesEnd = Date.now() + 60000;
-                        gameState.obstacles.forEach(obs => { obs.visible = false; if (obs.blinkTimer) { clearTimeout(obs.blinkTimer); obs.blinkTimer = null; } });
+                        gameState.obstacles.forEach(obs => {
+                            obs.visible = false;
+                            if (obs.blinkTimer) { clearTimeout(obs.blinkTimer); obs.blinkTimer = null; }
+                        });
                         setTimeout(() => {
                             activeBoosts.hideObstacles = false;
                             gameState.hideObstaclesEnd = null;
@@ -2785,12 +2821,13 @@
                             gameState.adPaused = false;
                             if (rewarded) {
                                 registerAdEvent('rewarded', rewardType, true);
-                                giveReward(rewardType);
-                                showBonusAnimation(`+${getRewardName(rewardType)}!`);
+                                // Reactivate game FIRST so giveReward works with active game state
                                 if (wasActive) {
                                     gameState.gameActive = true;
                                     if (wasPlaying) initAdaptiveMusic();
                                 }
+                                giveReward(rewardType);
+                                showBonusAnimation(`+${getRewardName(rewardType)}!`);
                                 showMessage(tm(`🎁 Recompensa: ${getRewardName(rewardType)}!`,`🎁 Reward: ${getRewardName(rewardType)}!`));
                                 resolve(true);
                             } else {
@@ -2897,8 +2934,6 @@
             }
 
             function showBonusMenu() {
-                if (!checkAdCooldown('rewarded')) return;
-                
                 const menu = document.createElement('div');
                 menu.className = 'modal';
                 const _isEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
@@ -2917,7 +2952,7 @@
                                 🌟 ${_isEN ? 'Earn a life star' : 'Ganhar uma estrela da vida'}
                             </button>
                             <button class="consent-btn" id="bonusSpeed" style="background:#f39c12; padding:15px;">
-                                👻 ${_isEN ? 'Hide red balls for 1 min' : 'Sumir bolas vermelhas por 1 min'}
+                                👻 ${_isEN ? 'No Furia for 1 min' : 'Sem Fúria por 1 min'}
                             </button>
                         </div>
                         <button class="consent-btn" onclick="this.closest('.modal').remove()">${_isEN ? 'Close' : 'Fechar'}</button>
@@ -3218,11 +3253,10 @@
             }
 
             function getMonthName(month) {
-                const months = [
-                    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-                ];
-                return months[month - 1];
+                const monthsPT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+                const monthsEN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                const list = (typeof currentLanguage !== 'undefined' && currentLanguage === 'en') ? monthsEN : monthsPT;
+                return list[month - 1];
             }
 
             function saveChallengeHistory() {
@@ -3298,7 +3332,7 @@
                 
                 newAchievements.forEach(ach => {
                     gameState.score += ach.reward;
-                    showBonusAnimation(`🏆 ${ach.name}! +${ach.reward} pontos`);
+                    showBonusAnimation(tm(`🏆 ${ach.name}! +${formatNum(ach.reward)} pontos`,`🏆 ${ach.name}! +${formatNum(ach.reward)} points`));
                     showMessage(tm(`🎉 Meta mensal: ${ach.desc}`,`🎉 Monthly goal: ${ach.desc}`));
                     
                     const achievementId = `monthly_${month.month}_${month.year}_${ach.name}`;
@@ -3329,22 +3363,22 @@
                 const current = challengeHistory.currentMonth;
                 historyHTML += `
                     <div style="background: rgba(255,215,0,0.1); padding:15px; border-radius:15px; margin:15px 0;">
-                        <h3 style="color:#ffd700; margin-bottom:10px;">📆 ${getMonthName(current.month)}/${current.year} (Atual)</h3>
+                        <h3 style="color:#ffd700; margin-bottom:10px;">📆 ${getMonthName(current.month)}/${current.year} (${_hEN ? 'Current' : 'Atual'})</h3>
                         <div style="display:grid; gap:10px;">
                             <div class="comparison-item">
                                 <span class="comparison-icon">⭐</span>
-                                <span><strong>${current.stars}</strong> estrelas coletadas</span>
-                                ${current.stars >= 10000 ? '<span style="color:#00ff00;">✅ Meta 10k</span>' : ''}
+                                <span><strong>${current.stars}</strong> ${_hEN ? 'stars collected' : 'estrelas coletadas'}</span>
+                                ${current.stars >= 10000 ? `<span style="color:#00ff00;">✅ ${_hEN ? 'Goal 10k' : 'Meta 10k'}</span>` : ''}
                             </div>
                             <div class="comparison-item">
                                 <span class="comparison-icon">🔥</span>
-                                <span><strong>${current.combo}</strong> combo máximo</span>
-                                ${current.combo >= 500 ? '<span style="color:#00ff00;">✅ Meta 500</span>' : ''}
+                                <span><strong>${current.combo}</strong> ${_hEN ? 'max combo' : 'combo máximo'}</span>
+                                ${current.combo >= 500 ? `<span style="color:#00ff00;">✅ ${_hEN ? 'Goal 500' : 'Meta 500'}</span>` : ''}
                             </div>
                             <div class="comparison-item">
                                 <span class="comparison-icon">📱</span>
-                                <span><strong>${current.shares}</strong> compartilhamentos</span>
-                                ${current.shares >= 100 ? '<span style="color:#00ff00;">✅ Meta 100</span>' : ''}
+                                <span><strong>${current.shares}</strong> ${_hEN ? 'shares' : 'compartilhamentos'}</span>
+                                ${current.shares >= 100 ? `<span style="color:#00ff00;">✅ ${_hEN ? 'Goal 100' : 'Meta 100'}</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -3371,9 +3405,9 @@
                                         <span>${month.shares}</span>
                                     </div>
                                 </div>
-                                ${month.completed?.stars ? '<div style="color:#00ff00; font-size:0.8em;">⭐ Mestre das Estrelas</div>' : ''}
-                                ${month.completed?.combo ? '<div style="color:#00ff00; font-size:0.8em;">⚡ Lenda do Combo</div>' : ''}
-                                ${month.completed?.shares ? '<div style="color:#00ff00; font-size:0.8em;">📢 Influenciador</div>' : ''}
+                                ${month.completed?.stars ? `<div style="color:#00ff00; font-size:0.8em;">⭐ ${_hEN ? 'Star Master' : 'Mestre das Estrelas'}</div>` : ''}
+                                ${month.completed?.combo ? `<div style="color:#00ff00; font-size:0.8em;">⚡ ${_hEN ? 'Combo Legend' : 'Lenda do Combo'}</div>` : ''}
+                                ${month.completed?.shares ? `<div style="color:#00ff00; font-size:0.8em;">📢 ${_hEN ? 'Influencer' : 'Influenciador'}</div>` : ''}
                             </div>
                         `;
                     });
@@ -3444,7 +3478,8 @@
                 sessionId: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
                 startTime: Date.now(),
                 eventMultiplier: 1,
-                weekendBonus: false
+                weekendBonus: false,
+                totalChallengesCompleted: 0
             };
 
             AD_COOLDOWN.interstitial.sessionCount = 0;
@@ -3602,7 +3637,7 @@
                     
                     // Bônus extra por compartilhar o desafio
                     gameState.score += 500;
-                    showBonusAnimation('+500 BÔNUS!');
+                    showBonusAnimation(tm('+500 BÔNUS!','+500 BONUS!'));
                     updateDisplay();
                     saveGameProgress();
                 };
@@ -3714,17 +3749,27 @@
                 trackGameStats();
             }
 
+            function formatNum(n) {
+                n = Math.floor(n);
+                if (n >= 1e12) return (n / 1e12).toFixed(1).replace(/\.0$/, '') + 'T';
+                if (n >= 1e9)  return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+                if (n >= 1e6)  return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+                if (n >= 1e3)  return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+                return n.toString();
+            }
+
             function updateDisplay() {
-                scoreDisplay.textContent = Math.floor(gameState.score);
-                recordDisplay.textContent = Math.floor(gameState.record);
-                document.getElementById('achievementStarsDisplay').textContent = gameState.achievementStars?.toFixed(2) || '0.00';
-                
-                document.getElementById('challenge1Progress').textContent = `${dailyChallenges.stars.current}/${dailyChallenges.stars.target}`;
-                document.getElementById('challenge2Progress').textContent = `${dailyChallenges.combo.current}/${dailyChallenges.combo.target}`;
-                document.getElementById('challenge3Progress').textContent = `${dailyChallenges.share.current}/${dailyChallenges.share.target}`;
-                
-                document.getElementById('challenge1Target').textContent = dailyChallenges.stars.target;
-                document.getElementById('challenge2Target').textContent = dailyChallenges.combo.target;
+                scoreDisplay.textContent = formatNum(gameState.score);
+                recordDisplay.textContent = formatNum(gameState.record);
+                document.getElementById('achievementStarsDisplay').textContent = formatNum(gameState.achievementStars || 0);
+                document.getElementById('challengeDisplay').textContent = `${formatNum(gameState.totalChallengesCompleted || 0)}/365`;
+
+                document.getElementById('challenge1Progress').textContent = `${formatNum(dailyChallenges.stars.current)}/${formatNum(dailyChallenges.stars.target)}`;
+                document.getElementById('challenge2Progress').textContent = `${formatNum(dailyChallenges.combo.current)}/${formatNum(dailyChallenges.combo.target)}`;
+                document.getElementById('challenge3Progress').textContent = `${formatNum(dailyChallenges.share.current)}/${formatNum(dailyChallenges.share.target)}`;
+
+                document.getElementById('challenge1Target').textContent = formatNum(dailyChallenges.stars.target);
+                document.getElementById('challenge2Target').textContent = formatNum(dailyChallenges.combo.target);
                 
                 checkDailyChallenges();
                 updateAchievementsBar();
@@ -3733,32 +3778,46 @@
             function checkDailyChallenges() {
                 let updated = false;
                 let completedChallenge = null;
-                
+                const today = new Date().toDateString();
+                const dayAlreadyCounted = localStorage.getItem('challenge_day_counted') === today;
+
                 if (dailyChallenges.stars.current >= dailyChallenges.stars.target && !dailyChallenges.stars.completed) {
                     dailyChallenges.stars.completed = true;
                     gameState.score += dailyChallenges.stars.reward;
-                    showBonusAnimation(`+${dailyChallenges.stars.reward} ESTRELAS!`);
+                    if (!dayAlreadyCounted) {
+                        gameState.totalChallengesCompleted = Math.min(365, (gameState.totalChallengesCompleted || 0) + 1);
+                        localStorage.setItem('challenge_day_counted', today);
+                    }
+                    showBonusAnimation(tm(`+${formatNum(dailyChallenges.stars.reward)} ESTRELAS!`,`+${formatNum(dailyChallenges.stars.reward)} STARS!`));
                     updateMonthlyProgress('stars', dailyChallenges.stars.target);
                     updated = true;
                     completedChallenge = 'stars';
                 }
-                
+
                 if (dailyChallenges.combo.current >= dailyChallenges.combo.target && !dailyChallenges.combo.completed) {
                     dailyChallenges.combo.completed = true;
                     gameState.score += dailyChallenges.combo.reward;
-                    showBonusAnimation(`+${dailyChallenges.combo.reward} COMBO!`);
+                    if (localStorage.getItem('challenge_day_counted') !== today) {
+                        gameState.totalChallengesCompleted = Math.min(365, (gameState.totalChallengesCompleted || 0) + 1);
+                        localStorage.setItem('challenge_day_counted', today);
+                    }
+                    showBonusAnimation(tm(`+${formatNum(dailyChallenges.combo.reward)} COMBO!`,`+${formatNum(dailyChallenges.combo.reward)} COMBO!`));
                     updated = true;
                     completedChallenge = 'combo';
                 }
-                
+
                 if (dailyChallenges.share.current >= dailyChallenges.share.target && !dailyChallenges.share.completed) {
                     dailyChallenges.share.completed = true;
                     gameState.score += dailyChallenges.share.reward;
-                    showBonusAnimation(`+${dailyChallenges.share.reward} COMPARTILHAR!`);
+                    if (localStorage.getItem('challenge_day_counted') !== today) {
+                        gameState.totalChallengesCompleted = Math.min(365, (gameState.totalChallengesCompleted || 0) + 1);
+                        localStorage.setItem('challenge_day_counted', today);
+                    }
+                    showBonusAnimation(tm(`+${formatNum(dailyChallenges.share.reward)} COMPARTILHADO!`,`+${formatNum(dailyChallenges.share.reward)} SHARED!`));
                     updated = true;
                     completedChallenge = 'share';
                 }
-                
+
                 if (updated) {
                     saveDailyChallenges();
                     saveGameProgress();
@@ -3787,49 +3846,49 @@
                     playerAchievements.push('firstStar'); 
                     newUnlock = true;
                     bonusPoints += 100;
-                    showBonusAnimation('+100 PONTOS! 🌟');
+                    showBonusAnimation(tm('+100 PONTOS! 🌟','+100 POINTS! 🌟'));
                 }
                 if (!playerAchievements.includes('collector10') && gameState.totalStars >= 10) {
                     playerAchievements.push('collector10'); 
                     newUnlock = true;
                     bonusPoints += 250;
-                    showBonusAnimation('+250 PONTOS! ✨');
+                    showBonusAnimation(tm('+250 PONTOS! ✨','+250 POINTS! ✨'));
                 }
                 if (!playerAchievements.includes('collector50') && gameState.totalStars >= 50) {
                     playerAchievements.push('collector50'); 
                     newUnlock = true;
                     bonusPoints += 500;
-                    showBonusAnimation('+500 PONTOS! 💫');
+                    showBonusAnimation(tm('+500 PONTOS! 💫','+500 POINTS! 💫'));
                 }
                 if (!playerAchievements.includes('collector100') && gameState.totalStars >= 100) {
                     playerAchievements.push('collector100'); 
                     newUnlock = true;
                     bonusPoints += 1000;
-                    showBonusAnimation('+1000 PONTOS! 🌠');
+                    showBonusAnimation(tm('+1000 PONTOS! 🌠','+1000 POINTS! 🌠'));
                 }
                 if (!playerAchievements.includes('combo5') && gameState.maxCombo >= 5) {
                     playerAchievements.push('combo5'); 
                     newUnlock = true;
                     bonusPoints += 200;
-                    showBonusAnimation('+200 PONTOS! 🔥');
+                    showBonusAnimation(tm('+200 PONTOS! 🔥','+200 POINTS! 🔥'));
                 }
                 if (!playerAchievements.includes('combo10') && gameState.maxCombo >= 10) {
                     playerAchievements.push('combo10'); 
                     newUnlock = true;
                     bonusPoints += 500;
-                    showBonusAnimation('+500 PONTOS! ⚡');
+                    showBonusAnimation(tm('+500 PONTOS! ⚡','+500 POINTS! ⚡'));
                 }
                 if (!playerAchievements.includes('sharer1') && gameState.totalShares >= 1) {
                     playerAchievements.push('sharer1'); 
                     newUnlock = true;
                     bonusPoints += 50;
-                    showBonusAnimation('+50 PONTOS! 📱');
+                    showBonusAnimation(tm('+50 PONTOS! 📱','+50 POINTS! 📱'));
                 }
                 if (!playerAchievements.includes('sharer5') && gameState.totalShares >= 5) {
                     playerAchievements.push('sharer5'); 
                     newUnlock = true;
                     bonusPoints += 250;
-                    showBonusAnimation('+250 PONTOS! 🔥');
+                    showBonusAnimation(tm('+250 PONTOS! 🔥','+250 POINTS! 🔥'));
                 }
                 
                 if (bonusPoints > 0) {
@@ -3877,11 +3936,22 @@
             }
 
             function resetDailyChallenges() {
-                const baseTarget = Math.max(500, Math.floor((gameState?.record || 0) / 100) * 100);
-                
+                const days = gameState.totalChallengesCompleted || 0;
+
+                // Stars: starts 500, grows exponentially — no cap, infinite
+                // Each day adds more than the last, tied to record too
+                const recordBonus = Math.floor((gameState?.record || 0) / 100) * 100;
+                const daysBonus = days * 200;                         // +200 per day
+                const expBonus = days >= 7  ? Math.pow(days, 1.5) * 10 : 0; // exponential after week 1
+                const starsTarget = Math.floor(Math.max(500, recordBonus + daysBonus + expBonus));
+
+                // Combo: starts 20, grows with days and personal best
+                const comboBase = Math.max(20, Math.floor((gameState?.maxCombo || 1) * 1.5));
+                const comboTarget = comboBase + Math.floor(days * 2);  // +2 per day
+
                 dailyChallenges = {
-                    stars: { current: 0, target: baseTarget, completed: false, reward: baseTarget * 10 },
-                    combo: { current: 0, target: Math.max(20, Math.floor((gameState?.maxCombo || 1) * 1.5)), completed: false, reward: 5000 },
+                    stars: { current: 0, target: starsTarget, completed: false, reward: starsTarget * 10 },
+                    combo: { current: 0, target: comboTarget, completed: false, reward: 5000 + (days * 500) },
                     share: { current: 0, target: 5, completed: false, reward: 1000 }
                 };
                 saveDailyChallenges();
@@ -3911,6 +3981,11 @@
             }
 
             function addToRanking() {
+                // Always use the most current name (popup may have updated localStorage)
+                const savedName = localStorage.getItem('starrush_player_name');
+                if (savedName && savedName !== 'Jogador' && savedName !== 'Player') {
+                    gameState.playerName = savedName;
+                }
                 const playerName = gameState.playerName;
                 const existingIndex = ranking.findIndex(r => r.name === playerName);
                 
@@ -4162,7 +4237,7 @@
                             
                             if (gameState.score > gameState.record) {
                                 gameState.record = gameState.score;
-                                showBonusAnimation('🏆 NOVO RECORDE!');
+                                showBonusAnimation(tm('🏆 NOVO RECORDE!','🏆 NEW RECORD!'));
                                 addToRanking();
                             }
                             
@@ -4268,6 +4343,14 @@
                                     safeButtonClick('continueBtn', async () => {
                                         const watched = await showRewardedAd('extraLife');
                                         if (watched) {
+                                            // Save current score to ranking before resetting
+                                            if (gameState.score > 0) {
+                                                if (gameState.score > gameState.record) {
+                                                    gameState.record = gameState.score;
+                                                }
+                                                addToRanking();
+                                                saveGameProgress();
+                                            }
                                             gameState.gameActive = true;
                                             initGame();
                                         } else {
@@ -4406,7 +4489,7 @@
                 updateMonthlyProgress('shares', 1);
 
                 createAchievementSound();
-                showBonusAnimation(`+${bonus} CONSTELAÇÃO COMPARTILHADA!`);
+                showBonusAnimation(tm(`+${bonus} CONSTELAÇÃO COMPARTILHADA!`,`+${bonus} CONSTELLATION SHARED!`));
                 showMessage(tm(`🌟 Brilha comemorou! +${bonus} estrelas por compartilhar!`,`🌟 Brilha celebrated! +${bonus} stars for sharing!`));
 
                 checkAchievements();
@@ -4421,9 +4504,9 @@
 
             function getShareText() {
                 const nome = gameState.playerName;
-                const pontos = Math.floor(gameState.score);
-                const combo = gameState.maxCombo;
-                const estrelas = gameState.totalStars;
+                const pontos = formatNum(gameState.score);
+                const combo = formatNum(gameState.maxCombo);
+                const estrelas = formatNum(gameState.totalStars);
                 const vidas = LIFE_SYSTEM.current;
 
                 if (currentLanguage === 'en') {
@@ -4648,7 +4731,7 @@
                     ctx.fillStyle = 'rgba(0,0,0,0.5)';
                     ctx.fillRect(6, 6, 118, 22);
                     ctx.fillStyle = '#fff';
-                    ctx.fillText(`👻 Sem bolas: ${remaining}s`, 10, 21);
+                    ctx.fillText(tm(`👻 Sem Fúria: ${remaining}s`,`👻 No Furia: ${remaining}s`), 10, 21);
                     ctx.restore();
                 }
                 
@@ -4670,7 +4753,7 @@
                     ctx.textAlign = 'center';
                     ctx.fillText(tm('🔴 A Fúria venceu...','🔴 Furia won...'), 0, 0);
                     ctx.font = '16px Arial';
-                    ctx.fillText(tm(`${Math.floor(gameState.score)} estrelas salvas em Constelândia`,`${Math.floor(gameState.score)} stars saved in Constelandia`), 0, 40);
+                    ctx.fillText(tm(`${formatNum(gameState.score)} estrelas salvas em Constelândia`,`${formatNum(gameState.score)} stars saved in Constelandia`), 0, 40);
                     ctx.restore();
                     ctx.globalAlpha = 1.0;
                 }
