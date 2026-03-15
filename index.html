@@ -1272,32 +1272,43 @@
                     ctx.fillRect(x, y, size, size);
                 }
                 
+                // Estrelas decorativas no fundo
                 ctx.fillStyle = '#ffd700';
-                ctx.font = 'bold 60px Arial';
+                for (let i = 0; i < 8; i++) {
+                    ctx.font = '28px Arial';
+                    ctx.fillText('⭐', 80 + i * 140, 55);
+                }
+
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 52px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('🌟 NOVO RECORDE! 🌟', 600, 100);
-                
+                ctx.fillText('✨ MINHA CONSTELAÇÃO BRILHOU! ✨', 600, 100);
+
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 48px Arial';
-                ctx.fillText(gameState.playerName, 600, 180);
-                
+                ctx.font = 'bold 44px Arial';
+                ctx.fillText(`Eu, ${gameState.playerName}, salvei:`, 600, 175);
+
                 ctx.fillStyle = '#ffd700';
-                ctx.font = 'bold 120px Arial';
+                ctx.font = 'bold 130px Arial';
                 ctx.fillText(Math.floor(gameState.record), 600, 340);
-                ctx.font = 'bold 40px Arial';
-                ctx.fillText('PONTOS', 600, 390);
-                
+                ctx.font = 'bold 38px Arial';
+                ctx.fillText('ESTRELAS EM CONSTELÂNDIA', 600, 390);
+
+                ctx.fillStyle = '#ff6b6b';
+                ctx.font = 'bold 30px Arial';
+                ctx.fillText('🔴 Eu enfrentei a Fúria e venci!', 600, 450);
+
                 ctx.fillStyle = '#4a90e2';
-                ctx.font = '32px Arial';
-                ctx.fillText(`⭐ ${gameState.starsCollected} Estrelas  |  🔥 Combo x${gameState.maxCombo}`, 600, 460);
-                
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 36px Arial';
-                ctx.fillText('Consegue me vencer? 🎮', 600, 530);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
                 ctx.font = '28px Arial';
-                ctx.fillText('starrushgame.vercel.app', 600, 590);
+                ctx.fillText(`⭐ ${gameState.starsCollected} estrelas salvas  |  🔥 Combo x${gameState.maxCombo}`, 600, 495);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 34px Arial';
+                ctx.fillText('Vem construir a SUA constelação! 🌟', 600, 545);
+
+                ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
+                ctx.font = 'bold 26px Arial';
+                ctx.fillText('#EuSalveiAFúria  #ASuaConstelação  starrushgame.vercel.app', 600, 600);
                 
                 return screenshotCanvas.toDataURL('image/png');
             }
@@ -1318,13 +1329,13 @@
                                     url: 'https://starrushgame.vercel.app'
                                 });
                             });
-                        showMessage('📸 Compartilhando seu recorde!');
+                        showMessage('📸 Compartilhando minha constelação com o mundo!');
                     } else {
                         const link = document.createElement('a');
                         link.download = `starrush-record-${gameState.record}.png`;
                         link.href = imageData;
                         link.click();
-                        showMessage('📸 Screenshot salva! Compartilhe seu recorde!');
+                        showMessage('📸 Imagem da minha constelação salva! Compartilhe!');
                     }
                 } catch (error) {
                     console.error('Erro ao gerar screenshot:', error);
@@ -1336,7 +1347,7 @@
                 const challengeUrl = `${window.location.origin}${window.location.pathname}?challenge=${challengeId}`;
                 
                 navigator.clipboard.writeText(challengeUrl).then(() => {
-                    showMessage('🔗 Link de desafio copiado! Envie para seus amigos!');
+                    showMessage('🔗 Link copiado! Desafie seus amigos a construírem a constelação deles!');
                 });
                 
                 const shareText = `🎮 ${gameState.playerName} te desafiou no Starrush!\n\n🎯 Meta: Bater ${Math.floor(gameState.record)} pontos\n\nVocê aceita o desafio? 🔥`;
@@ -1362,7 +1373,7 @@
                         const decoded = atob(challengeId);
                         const [challenger, score, timestamp] = decoded.split(':');
                         
-                        showMessage(`🎯 Desafio de ${challenger}: Bater ${score} pontos!`);
+                        showMessage(`🎯 Desafio de ${challenger}: Supere ${score} estrelas em Constelândia!`);
                         localStorage.setItem('active_challenge', JSON.stringify({ challenger, score, timestamp }));
                     } catch (error) {
                         console.error('Desafio inválido');
@@ -1396,7 +1407,7 @@
                 localStorage.setItem('last_play_date', today);
                 
                 if (streak >= 7) {
-                    showMessage('🎁 7 dias seguidos! Ganhou skin especial!');
+                    showMessage('🎁 7 dias seguidos em Constelândia! A Luminara te deu uma skin especial!');
                     localStorage.setItem('streak_skin_unlocked', 'true');
                     if (typeof skins !== 'undefined' && skins.neon) {
                         skins.neon.unlocked = true;
@@ -1886,24 +1897,24 @@
                 gain: function() {
                     if (this.current < this.max) {
                         this.current++;
-                        showMessage('🌟 VOCÊ GANHOU UMA ESTRELA DA VIDA!');
+                        showMessage('🌟 O colar brilhou! Ganhei mais uma estrela da vida!');
                         this.animate();
                         updateLivesDisplay();
                         
                         return true;
                     }
-                    showMessage('✨ Sua constelação já está completa!');
+                    showMessage('✨ Meu colar está completo! A Luminara ficaria orgulhosa!');
                     return false;
                 },
                 
                 lose: function() {
                     if (this.current > 0) {
                         this.current--;
-                        showMessage('⭐ Uma estrela se apagou...');
+                        showMessage('🔴 A Fúria acertou... uma estrela do meu colar se apagou!');
                         updateLivesDisplay();
                         
                         if (this.current > 0) {
-                            showMessage(`✨ Ainda brilham ${this.current} estrelas!`);
+                            showMessage(`💪 Ainda tenho ${this.current} estrelas no meu colar! Não vou desistir!`);
                         }
                         return true;
                     }
@@ -2196,7 +2207,7 @@
                             addToRanking();
                         }
                         updateDisplay();
-                        showMessage('🔥 PONTOS TRIPLICADOS!');
+                        showMessage('🔥 Fúria ficou com raiva! Minhas estrelas triplicaram!');
                         break;
                         
                     case 'doublePoints':
@@ -2208,7 +2219,7 @@
                             addToRanking();
                         }
                         updateDisplay();
-                        showMessage('🎯 PONTOS EM DOBRO!');
+                        showMessage('🎯 Poder de Constelândia! Minhas estrelas dobraram!');
                         break;
                         
                     case 'extraLife':
@@ -2224,7 +2235,7 @@
                             gameState.hideObstaclesEnd = null;
                             gameState.obstacles.forEach(obs => obs.visible = true);
                         }, 60000);
-                        showMessage('👻 Bolas vermelhas sumindo por 1 minuto!');
+                        showMessage('👻 As sentinelas da Fúria fugiram por 1 minuto!');
                         break;
                 }
                 saveGameProgress();
@@ -2791,7 +2802,7 @@
                     });
                     
                     createStarRainEffect();
-                    showMessage('💫 CHUVA DE ESTRELAS! Todas as vidas renovadas!');
+                    showMessage('💫 A Luminara enviou uma chuva de estrelas! Todas as vidas renovadas!');
                     LIFE_SYSTEM.current = LIFE_SYSTEM.max;
                     updateLivesDisplay();
                 }
@@ -3118,7 +3129,7 @@
                     
                     if (gameState.combo >= 50) {
                         createCometEffect();
-                        showMessage('💫 UM COMETA PASSOU! +2 ESTRELAS!');
+                        showMessage('💫 A Luminara enviou um cometa! +2 estrelas pro meu colar!');
                         LIFE_SYSTEM.current = Math.min(LIFE_SYSTEM.current + 2, LIFE_SYSTEM.max);
                         updateLivesDisplay();
                     }
@@ -3128,7 +3139,7 @@
             function resetCombo() {
                 if (gameState.combo > 1) {
                     createComboBreakSound();
-                    showMessage(`💔 Combo quebrado! Você estava em x${gameState.combo}`);
+                    showMessage(`💔 As sentinelas da Fúria quebraram meu combo x${gameState.combo}!`);
                 }
                 gameState.combo = 1;
                 updateCombo();
@@ -3344,7 +3355,7 @@
                     
                     saveGameProgress();
                     createAchievementSound();
-                    showMessage('🏆 Nova conquista desbloqueada!');
+                    showMessage('🏆 Nova conquista em Constelândia! A Brilha pulou de alegria!');
                     localStorage.setItem('achievements', JSON.stringify(playerAchievements));
                     updateAchievementsBar();
                     updateDisplay();
@@ -3451,7 +3462,7 @@
                                 try {
                                     const challenge = JSON.parse(activeChallenge);
                                     if (gameState.record >= parseInt(challenge.score)) {
-                                        showMessage(`🏆 DESAFIO VENCIDO! Você bateu ${challenge.challenger}!`);
+                                        showMessage(`🏆 DESAFIO VENCIDO! Eu superei ${challenge.challenger} em Constelândia!`);
                                         localStorage.removeItem('active_challenge');
                                         generateChallengeLink();
                                     }
@@ -3683,7 +3694,7 @@
                     if (distance < gameState.player.radius + obs.radius && gameState.gameActive) {
                         if (activeBoosts.extraLife) {
                             activeBoosts.extraLife = false;
-                            showMessage('💫 Escudo ativado!');
+                            showMessage('💫 A Brilha me protegeu! Escudo ativado!');
                             gameState.hitFlash = 6;
                             gameState.player.x = Math.random() * (canvas.width - 40) + 20;
                             gameState.player.y = Math.random() * (canvas.height - 40) + 20;
@@ -3707,7 +3718,7 @@
                                 obstacleTimer = null;
                             }
                             
-                            showMessage('💫 TODAS AS ESTRELAS SE APAGARAM...');
+                            showMessage('🔴 A Fúria venceu... todas as estrelas do meu colar se apagaram...');
                             
                             if (checkAdCooldown('rewarded')) {
                                 const continueBtn = document.createElement('div');
@@ -3727,7 +3738,7 @@
                                     box-shadow: 0 5px 20px rgba(255,215,0,0.5);
                                     animation: pulse 1.5s infinite;
                                 `;
-                                continueBtn.innerHTML = '🌟 RENASCER COM UMA ESTRELA?';
+                                continueBtn.innerHTML = '🌟 A Brilha pode me salvar! Renascer?';
                                 
                                 const timer = document.createElement('div');
                                 timer.className = 'countdown-timer';
@@ -3757,7 +3768,7 @@
                                             initGame();
                                         } else {
                                             showInterstitialAd('game_over');
-                                            showMessage(`💫 Game Over! Pontuação: ${gameState.score}`);
+                                            showMessage(`💫 Fui derrotado em Constelândia com ${Math.floor(gameState.score)} estrelas salvas!`);
                                         }
                                     });
                                 };
@@ -3811,24 +3822,24 @@
             function getViralMessage(type) {
                 const messages = {
                     gainLife: [
-                        `🌟 Acabei de ganhar uma estrela da vida no Starrush!`,
-                        `✨ Minha constelação está crescendo! +1 estrela!`,
-                        `💫 Mais uma estrela brilhando no meu céu!`
+                        `🌟 Acabei de salvar mais uma estrela pra MINHA constelação no Starrush! A Brilha ficou feliz! ✨`,
+                        `💫 Minha constelação está crescendo! Mais uma estrela salva de Constelândia!`,
+                        `⭐ A Luminara tinha razão: eu vim até aqui e salvei mais uma estrela! #ASuaConstelação`
                     ],
                     loseLife: [
-                        `⭐ Perdi uma estrela... mas ainda brilham ${LIFE_SYSTEM.current}!`,
-                        `✨ Ainda tenho estrelas para continuar!`,
-                        `💪 Uma estrela se apagou, mas não vou desistir!`
+                        `🔴 A Fúria acertou uma das minhas estrelas... mas ainda tenho ${LIFE_SYSTEM.current} brilhando! Não vou desistir da MINHA constelação!`,
+                        `⭐ Uma sentinela da Fúria me pegou... mas a Brilha me anima: ainda brilham ${LIFE_SYSTEM.current} estrelas!`,
+                        `💪 Perdi uma estrela do colar... mas MINHA constelação não vai desaparecer! #EuSalveiAFúria`
                     ],
                     cometEvent: [
-                        `💫 UM COMETA PASSOU! Ganhei 2 estrelas extras!`,
-                        `✨ Evento raro! Cometa me deu mais estrelas!`,
-                        `🌟 Minha sorte no Starrush está brilhando!`
+                        `💫 UM COMETA DE CONSTELÂNDIA PASSOU! Ganhei 2 estrelas extras pra MINHA constelação!`,
+                        `✨ Evento raro! A Luminara mandou um cometa! +2 estrelas no meu colar!`,
+                        `🌟 Constelândia me abençoou com um cometa! MINHA constelação está cada vez mais linda!`
                     ],
                     gameOver: [
-                        `💫 Todas as estrelas se apagaram... Mas vou renascer!`,
-                        `✨ Game Over no Starrush. Hora de brilhar de novo!`,
-                        `🌟 Minhas estrelas vão voltar a brilhar!`
+                        `💫 A Fúria venceu dessa vez... todas as minhas estrelas se apagaram. Mas vou voltar pra MINHA constelação! #Starrush`,
+                        `✨ O colar das estrelas da vida chegou ao fim... Mas a Brilha disse: sempre dá pra recomeçar! #ASuaConstelação`,
+                        `🌟 Constelândia vai me esperar. MINHA constelação não está completa ainda! #EuSalveiAFúria`
                     ]
                 };
                 
@@ -3891,8 +3902,8 @@
                 updateMonthlyProgress('shares', 1);
 
                 createAchievementSound();
-                showBonusAnimation(`+${bonus} COMPARTILHOU!`);
-                showMessage(`🎁 Bônus de ${bonus} pontos!`);
+                showBonusAnimation(`+${bonus} CONSTELAÇÃO COMPARTILHADA!`);
+                showMessage(`🌟 Brilha comemorou! +${bonus} estrelas por compartilhar!`);
 
                 checkAchievements();
                 updateDisplay();
@@ -3900,20 +3911,20 @@
 
                 setTimeout(() => {
                     gameState.bonusAvailable = true;
-                    showMessage('✨ Novo bônus disponível!');
+                    showMessage('✨ A Luminara liberou um novo bônus pra mim!');
                 }, 30000);
             }
 
             function getShareText() {
                 const frases = [
-                    `✨ ${gameState.playerName} fez ${gameState.score.toFixed(2)} pontos no Starrush Infinito! Consegue superar? 🌟`,
-                    `🔥 ${gameState.playerName} conseguiu combo x${gameState.maxCombo} no Starrush! 🎮`,
-                    `🏆 ${gameState.playerName} bateu recorde: ${gameState.record.toFixed(2)} estrelas! Vem jogar 💫`,
-                    `🌟 ${gameState.playerName} já coletou ${gameState.totalStars} estrelas no Starrush!`,
-                    `⚡ ${gameState.playerName} conquistou ${playerAchievements.length} conquistas! E você?`,
-                    `📅 ${gameState.playerName} já completou ${challengeHistory.currentMonth.stars} estrelas este mês!`,
-                    `🔥 ${gameState.playerName} está tentando o combo x100! Será que consegue?`,
-                    `🌟 ${gameState.playerName} tem ${LIFE_SYSTEM.current} estrelas da vida!`,
+                    `🌟 Eu, ${gameState.playerName}, salvei ${Math.floor(gameState.score)} estrelas pra MINHA constelação no Starrush! A Fúria tentou me parar mas não conseguiu! Consegue me superar? #EuSalveiAFúria`,
+                    `🔴 Eu enfrentei as sentinelas da Fúria e cheguei ao combo x${gameState.maxCombo}! MINHA constelação está cada vez mais linda! #Starrush #ASuaConstelação`,
+                    `🏆 Eu, ${gameState.playerName}, bati recorde em Constelândia: ${Math.floor(gameState.record)} estrelas salvas! A Brilha ficou orgulhosa! Vem construir a SUA! #Starrush`,
+                    `💫 Eu já salvei ${gameState.totalStars} estrelas pra MINHA constelação! A Luminara disse que sou especial! E você, já construiu a SUA? #ASuaConstelação`,
+                    `⚡ Eu conquistei ${playerAchievements.length} conquistas em Constelândia! A Fúria não esperava por mim! E você? #EuSalveiAFúria`,
+                    `📅 Eu já salvei ${challengeHistory.currentMonth.stars} estrelas esse mês em Constelândia! MINHA constelação nunca foi tão linda! #Starrush`,
+                    `🔥 Eu estou tentando o combo x100 em Constelândia! As sentinelas da Fúria não vão me parar! #ASuaConstelação #Starrush`,
+                    `🌟 Eu tenho ${LIFE_SYSTEM.current} estrelas da vida no meu colar! A Luminara me deu esse presente! Vem construir a SUA constelação! #Starrush`,
                     getViralMessage('gainLife')
                 ];
                 return frases[Math.floor(Math.random() * frases.length)];
@@ -4129,9 +4140,9 @@
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 24px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('💫 GAME OVER', 0, 0);
+                    ctx.fillText('🔴 A Fúria venceu...', 0, 0);
                     ctx.font = '16px Arial';
-                    ctx.fillText(`Pontuação: ${gameState.score.toFixed(2)}`, 0, 40);
+                    ctx.fillText(`${Math.floor(gameState.score)} estrelas salvas em Constelândia`, 0, 40);
                     ctx.restore();
                     ctx.globalAlpha = 1.0;
                 }
@@ -4188,7 +4199,7 @@
                         LIFE_SYSTEM.reset();
                         gameState.gameActive = true;
                         initGame();
-                        showMessage('🌟 Nova jornada infinita!');
+                        showMessage('🌟 De volta a Constelândia! A Brilha está te esperando!');
                     });
                 });
 
