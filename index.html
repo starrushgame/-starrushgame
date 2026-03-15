@@ -2042,7 +2042,7 @@
                 const m = document.createElement('div');
                 m.id = 'privacyModal';
                 m.className = 'modal';
-                m.style.zIndex = '9999';
+                m.style.zIndex = '200000';
                 const _ppEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
                 const _dateStr = new Date().toLocaleDateString(_ppEN ? 'en-US' : 'pt-BR');
                 m.innerHTML = `
@@ -2556,8 +2556,8 @@
             const AD_COOLDOWN = {
                 rewarded: {
                     lastTime: 0,
-                    minInterval: 45000,
-                    maxPerHour: 8,
+                    minInterval: 30000,
+                    maxPerHour: 12,
                     countThisHour: 0,
                     hourReset: Date.now()
                 },
