@@ -8,11 +8,47 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' fill='%23ffd700' stroke='%23ffa500' stroke-width='3'/%3E%3C/svg%3E">
     <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' fill='%23ffd700' stroke='%23ffa500' stroke-width='3'/%3E%3C/svg%3E">
     
-    <!-- COOKIE CONSENT by TermsFeed v4.2 (gratuito, ilimitado) -->
+    <!-- COOKIE CONSENT by TermsFeed v4.2 -->
     <link rel="stylesheet" type="text/css" href="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.css" />
     <script type="text/javascript" src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js"></script>
     
-    <!-- Estilo personalizado do Cookie Consent - VERSÃO MOBILE OTIMIZADA -->
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json,{
+      &quot;name&quot;: &quot;Starrush - Infinito Estelar&quot;,
+      &quot;short_name&quot;: &quot;Starrush&quot;,
+      &quot;description&quot;: &quot;A magical adventure where YOU build your own constellation&quot;,
+      &quot;start_url&quot;: &quot;/&quot;,
+      &quot;display&quot;: &quot;fullscreen&quot;,
+      &quot;background_color&quot;: &quot;#0a0f2a&quot;,
+      &quot;theme_color&quot;: &quot;#1a1f3a&quot;,
+      &quot;orientation&quot;: &quot;portrait&quot;,
+      &quot;icons&quot;: [
+        {
+          &quot;src&quot;: &quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' fill='%23ffd700' stroke='%23ffa500' stroke-width='3'/%3E%3C/svg%3E&quot;,
+          &quot;sizes&quot;: &quot;72x72&quot;,
+          &quot;type&quot;: &quot;image/svg+xml&quot;
+        },
+        {
+          &quot;src&quot;: &quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' fill='%23ffd700' stroke='%23ffa500' stroke-width='3'/%3E%3C/svg%3E&quot;,
+          &quot;sizes&quot;: &quot;192x192&quot;,
+          &quot;type&quot;: &quot;image/svg+xml&quot;
+        },
+        {
+          &quot;src&quot;: &quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' fill='%23ffd700' stroke='%23ffa500' stroke-width='3'/%3E%3C/svg%3E&quot;,
+          &quot;sizes&quot;: &quot;512x512&quot;,
+          &quot;type&quot;: &quot;image/svg+xml&quot;
+        }
+      ]
+    }">
+    <meta name="theme-color" content="#1a1f3a">
+    
+    <!-- Meta tags para PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Starrush">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' fill='%23ffd700' stroke='%23ffa500' stroke-width='3'/%3E%3C/svg%3E">
+    
+    <!-- Estilo personalizado do Cookie Consent -->
     <style>
         /* Reset do banner para evitar conflitos */
         .cc-window {
@@ -161,7 +197,7 @@
             }
         }
 
-        /* Link de preferências personalizado (mais visível para CCPA) */
+        /* Link de preferências personalizado */
         #open_preferences_center {
             position: fixed;
             bottom: 10px;
@@ -216,16 +252,45 @@
             background: rgba(0,0,0,0.5);
             border-color: #ffd700;
         }
+
+        /* ===== BOTÃO DE INSTALAÇÃO PWA ===== */
+        #installPWA {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: linear-gradient(45deg, #4a90e2, #9b59b6);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1em;
+            border: 3px solid #ffd700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            cursor: pointer;
+            z-index: 10001;
+            animation: pulseInstall 2s infinite;
+            transition: transform 0.3s;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,215,0,0.5);
+        }
+
+        #installPWA:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255,215,0,0.3);
+        }
+
+        @keyframes pulseInstall {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#1a1f3a">
-    
-    <!-- ESTILOS ORIGINAIS DO JOGO (100% PRESERVADOS) -->
+    <!-- ESTILOS ORIGINAIS DO JOGO -->
     <style>
         * {
             margin: 0;
@@ -623,7 +688,7 @@
             padding: 2px 10px;
         }
 
-        #rankingBtn, #skinBtn, #bonusBtn, #historyBtn {
+        #rankingBtn, #skinBtn, #bonusBtn, #historyBtn, #dailyBonusBtn {
             background: linear-gradient(45deg, #4a90e2, #9b59b6);
         }
 
@@ -635,6 +700,12 @@
 
         #historyBtn {
             background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        #dailyBonusBtn {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+            font-weight: bold;
         }
 
         .modal {
@@ -1278,6 +1349,7 @@
             <button id="bonusBtn">🎁 Bônus</button>
             <button id="musicBtn">🎵 Música</button>
             <button id="historyBtn">📅 Histórico</button>
+            <button id="dailyBonusBtn">🎁 Presente</button>
         </div>
 
         <div id="dailyChallenge">
@@ -1352,7 +1424,6 @@
         });
     </script>
     <noscript>Free cookie consent management tool by <a href="https://www.termsfeed.com/">TermsFeed</a></noscript>
-    <!-- End Cookie Consent by TermsFeed -->
 
     <!-- Google AdSense (bloqueado até consentimento) -->
     <script type="text/plain" data-cookie-consent="targeting">
@@ -1378,16 +1449,239 @@
         });
     </script>
 
-    <!-- Links legais no rodapé (mais visíveis para CCPA) -->
+    <!-- Links legais no rodapé -->
     <div class="legal-links">
         <a href="#" onclick="showPrivacyPolicyModal();return false;">📄 Política de Privacidade</a>
         <a href="#" id="open_preferences_center">⚙️ Cookie</a>
     </div>
 
-    <!-- SCRIPTS DO JOGO (100% PRESERVADOS) -->
+    <!-- Botão de instalação PWA -->
+    <div id="installPWA" style="display: none;">📲 Instalar Starrush</div>
+
+    <!-- Service Worker -->
+    <script>
+        // ===== REGISTRAR SERVICE WORKER =====
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                const swCode = `
+                    const CACHE_NAME = 'starrush-v1';
+                    const urlsToCache = [
+                        '/',
+                        'index.html',
+                        'https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.css',
+                        'https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js',
+                        'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
+                    ];
+
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => {
+                                    console.log('✅ Cache aberto');
+                                    return cache.addAll(urlsToCache);
+                                })
+                                .then(() => self.skipWaiting())
+                        );
+                    });
+
+                    self.addEventListener('activate', event => {
+                        event.waitUntil(
+                            caches.keys().then(cacheNames => {
+                                return Promise.all(
+                                    cacheNames.map(cacheName => {
+                                        if (cacheName !== CACHE_NAME) {
+                                            console.log('🗑️ Removendo cache antigo:', cacheName);
+                                            return caches.delete(cacheName);
+                                        }
+                                    })
+                                );
+                            }).then(() => self.clients.claim())
+                        );
+                    });
+
+                    self.addEventListener('fetch', event => {
+                        if (event.request.url.includes('supabase') || 
+                            event.request.url.includes('ipapi.co') ||
+                            event.request.method !== 'GET') {
+                            return;
+                        }
+
+                        event.respondWith(
+                            caches.match(event.request).then(cachedResponse => {
+                                const fetchPromise = fetch(event.request)
+                                    .then(networkResponse => {
+                                        if (networkResponse && networkResponse.status === 200) {
+                                            const responseToCache = networkResponse.clone();
+                                            caches.open(CACHE_NAME).then(cache => {
+                                                cache.put(event.request, responseToCache);
+                                            });
+                                        }
+                                        return networkResponse;
+                                    })
+                                    .catch(error => {
+                                        console.log('❌ Falha na rede, usando cache:', error);
+                                        return cachedResponse;
+                                    });
+
+                                return cachedResponse || fetchPromise;
+                            })
+                        );
+                    });
+
+                    self.addEventListener('sync', event => {
+                        if (event.tag === 'sync-game-data') {
+                            event.waitUntil(syncGameData());
+                        }
+                    });
+
+                    async function syncGameData() {
+                        const cache = await caches.open(CACHE_NAME);
+                        const requests = await cache.keys();
+                        const gameData = {};
+                        
+                        for (const request of requests) {
+                            if (request.url.includes('starrush_save')) {
+                                const response = await cache.match(request);
+                                gameData[request.url] = await response.json();
+                            }
+                        }
+                        
+                        console.log('📤 Dados sincronizados:', gameData);
+                    }
+                `;
+
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(swUrl).then(registration => {
+                    console.log('✅ Service Worker registrado:', registration.scope);
+                    
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        console.log('🔄 Nova versão do Service Worker encontrada');
+                        
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                if (confirm('Nova versão disponível! Atualizar agora?')) {
+                                    newWorker.postMessage({ action: 'skipWaiting' });
+                                }
+                            }
+                        });
+                    });
+                }).catch(error => {
+                    console.error('❌ Erro ao registrar Service Worker:', error);
+                });
+
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('🔄 Novo Service Worker ativo, recarregando...');
+                    window.location.reload();
+                });
+            });
+        }
+
+        function checkConnection() {
+            if (!navigator.onLine) {
+                if (typeof showMessage === 'function') {
+                    showMessage(
+                        window.currentLanguage === 'en' 
+                            ? '📴 Offline mode - Progress saved locally'
+                            : '📴 Modo offline - Progresso salvo localmente'
+                    );
+                }
+            }
+        }
+
+        window.addEventListener('online', () => {
+            if (typeof showMessage === 'function') {
+                showMessage(
+                    window.currentLanguage === 'en'
+                        ? '🌐 Connection restored! Data synchronized'
+                        : '🌐 Conexão restaurada! Dados sincronizados'
+                );
+            }
+        });
+
+        window.addEventListener('offline', checkConnection);
+        checkConnection();
+    </script>
+
+    <!-- Sistema de instalação PWA -->
+    <script>
+        let deferredPrompt;
+        const installButton = document.getElementById('installPWA');
+        let installButtonShown = false;
+        let gameStartTime = Date.now();
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            checkInstallButton();
+        });
+
+        function checkInstallButton() {
+            const timePlayed = Date.now() - gameStartTime;
+            if (timePlayed >= 60000 && !installButtonShown && deferredPrompt) {
+                showInstallButton();
+            }
+        }
+
+        function showInstallButton() {
+            if (!deferredPrompt || installButtonShown) return;
+            
+            installButton.style.display = 'block';
+            installButtonShown = true;
+            
+            installButton.textContent = window.currentLanguage === 'en' 
+                ? '📲 Install Starrush' 
+                : '📲 Instalar Starrush';
+        }
+
+        function hideInstallButton() {
+            installButton.style.display = 'none';
+        }
+
+        installButton.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            deferredPrompt.prompt();
+            
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`📲 Resultado da instalação: ${outcome}`);
+            
+            deferredPrompt = null;
+            hideInstallButton();
+        });
+
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('✅ Starrush foi instalado com sucesso!');
+            hideInstallButton();
+            
+            if (typeof showMessage === 'function') {
+                showMessage(
+                    window.currentLanguage === 'en'
+                        ? '🎉 Starrush installed! Now play offline!'
+                        : '🎉 Starrush instalado! Agora jogue offline!'
+                );
+            }
+        });
+
+        setInterval(checkInstallButton, 5000);
+
+        const originalInitGame = window.initGame || function() {};
+        window.initGame = function() {
+            gameStartTime = Date.now();
+            originalInitGame();
+        };
+
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('📱 Executando como app instalado');
+            document.body.classList.add('pwa-installed');
+        }
+    </script>
+
+    <!-- SCRIPTS DO JOGO -->
     <script>
         (function() {
-
             // ===== INTERNACIONALIZAÇÃO PT/EN =====
             let currentLanguage = 'pt';
 
@@ -1420,6 +1714,7 @@
                     btnBonus: "🎁 Bônus",
                     btnMusic: "🎵 Música",
                     btnHistory: "📅 Histórico",
+                    btnDailyBonus: "🎁 Presente",
                     musicOn: "🔊 Música",
                     musicOff: "🎵 Música",
                     rankingGlobal: "🏆 Ranking Global",
@@ -1463,6 +1758,7 @@
                     btnBonus: "🎁 Bonus",
                     btnMusic: "🎵 Music",
                     btnHistory: "📅 History",
+                    btnDailyBonus: "🎁 Gift",
                     musicOn: "🔊 Music",
                     musicOff: "🎵 Music",
                     rankingGlobal: "🏆 Global Ranking",
@@ -1567,31 +1863,22 @@
                     const el = document.getElementById(elMap[key]);
                     if (el) el.innerHTML = t(key);
                 });
-                // Privacy and cookie links: update text only, preserve onclick
                 const lp = document.getElementById('linkPrivacy');
                 if (lp) lp.textContent = t('privacyLink');
                 const lc = document.getElementById('linkCookies');
                 if (lc) lc.textContent = t('cookieLink');
                 const inp = document.getElementById('playerNameInput');
                 if (inp) inp.placeholder = t('nameInputPlaceholder');
-                // Active lang buttons
                 const btnPT = document.getElementById('btnPT');
                 const btnEN = document.getElementById('btnEN');
                 if (btnPT) btnPT.classList.toggle('active', currentLanguage === 'pt');
                 if (btnEN) btnEN.classList.toggle('active', currentLanguage === 'en');
-                // Update story body
                 const body = document.getElementById('storyBody');
                 if (body) body.innerHTML = storyContent[currentLanguage] || storyContent.pt;
 
-                // Update static game UI elements
-                const staticMap = {
-                    'livesLabel':     t('livesLabel'),
-                    'btnNewGame_el':  null, // handled by button ids below
-                };
                 const el_livesLabel = document.getElementById('livesLabel');
                 if (el_livesLabel) el_livesLabel.textContent = t('livesLabel');
 
-                // Stats bar labels
                 const statsBar = document.getElementById('statsBar');
                 if (statsBar) {
                     const stats = statsBar.querySelectorAll('.stat');
@@ -1602,13 +1889,11 @@
                     if (stats[4]) { stats[4].childNodes[0].textContent = t('statAchievements'); }
                 }
 
-                // Challenge title & labels
                 const chalTitle = document.querySelector('#dailyChallenge > div:first-child');
                 if (chalTitle) chalTitle.textContent = t('challengeTitle');
                 const ch3 = document.querySelector('#challenge3 > span:first-child');
                 if (ch3) ch3.textContent = t('challenge3Label');
 
-                // Challenge 1: "🌟 Coletar X estrelas" — update label and suffix
                 const ch1span = document.querySelector('#challenge1 > span:first-child');
                 if (ch1span) {
                     const ch1Target = document.getElementById('challenge1Target');
@@ -1616,11 +1901,11 @@
                     ch1span.innerHTML = `${t('challenge1Label')} <span id="challenge1Target">${targetVal}</span> ${t('challenge1Suffix')}`;
                 }
 
-                // Control buttons
                 const btnMap = {
                     'newGameBtn': 'btnNewGame', 'rankingBtn': 'btnRanking',
                     'skinBtn': 'btnSkins', 'bonusBtn': 'btnBonus',
-                    'musicBtn': 'btnMusic', 'historyBtn': 'btnHistory'
+                    'musicBtn': 'btnMusic', 'historyBtn': 'btnHistory',
+                    'dailyBonusBtn': 'btnDailyBonus'
                 };
                 Object.keys(btnMap).forEach(id => {
                     const b = document.getElementById(id);
@@ -1640,7 +1925,6 @@
                 const hasSavedName = localStorage.getItem('starrush_player_name');
                 if (!hasSavedName) {
                     showNamePopup().then((name) => {
-                        // Update gameState with the typed name before tutorial starts
                         if (typeof gameState !== 'undefined') {
                             gameState.playerName = name;
                         }
@@ -1672,7 +1956,6 @@
                     input.onkeypress = (e) => { if (e.key === 'Enter') submit(); };
                 });
             }
-            // ===== FIM INTERNACIONALIZAÇÃO =====
 
             // ==================== SUPABASE CONFIGURAÇÃO ====================
             const SUPABASE_URL = 'https://aflypjszvkyrowpzugii.supabase.co';
@@ -1691,7 +1974,6 @@
                 console.error('❌ Erro Supabase:', error);
             }
             
-            // ==================== NOVO: SISTEMA DE ONLINE ====================
             async function updateLastActive() {
                 if (!supabaseInitialized || !gameState?.playerName) return;
                 try {
@@ -1706,7 +1988,6 @@
             }
             setInterval(updateLastActive, 30000);
             
-            // ==================== SCREENSHOT AUTOMÁTICO DE RECORDES ====================
             function captureRecordScreenshot() {
                 const canvas = document.getElementById('gameCanvas');
                 const screenshotCanvas = document.createElement('canvas');
@@ -1728,7 +2009,6 @@
                     ctx.fillRect(x, y, size, size);
                 }
                 
-                // Estrelas decorativas no fundo
                 ctx.fillStyle = '#ffd700';
                 for (let i = 0; i < 8; i++) {
                     ctx.font = '28px Arial';
@@ -2031,9 +2311,7 @@
                 localStorage.setItem(CONSENT_LOG_KEY, JSON.stringify(consentLog));
             }
 
-            async function showConsentPopup() {
-                // Função mantida vazia (TermsFeed substitui)
-            }
+            async function showConsentPopup() {}
 
             function showPrivacyPolicyModal() {
                 const existing = document.getElementById('privacyModal');
@@ -2220,7 +2498,6 @@
 
                 animateTutorialPreview();
 
-                // Re-render tutorial when language changes while tutorial is open
                 const _origSetLang = setLanguage;
                 setLanguage = function(lang) {
                     _origSetLang(lang);
@@ -2786,6 +3063,11 @@
             }
 
             async function showRewardedAd(rewardType) {
+                if (!gameState.gameActive) {
+                    showMessage(tm('⏳ Você precisa estar jogando para usar bônus!','⏳ You need to be playing to use bonuses!'));
+                    return false;
+                }
+                
                 if (!checkAdCooldown('rewarded')) return false;
                 
                 const wasActive = gameState.gameActive;
@@ -2824,7 +3106,6 @@
                             gameState.adPaused = false;
                             if (rewarded) {
                                 registerAdEvent('rewarded', rewardType, true);
-                                // Reactivate game FIRST so giveReward works with active game state
                                 if (wasActive) {
                                     gameState.gameActive = true;
                                     if (wasPlaying) initAdaptiveMusic();
@@ -2843,7 +3124,6 @@
                             }
                         }
 
-                        // Tenta AdSense H5 Games real
                         if (typeof adBreak === 'function' && window.adsenseReady) {
                             adBreak({
                                 type: 'reward',
@@ -2863,7 +3143,6 @@
                                 }
                             });
                         } else {
-                            // Fallback: simulação quando AdSense não disponível (dev/local)
                             const progressBar = document.createElement('div');
                             progressBar.className = 'progress-bar';
                             const progressFill = document.createElement('div');
@@ -2940,8 +3219,7 @@
 
             function showRewardedAdRecord() {
                 const now = Date.now();
-                // Show at most once every 3 minutes for record
-                if (now - _lastRecordAdShown < 180000) return;
+                if (now - (_lastRecordAdShown || 0) < 180000) return;
                 _lastRecordAdShown = now;
 
                 const popup = document.createElement('div');
@@ -3383,75 +3661,694 @@
                 }
             }
 
-            function showMonthlyHistory() {
-                loadChallengeHistory();
+            // ===== SISTEMA DE BÔNUS DIÁRIO (Presente da Luminara) =====
+            const DAILY_BONUS_KEY = 'starrush_daily_bonus';
+
+            function getDailyBonusStatus() {
+                const lastBonus = localStorage.getItem(DAILY_BONUS_KEY);
+                if (!lastBonus) return { available: true, timeRemaining: 0 };
+                
+                const now = new Date();
+                const lastDate = new Date(lastBonus);
+                
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const lastDay = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate());
+                
+                const available = today > lastDay;
+                
+                if (!available) {
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    const timeRemaining = tomorrow - now;
+                    return { available, timeRemaining };
+                }
+                
+                return { available, timeRemaining: 0 };
+            }
+
+            function showDailyBonusPopup() {
+                const status = getDailyBonusStatus();
+                if (!status.available) {
+                    const hours = Math.floor(status.timeRemaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((status.timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    showMessage(tm(
+                        `⏳ Presente da Luminara em ${hours}h${minutes}m`,
+                        `⏳ Luminara's gift in ${hours}h${minutes}m`
+                    ));
+                    return;
+                }
+                
+                const isEN = currentLanguage === 'en';
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content" style="text-align:center;">
+                        <div style="font-size:3em; margin-bottom:10px;">🎁</div>
+                        <h2 style="color:#ffd700;">${isEN ? '✨ LUMINARA\'S GIFT ✨' : '✨ PRESENTE DA LUMINARA ✨'}</h2>
+                        <p style="margin:20px 0;">${isEN ? 'Choose your reward:' : 'Escolha sua recompensa:'}</p>
+                        <div style="display:grid; gap:15px; margin:20px 0;">
+                            <button class="consent-btn" id="bonusStars" style="background:#4a90e2; padding:15px;">
+                                ⭐ ${isEN ? '100 STARS' : '100 ESTRELAS'}
+                            </button>
+                            <button class="consent-btn" id="bonusSafe" style="background:#e74c3c; padding:15px;">
+                                🛡️ ${isEN ? '30s NO RED BALLS' : '30s SEM BOLAS VERMELHAS'}
+                            </button>
+                        </div>
+                        <button class="consent-btn" onclick="this.closest('.modal').remove()">${isEN ? 'Close' : 'Fechar'}</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                document.getElementById('bonusStars').onclick = () => {
+                    modal.remove();
+                    claimDailyBonus('stars');
+                };
+                
+                document.getElementById('bonusSafe').onclick = () => {
+                    modal.remove();
+                    claimDailyBonus('safe');
+                };
+            }
+
+            function claimDailyBonus(type) {
+                if (!checkAdCooldown('rewarded')) return;
+                
+                const wasActive = gameState.gameActive;
+                const wasPlaying = musicSystem.isPlaying;
+                
+                if (wasActive) {
+                    gameState.gameActive = false;
+                    gameState.adPaused = true;
+                    if (wasPlaying) stopAdaptiveMusic();
+                }
                 
                 const modal = document.createElement('div');
                 modal.className = 'modal';
-                
-                const _hEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
-                let historyHTML = `
-                    <div class="modal-content">
-                        <h2 style="color:#ffd700; text-align:center;">${_hEN ? '📅 Monthly History' : '📅 Histórico Mensal'}</h2>
-                `;
-                
-                const current = challengeHistory.currentMonth;
-                historyHTML += `
-                    <div style="background: rgba(255,215,0,0.1); padding:15px; border-radius:15px; margin:15px 0;">
-                        <h3 style="color:#ffd700; margin-bottom:10px;">📆 ${getMonthName(current.month)}/${current.year} (${_hEN ? 'Current' : 'Atual'})</h3>
-                        <div style="display:grid; gap:10px;">
-                            <div class="comparison-item">
-                                <span class="comparison-icon">⭐</span>
-                                <span><strong>${current.stars}</strong> ${_hEN ? 'stars collected' : 'estrelas coletadas'}</span>
-                                ${current.stars >= 10000 ? `<span style="color:#00ff00;">✅ ${_hEN ? 'Goal 10k' : 'Meta 10k'}</span>` : ''}
-                            </div>
-                            <div class="comparison-item">
-                                <span class="comparison-icon">🔥</span>
-                                <span><strong>${current.combo}</strong> ${_hEN ? 'max combo' : 'combo máximo'}</span>
-                                ${current.combo >= 500 ? `<span style="color:#00ff00;">✅ ${_hEN ? 'Goal 500' : 'Meta 500'}</span>` : ''}
-                            </div>
-                            <div class="comparison-item">
-                                <span class="comparison-icon">📱</span>
-                                <span><strong>${current.shares}</strong> ${_hEN ? 'shares' : 'compartilhamentos'}</span>
-                                ${current.shares >= 100 ? `<span style="color:#00ff00;">✅ ${_hEN ? 'Goal 100' : 'Meta 100'}</span>` : ''}
-                            </div>
+                const isEN = currentLanguage === 'en';
+                modal.innerHTML = `
+                    <div class="modal-content" style="text-align:center;">
+                        <div style="font-size:3em; margin-bottom:10px;">🎬</div>
+                        <h2 style="color:#ffd700;">${isEN ? 'WATCH TO CLAIM?' : 'ASSISTIR PARA GANHAR?'}</h2>
+                        <p style="margin:20px 0;">${isEN ? 'Watch a short video to receive your gift!' : 'Assista um vídeo curto para receber seu presente!'}</p>
+                        <div style="display:flex; gap:10px;">
+                            <button class="consent-btn" id="cancelAd" style="flex:1;">❌ ${isEN ? 'No' : 'Não'}</button>
+                            <button class="consent-btn accept" id="watchAd" style="flex:1;">✅ ${isEN ? 'Watch' : 'Assistir'}</button>
                         </div>
                     </div>
                 `;
+                document.body.appendChild(modal);
                 
-                if (challengeHistory.months.length > 0) {
-                    historyHTML += `<h3 style="color:#ffd700; margin:15px 0;">${_hEN ? '📜 Previous Months' : '📜 Meses Anteriores'}</h3>`;
+                document.getElementById('watchAd').onclick = () => {
+                    modal.remove();
                     
-                    challengeHistory.months.forEach((month, index) => {
-                        historyHTML += `
-                            <div style="background: rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin:10px 0;">
-                                <h4 style="color:#888;">📅 ${month.monthName}/${month.year}</h4>
-                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-top:5px;">
+                    function onAdFinished(rewarded) {
+                        gameState.adPaused = false;
+                        if (rewarded) {
+                            registerAdEvent('rewarded', 'daily_bonus', true);
+                            
+                            localStorage.setItem(DAILY_BONUS_KEY, new Date().toISOString());
+                            
+                            if (type === 'stars') {
+                                gameState.score += 100;
+                                gameState.totalStars += 100;
+                                showBonusAnimation(tm('+100 ESTRELAS!', '+100 STARS!'));
+                                showMessage(tm('✨ Luminara enviou 100 estrelas!', '✨ Luminara sent 100 stars!'));
+                            } else {
+                                activeBoosts.hideObstacles = true;
+                                gameState.hideObstaclesEnd = Date.now() + 30000;
+                                gameState.obstacles.forEach(obs => {
+                                    obs.visible = false;
+                                    if (obs.blinkTimer) { clearTimeout(obs.blinkTimer); obs.blinkTimer = null; }
+                                });
+                                setTimeout(() => {
+                                    activeBoosts.hideObstacles = false;
+                                    gameState.hideObstaclesEnd = null;
+                                    gameState.obstacles.forEach(obs => obs.visible = true);
+                                }, 30000);
+                                showMessage(tm('🛡️ Luminara te protegeu por 30s!', '🛡️ Luminara protected you for 30s!'));
+                            }
+                            
+                            createCometEffect();
+                            
+                            updateDisplay();
+                            saveGameProgress();
+                        }
+                        
+                        if (wasActive) {
+                            gameState.gameActive = true;
+                            if (wasPlaying) initAdaptiveMusic();
+                        }
+                    }
+                    
+                    if (typeof adBreak === 'function' && window.adsenseReady) {
+                        adBreak({
+                            type: 'reward',
+                            name: 'daily_bonus',
+                            beforeAd: () => {},
+                            afterAd: () => {},
+                            adDismissed: () => onAdFinished(false),
+                            adViewed: () => onAdFinished(true),
+                            adBreakDone: (placementInfo) => {
+                                if (placementInfo.breakStatus !== 'viewed' && placementInfo.breakStatus !== 'dismissed') {
+                                    onAdFinished(false);
+                                }
+                            }
+                        });
+                    } else {
+                        const progressBar = document.createElement('div');
+                        progressBar.className = 'progress-bar';
+                        const progressFill = document.createElement('div');
+                        progressFill.className = 'progress-fill';
+                        progressBar.appendChild(progressFill);
+                        document.body.appendChild(progressBar);
+                        let seconds = 0;
+                        const adInterval = setInterval(() => {
+                            seconds++;
+                            progressFill.style.width = `${(seconds / 5) * 100}%`;
+                            if (seconds >= 5) {
+                                clearInterval(adInterval);
+                                progressBar.remove();
+                                onAdFinished(true);
+                            }
+                        }, 1000);
+                    }
+                };
+                
+                document.getElementById('cancelAd').onclick = () => {
+                    modal.remove();
+                    gameState.adPaused = false;
+                    if (wasActive) {
+                        gameState.gameActive = true;
+                        if (wasPlaying) initAdaptiveMusic();
+                    }
+                };
+            }
+
+            // ===== BÔNUS POR MARCO =====
+            function offerMilestoneBoost(challengesCompleted) {
+                const milestones = [10, 50, 100];
+                if (!milestones.includes(challengesCompleted)) return false;
+                
+                const storageKey = `milestone_boost_${challengesCompleted}`;
+                if (localStorage.getItem(storageKey)) return false;
+                
+                const isEN = currentLanguage === 'en';
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content" style="text-align:center;">
+                        <div style="font-size:3em; margin-bottom:10px;">🏆</div>
+                        <h2 style="color:#ffd700;">${challengesCompleted} ${isEN ? 'CHALLENGES!' : 'DESAFIOS!'}</h2>
+                        <p style="margin:20px 0;">${isEN 
+                            ? `You completed ${challengesCompleted} challenges! Watch a video to DOUBLE your reward!` 
+                            : `Você completou ${challengesCompleted} desafios! Assista um vídeo para DOBRAR sua recompensa!`}</p>
+                        <div style="display:flex; gap:10px;">
+                            <button class="consent-btn" id="skipMilestone" style="flex:1;">❌ ${isEN ? 'Skip' : 'Pular'}</button>
+                            <button class="consent-btn accept" id="watchMilestone" style="flex:1;">✅ ${isEN ? 'Watch' : 'Assistir'}</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                document.getElementById('skipMilestone').onclick = () => {
+                    modal.remove();
+                };
+                
+                document.getElementById('watchMilestone').onclick = () => {
+                    modal.remove();
+                    
+                    const wasActive = gameState.gameActive;
+                    const wasPlaying = musicSystem.isPlaying;
+                    
+                    if (wasActive) {
+                        gameState.gameActive = false;
+                        gameState.adPaused = true;
+                        if (wasPlaying) stopAdaptiveMusic();
+                    }
+                    
+                    function onAdFinished(rewarded) {
+                        gameState.adPaused = false;
+                        if (rewarded) {
+                            localStorage.setItem(storageKey, 'true');
+                            
+                            const bonus = challengesCompleted * 1000;
+                            gameState.score += bonus;
+                            showBonusAnimation(tm(`+${bonus} BÔNUS!`, `+${bonus} BONUS!`));
+                            showMessage(tm(
+                                `🎉 Marco de ${challengesCompleted} desafios dobrado!`,
+                                `🎉 ${challengesCompleted} challenges milestone doubled!`
+                            ));
+                            
+                            registerAdEvent('rewarded', `milestone_${challengesCompleted}`, true);
+                            createCometEffect();
+                            updateDisplay();
+                            saveGameProgress();
+                        }
+                        
+                        if (wasActive) {
+                            gameState.gameActive = true;
+                            if (wasPlaying) initAdaptiveMusic();
+                        }
+                    }
+                    
+                    if (typeof adBreak === 'function' && window.adsenseReady) {
+                        adBreak({
+                            type: 'reward',
+                            name: `milestone_${challengesCompleted}`,
+                            beforeAd: () => {},
+                            afterAd: () => {},
+                            adDismissed: () => onAdFinished(false),
+                            adViewed: () => onAdFinished(true),
+                            adBreakDone: (placementInfo) => {
+                                if (placementInfo.breakStatus !== 'viewed' && placementInfo.breakStatus !== 'dismissed') {
+                                    onAdFinished(false);
+                                }
+                            }
+                        });
+                    } else {
+                        setTimeout(() => onAdFinished(true), 2000);
+                    }
+                };
+                
+                return true;
+            }
+
+            // ===== HISTÓRICO MENSAL =====
+            const MONTHLY_HISTORY_KEY = 'starrush_monthly_history';
+
+            let monthlyHistory = {};
+
+            function loadMonthlyHistory() {
+                const saved = localStorage.getItem(MONTHLY_HISTORY_KEY);
+                if (saved) {
+                    try {
+                        monthlyHistory = JSON.parse(saved);
+                    } catch (e) {
+                        console.error('Erro ao carregar histórico mensal:', e);
+                        monthlyHistory = {};
+                    }
+                } else {
+                    monthlyHistory = {};
+                }
+            }
+
+            function saveMonthlyHistory() {
+                localStorage.setItem(MONTHLY_HISTORY_KEY, JSON.stringify(monthlyHistory));
+            }
+
+            function getCurrentMonthKey() {
+                const now = new Date();
+                return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            }
+
+            function updateMonthlyHistory() {
+                loadMonthlyHistory();
+                
+                const monthKey = getCurrentMonthKey();
+                
+                if (!monthlyHistory[monthKey]) {
+                    monthlyHistory[monthKey] = {
+                        days: 0,
+                        stars: 0,
+                        maxCombo: 0
+                    };
+                }
+                
+                const today = new Date().toDateString();
+                const lastPlayedKey = `monthly_last_played_${monthKey}`;
+                const lastPlayed = localStorage.getItem(lastPlayedKey);
+                
+                if (lastPlayed !== today) {
+                    monthlyHistory[monthKey].days++;
+                    localStorage.setItem(lastPlayedKey, today);
+                }
+                
+                monthlyHistory[monthKey].stars = gameState.totalStars || 0;
+                monthlyHistory[monthKey].maxCombo = Math.max(
+                    monthlyHistory[monthKey].maxCombo || 0,
+                    gameState.maxCombo || 0
+                );
+                
+                saveMonthlyHistory();
+            }
+
+            function checkMonthRollover() {
+                loadMonthlyHistory();
+                
+                const lastMonthKey = localStorage.getItem('last_month_key');
+                const currentMonthKey = getCurrentMonthKey();
+                
+                if (lastMonthKey && lastMonthKey !== currentMonthKey) {
+                    const lastMonthData = monthlyHistory[lastMonthKey];
+                    if (lastMonthData) {
+                        const isEN = currentLanguage === 'en';
+                        showMessage(tm(
+                            `📊 Mês passado: ${lastMonthData.days} dias, ${lastMonthData.stars} estrelas!`,
+                            `📊 Last month: ${lastMonthData.days} days, ${lastMonthData.stars} stars!`
+                        ));
+                    }
+                }
+                
+                localStorage.setItem('last_month_key', currentMonthKey);
+            }
+
+            function showMonthlyHistory() {
+                loadMonthlyHistory();
+                
+                const isEN = currentLanguage === 'en';
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                
+                let html = `
+                    <div class="modal-content">
+                        <h2 style="color:#ffd700; text-align:center; margin-bottom:20px;">
+                            📅 ${isEN ? 'MONTHLY HISTORY' : 'HISTÓRICO MENSAL'}
+                        </h2>
+                `;
+                
+                const currentMonth = getCurrentMonthKey();
+                const months = Object.keys(monthlyHistory).sort().reverse();
+                
+                if (months.length === 0) {
+                    html += `<p style="text-align:center; margin:20px;">${isEN ? 'No history yet.' : 'Nenhum histórico ainda.'}</p>`;
+                } else {
+                    months.forEach(month => {
+                        const data = monthlyHistory[month];
+                        const [year, monthNum] = month.split('-');
+                        const monthName = getMonthName(parseInt(monthNum));
+                        
+                        const isCurrent = month === currentMonth;
+                        
+                        html += `
+                            <div style="background: ${isCurrent ? 'rgba(255,215,0,0.2)' : 'rgba(255,255,255,0.05)'}; 
+                                        padding:15px; border-radius:10px; margin:10px 0;">
+                                <h3 style="color:#ffd700; margin-bottom:10px;">
+                                    ${monthName}/${year} ${isCurrent ? `(${isEN ? 'Current' : 'Atual'})` : ''}
+                                </h3>
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
                                     <div style="text-align:center;">
-                                        <span style="color:#ffd700;">⭐</span><br>
-                                        <span>${month.stars}</span>
+                                        <span style="font-size:1.5em;">📅</span><br>
+                                        <span style="font-size:1.2em; font-weight:bold;">${data.days}</span><br>
+                                        <span style="color:#aaa;">${isEN ? 'days' : 'dias'}</span>
                                     </div>
                                     <div style="text-align:center;">
-                                        <span style="color:#ffd700;">🔥</span><br>
-                                        <span>${month.combo}</span>
+                                        <span style="font-size:1.5em;">⭐</span><br>
+                                        <span style="font-size:1.2em; font-weight:bold;">${formatNum(data.stars || 0)}</span><br>
+                                        <span style="color:#aaa;">${isEN ? 'stars' : 'estrelas'}</span>
                                     </div>
                                     <div style="text-align:center;">
-                                        <span style="color:#ffd700;">📱</span><br>
-                                        <span>${month.shares}</span>
+                                        <span style="font-size:1.5em;">🔥</span><br>
+                                        <span style="font-size:1.2em; font-weight:bold;">x${data.maxCombo || 0}</span><br>
+                                        <span style="color:#aaa;">${isEN ? 'max combo' : 'max combo'}</span>
                                     </div>
                                 </div>
-                                ${month.completed?.stars ? `<div style="color:#00ff00; font-size:0.8em;">⭐ ${_hEN ? 'Star Master' : 'Mestre das Estrelas'}</div>` : ''}
-                                ${month.completed?.combo ? `<div style="color:#00ff00; font-size:0.8em;">⚡ ${_hEN ? 'Combo Legend' : 'Lenda do Combo'}</div>` : ''}
-                                ${month.completed?.shares ? `<div style="color:#00ff00; font-size:0.8em;">📢 ${_hEN ? 'Influencer' : 'Influenciador'}</div>` : ''}
                             </div>
                         `;
                     });
                 }
                 
-                historyHTML += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">${_hEN ? 'Close' : 'Fechar'}</button></div>`;
+                html += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">
+                            ${isEN ? 'Close' : 'Fechar'}
+                         </button>
+                        </div>`;
                 
-                modal.innerHTML = historyHTML;
+                modal.innerHTML = html;
                 document.body.appendChild(modal);
+            }
+
+            // ===== NOVAS FUNÇÕES PARA EFEITOS DAS SKINS =====
+            // Sistema de partículas para efeitos visuais
+            let particles = [];
+
+            function createParticles(x, y, color, count = 8) {
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 3,
+                        vy: (Math.random() - 0.5) * 3,
+                        size: Math.random() * 4 + 2,
+                        color: color,
+                        life: 1.0,
+                        maxLife: 1.0
+                    });
+                }
+            }
+
+            function updateParticles() {
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= 0.02;
+                    
+                    if (p.life <= 0) {
+                        particles.splice(i, 1);
+                    }
+                }
+            }
+
+            function drawParticles() {
+                particles.forEach(p => {
+                    ctx.save();
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+
+            // Estrelas cadentes para fundo
+            let shootingStars = [];
+
+            function createShootingStar() {
+                if (Math.random() < 0.01 && gameState.currentSkin === 'luminara') {
+                    shootingStars.push({
+                        x: Math.random() * canvas.width,
+                        y: 0,
+                        length: Math.random() * 50 + 30,
+                        speed: Math.random() * 5 + 3,
+                        life: 1.0
+                    });
+                }
+            }
+
+            function updateShootingStars() {
+                for (let i = shootingStars.length - 1; i >= 0; i--) {
+                    const star = shootingStars[i];
+                    star.x += star.speed * 0.5;
+                    star.y += star.speed;
+                    star.life -= 0.01;
+                    
+                    if (star.y > canvas.height || star.life <= 0) {
+                        shootingStars.splice(i, 1);
+                    }
+                }
+            }
+
+            function drawShootingStars() {
+                shootingStars.forEach(star => {
+                    ctx.save();
+                    ctx.globalAlpha = star.life;
+                    ctx.strokeStyle = '#ffd700';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(star.x, star.y);
+                    ctx.lineTo(star.x - star.length * 0.5, star.y - star.length);
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+
+            // Aura vermelha para Fúria
+            function drawFuriaAura() {
+                if (gameState.currentSkin !== 'furia' || !gameState.gameActive) return;
+                
+                ctx.save();
+                const gradient = ctx.createRadialGradient(
+                    gameState.player.x, gameState.player.y, gameState.player.radius,
+                    gameState.player.x, gameState.player.y, gameState.player.radius + 30
+                );
+                gradient.addColorStop(0, 'rgba(255, 0, 0, 0)');
+                gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.2)');
+                gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(gameState.player.x, gameState.player.y, gameState.player.radius + 30, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Sons específicos das skins
+            function playSkinSound(skin) {
+                if (audioCtx.state !== 'running') return;
+                
+                const now = audioCtx.currentTime;
+                
+                switch(skin) {
+                    case 'brilha':
+                        const osc1 = audioCtx.createOscillator();
+                        const gain1 = audioCtx.createGain();
+                        osc1.type = 'sine';
+                        osc1.frequency.setValueAtTime(880, now);
+                        osc1.frequency.exponentialRampToValueAtTime(1760, now + 0.1);
+                        gain1.gain.setValueAtTime(0.1, now);
+                        gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                        osc1.connect(gain1);
+                        gain1.connect(audioCtx.destination);
+                        osc1.start();
+                        osc1.stop(now + 0.2);
+                        break;
+                        
+                    case 'luminara':
+                        const notes = [523.25, 659.25, 783.99];
+                        notes.forEach((freq, i) => {
+                            const osc = audioCtx.createOscillator();
+                            const gain = audioCtx.createGain();
+                            osc.type = 'triangle';
+                            osc.frequency.value = freq;
+                            gain.gain.setValueAtTime(0.05, now + i * 0.05);
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+                            osc.connect(gain);
+                            gain.connect(audioCtx.destination);
+                            osc.start(now + i * 0.05);
+                            osc.stop(now + 1.0);
+                        });
+                        break;
+                        
+                    case 'furia':
+                        const bufferSize = audioCtx.sampleRate * 0.2;
+                        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                        const data = buffer.getChannelData(0);
+                        for (let i = 0; i < bufferSize; i++) {
+                            data[i] = Math.random() * 2 - 1;
+                        }
+                        
+                        const noise = audioCtx.createBufferSource();
+                        noise.buffer = buffer;
+                        
+                        const filter = audioCtx.createBiquadFilter();
+                        filter.type = 'bandpass';
+                        filter.frequency.value = 2000;
+                        filter.Q.value = 5;
+                        
+                        const gainNode = audioCtx.createGain();
+                        gainNode.gain.setValueAtTime(0.1, now);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                        
+                        noise.connect(filter);
+                        filter.connect(gainNode);
+                        gainNode.connect(audioCtx.destination);
+                        noise.start();
+                        break;
+                }
+            }
+
+            // Poderes das skins
+            let brilhaPowerUsed = false;
+            let furiaPowerActive = false;
+
+            function activateSkinPower(skin) {
+                const wasActive = gameState.gameActive;
+                const isEN = currentLanguage === 'en';
+                
+                switch(skin) {
+                    case 'brilha':
+                        if (!brilhaPowerUsed && gameState.gameActive) {
+                            brilhaPowerUsed = true;
+                            activeBoosts.doublePoints = true;
+                            
+                            setTimeout(() => {
+                                activeBoosts.doublePoints = false;
+                            }, 10000);
+                            
+                            showMessage(isEN 
+                                ? "✨ Brilha accelerates your stars!" 
+                                : "✨ Brilha acelera suas estrelas!");
+                            
+                            playSkinSound('brilha');
+                            
+                            for (let i = 0; i < 20; i++) {
+                                setTimeout(() => {
+                                    createParticles(
+                                        gameState.player.x + (Math.random() - 0.5) * 100,
+                                        gameState.player.y + (Math.random() - 0.5) * 100,
+                                        '#ffd700',
+                                        3
+                                    );
+                                }, i * 100);
+                            }
+                        }
+                        break;
+                        
+                    case 'luminara':
+                        showMessage(isEN 
+                            ? "🌟 Luminara's wisdom guides you." 
+                            : "🌟 Sabedoria de Luminara te guia.");
+                        playSkinSound('luminara');
+                        
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                shootingStars.push({
+                                    x: Math.random() * canvas.width,
+                                    y: 0,
+                                    length: Math.random() * 80 + 50,
+                                    speed: Math.random() * 8 + 5,
+                                    life: 1.0
+                                });
+                            }, i * 200);
+                        }
+                        break;
+                        
+                    case 'furia':
+                        furiaPowerActive = true;
+                        showMessage(isEN 
+                            ? "🔴 Furia burns with you!" 
+                            : "🔴 A Fúria queima com você!");
+                        playSkinSound('furia');
+                        gameState.hitFlash = 20;
+                        break;
+                }
+            }
+
+            function checkSkinPassives() {
+                const isEN = currentLanguage === 'en';
+                
+                switch(gameState.currentSkin) {
+                    case 'luminara':
+                        if (LIFE_SYSTEM.current < LIFE_SYSTEM.max) {
+                            LIFE_SYSTEM.current = Math.min(LIFE_SYSTEM.current + 1, LIFE_SYSTEM.max);
+                            updateLivesDisplay();
+                            showMessage(isEN 
+                                ? "🌟 Luminara blesses you with an extra life!" 
+                                : "🌟 Luminara te abençoa com uma vida extra!");
+                        }
+                        break;
+                        
+                    case 'furia':
+                        LIFE_SYSTEM.current = 1;
+                        updateLivesDisplay();
+                        showMessage(isEN 
+                            ? "🔴 Furia's rage: 3x points but only 1 life!" 
+                            : "🔴 Fúria furiosa: 3x pontos mas só 1 vida!");
+                        furiaPowerActive = true;
+                        break;
+                }
+            }
+
+            function getSkinPointMultiplier() {
+                if (gameState.currentSkin === 'furia' && furiaPowerActive) {
+                    return 3;
+                }
+                return 1;
             }
 
             const canvas = document.getElementById('gameCanvas');
@@ -3473,11 +4370,11 @@
             const rankingBtn = document.getElementById('rankingBtn');
             const skinBtn = document.getElementById('skinBtn');
             const historyBtn = document.getElementById('historyBtn');
+            const dailyBonusBtn = document.getElementById('dailyBonusBtn');
 
             const PLAYER_NAME_KEY = 'starrush_player_name';
             
             function getPlayerName() {
-                // Retorna nome salvo ou placeholder enquanto popup não aparece
                 return localStorage.getItem(PLAYER_NAME_KEY) || 'Jogador';
             }
 
@@ -3532,19 +4429,14 @@
 
             let playerAchievements = [];
 
-            function updateSkinsUnlocked() {
-                skins.neon.unlocked = playerAchievements.includes('collector50')
-                    || localStorage.getItem('streak_skin_unlocked') === 'true';
-                skins.cosmos.unlocked = playerAchievements.includes('collector100');
-                skins.arcoiris.unlocked = playerAchievements.includes('combo10');
-            }
-
+            // ===== SKINS ORIGINAIS =====
             const skins = {
                 classico: { 
                     player: '#4a90e2', 
                     playerGradient: ['#4a90e2', '#9b59b6'],
                     stars: '#ffd700',
                     name: 'Clássico',
+                    nameEN: 'Classic',
                     unlocked: true
                 },
                 neon: { 
@@ -3552,6 +4444,7 @@
                     playerGradient: ['#ff00ff', '#00ffff'],
                     stars: '#00ffff',
                     name: 'Neon',
+                    nameEN: 'Neon',
                     unlocked: false
                 },
                 cosmos: { 
@@ -3559,6 +4452,7 @@
                     playerGradient: ['#8e44ad', '#2c3e50'],
                     stars: '#f1c40f',
                     name: 'Cósmico',
+                    nameEN: 'Cosmic',
                     unlocked: false
                 },
                 arcoiris: { 
@@ -3566,9 +4460,119 @@
                     playerGradient: ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#8f00ff'],
                     stars: 'multicolor',
                     name: 'Arco-Íris',
+                    nameEN: 'Rainbow',
                     unlocked: false
                 }
             };
+
+            // ===== NOVAS SKINS BASEADAS NA HISTÓRIA =====
+            Object.assign(skins, {
+                brilha: { 
+                    player: '#ffaa00', 
+                    playerGradient: ['#ffaa00', '#ffdd44'],
+                    stars: '#ffffaa',
+                    name: 'Brilha',
+                    nameEN: 'Brilha',
+                    unlocked: false,
+                    description: 'A estrela mais nova e energética de Constelândia',
+                    descriptionEN: 'The newest and most energetic star of Constelandia'
+                },
+                luminara: { 
+                    player: '#ffd700', 
+                    playerGradient: ['#ffd700', '#ffb347'],
+                    stars: '#fff5cc',
+                    name: 'Luminara',
+                    nameEN: 'Luminara',
+                    unlocked: false,
+                    description: 'A estrela mais velha e sábia, guardiã de Constelândia',
+                    descriptionEN: 'The oldest and wisest star, guardian of Constelandia'
+                },
+                furia: { 
+                    player: '#ff4444', 
+                    playerGradient: ['#ff4444', '#cc0000'],
+                    stars: '#ff9999',
+                    name: 'Fúria',
+                    nameEN: 'Furia',
+                    unlocked: false,
+                    description: 'A estrela vermelha rebelde que aprendeu a fazer parte da constelação',
+                    descriptionEN: 'The rebellious red star who learned to be part of the constellation'
+                }
+            });
+
+            function checkMilestoneUnlocks() {
+                if (!streakSystem || !streakSystem.milestones) return;
+                
+                const milestones = [
+                    { days: 7, skin: 'neon', name: 'Neon' },
+                    { days: 30, skin: 'brilha', name: 'Brilha' },
+                    { days: 100, skin: 'luminara', name: 'Luminara' },
+                    { days: 365, skin: 'furia', name: 'Fúria' }
+                ];
+                
+                milestones.forEach(milestone => {
+                    if (streakSystem.milestones[milestone.days] && !skins[milestone.skin]?.unlocked) {
+                        skins[milestone.skin].unlocked = true;
+                        
+                        const isEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
+                        
+                        let message = '';
+                        switch(milestone.skin) {
+                            case 'neon':
+                                message = isEN 
+                                    ? '⚡ NEON SKIN UNLOCKED! Your constellation shines with neon light!' 
+                                    : '⚡ SKIN NEON DESBLOQUEADA! Sua constelação brilha com luz neon!';
+                                break;
+                            case 'brilha':
+                                message = isEN 
+                                    ? '🌟 Brilha now joins your constellation! The energetic star illuminates your path!'
+                                    : '🌟 Brilha agora faz parte da sua constelação! A estrela energética ilumina seu caminho!';
+                                break;
+                            case 'luminara':
+                                message = isEN 
+                                    ? '✨ Luminara blesses your constellation! The ancient star grants you her wisdom!'
+                                    : '✨ Luminara abençoa sua constelação! A estrela antiga te concede sua sabedoria!';
+                                break;
+                            case 'furia':
+                                message = isEN 
+                                    ? '🔴 Furia has been redeemed! The red star now shines peacefully in your constellation!'
+                                    : '🔴 Fúria se redimiu! A estrela vermelha agora brilha pacificamente em sua constelação!';
+                                break;
+                        }
+                        
+                        if (typeof showMessage === 'function') {
+                            showMessage(message, 5000);
+                        }
+                        
+                        if (typeof createSpecialEffect === 'function') {
+                            createSpecialEffect(milestone.skin);
+                        }
+                        
+                        if (typeof saveGameProgress === 'function') {
+                            saveGameProgress();
+                        }
+                        
+                        console.log(`🏆 Skin ${milestone.name} desbloqueada por ${milestone.days} dias!`);
+                    }
+                });
+                
+                if (typeof updateAchievementsBar === 'function') {
+                    updateAchievementsBar();
+                }
+            }
+
+            function updateSkinsUnlocked() {
+                skins.neon.unlocked = playerAchievements.includes('collector50')
+                    || localStorage.getItem('streak_skin_unlocked') === 'true'
+                    || (streakSystem?.milestones?.[7] === true);
+                skins.cosmos.unlocked = playerAchievements.includes('collector100');
+                skins.arcoiris.unlocked = playerAchievements.includes('combo10');
+                
+                if (streakSystem) {
+                    if (streakSystem.milestones?.[30]) skins.brilha.unlocked = true;
+                    if (streakSystem.milestones?.[100]) skins.luminara.unlocked = true;
+                    if (streakSystem.milestones?.[365]) skins.furia.unlocked = true;
+                }
+            }
 
             let dailyChallenges = {
                 stars: { current: 0, target: 1000, completed: false, reward: 10000 },
@@ -3598,7 +4602,6 @@
                 setTimeout(() => bonus.remove(), 1500);
             }
 
-            // NOVA FUNÇÃO: Pop-up de compartilhamento para desafios
             function showChallengeSharePopup(challengeType) {
                 const _cEN = currentLanguage === 'en';
                 const challengeNames = _cEN ? {
@@ -3670,7 +4673,6 @@
                     shareModal.remove();
                     handleShare('whatsapp', randomMessage);
                     
-                    // Bônus extra por compartilhar o desafio
                     gameState.score += 500;
                     showBonusAnimation(tm('+500 BÔNUS!','+500 BONUS!'));
                     updateDisplay();
@@ -3760,7 +4762,15 @@
                 gameState.maxCombo = 1;
                 gameState.gameActive = true;
                 gameState.starsCollected = 0;
+                gameState.bonusAvailable = true;
                 gameState.startTime = Date.now();
+                
+                // ===== VERIFICAR MUDANÇA DE MÊS =====
+                checkMonthRollover();
+                
+                // ===== CHAMADA PARA CHECKAR PASSIVAS DAS SKINS =====
+                checkSkinPassives();
+                brilhaPowerUsed = false;
                 
                 for (let i = 0; i < STAR_CONFIG.baseStars; i++) {
                     gameState.stars.push(createStar());
@@ -3797,7 +4807,7 @@
                 scoreDisplay.textContent = formatNum(gameState.score);
                 recordDisplay.textContent = formatNum(gameState.record);
                 document.getElementById('achievementStarsDisplay').textContent = formatNum(gameState.achievementStars || 0);
-                document.getElementById('challengeDisplay').textContent = `${formatNum(gameState.totalChallengesCompleted || 0)}/365`;
+                document.getElementById('challengeDisplay').textContent = `${formatNum(streakSystem?.totalDays || 0)}/365`;
 
                 document.getElementById('challenge1Progress').textContent = `${formatNum(dailyChallenges.stars.current)}/${formatNum(dailyChallenges.stars.target)}`;
                 document.getElementById('challenge2Progress').textContent = `${formatNum(dailyChallenges.combo.current)}/${formatNum(dailyChallenges.combo.target)}`;
@@ -3810,143 +4820,37 @@
                 updateAchievementsBar();
             }
 
-            function checkDailyChallenges() {
-                let updated = false;
-                let completedChallenge = null;
-                const today = new Date().toDateString();
-                const dayAlreadyCounted = localStorage.getItem('challenge_day_counted') === today;
-
-                if (dailyChallenges.stars.current >= dailyChallenges.stars.target && !dailyChallenges.stars.completed) {
-                    dailyChallenges.stars.completed = true;
-                    gameState.score += dailyChallenges.stars.reward;
-                    if (!dayAlreadyCounted) {
-                        gameState.totalChallengesCompleted = Math.min(365, (gameState.totalChallengesCompleted || 0) + 1);
-                        localStorage.setItem('challenge_day_counted', today);
-                    }
-                    showBonusAnimation(tm(`+${formatNum(dailyChallenges.stars.reward)} ESTRELAS!`,`+${formatNum(dailyChallenges.stars.reward)} STARS!`));
-                    updateMonthlyProgress('stars', dailyChallenges.stars.target);
-                    updated = true;
-                    completedChallenge = 'stars';
-                }
-
-                if (dailyChallenges.combo.current >= dailyChallenges.combo.target && !dailyChallenges.combo.completed) {
-                    dailyChallenges.combo.completed = true;
-                    gameState.score += dailyChallenges.combo.reward;
-                    if (localStorage.getItem('challenge_day_counted') !== today) {
-                        gameState.totalChallengesCompleted = Math.min(365, (gameState.totalChallengesCompleted || 0) + 1);
-                        localStorage.setItem('challenge_day_counted', today);
-                    }
-                    showBonusAnimation(tm(`+${formatNum(dailyChallenges.combo.reward)} COMBO!`,`+${formatNum(dailyChallenges.combo.reward)} COMBO!`));
-                    updated = true;
-                    completedChallenge = 'combo';
-                }
-
-                if (dailyChallenges.share.current >= dailyChallenges.share.target && !dailyChallenges.share.completed) {
-                    dailyChallenges.share.completed = true;
-                    gameState.score += dailyChallenges.share.reward;
-                    if (localStorage.getItem('challenge_day_counted') !== today) {
-                        gameState.totalChallengesCompleted = Math.min(365, (gameState.totalChallengesCompleted || 0) + 1);
-                        localStorage.setItem('challenge_day_counted', today);
-                    }
-                    showBonusAnimation(tm(`+${formatNum(dailyChallenges.share.reward)} COMPARTILHADO!`,`+${formatNum(dailyChallenges.share.reward)} SHARED!`));
-                    updated = true;
-                    completedChallenge = 'share';
-                }
-
-                if (updated) {
-                    saveDailyChallenges();
-                    saveGameProgress();
-                    updateDisplay();
-                }
-            }
-
-            function updateAchievementsBar() {
-                const bar = document.getElementById('achievementsBar');
-                bar.innerHTML = '';
-                
-                Object.values(achievements).forEach(ach => {
-                    const unlocked = playerAchievements.includes(ach.id);
-                    const div = document.createElement('div');
-                    div.className = `achievement-icon ${unlocked ? '' : 'locked'}`;
-                    div.innerHTML = `${ach.icon}<span>${ach.name}: ${ach.desc}</span>`;
-                    bar.appendChild(div);
-                });
-            }
-
-            function checkAchievements() {
-                let newUnlock = false;
-                let bonusPoints = 0;
-                
-                if (!playerAchievements.includes('firstStar') && gameState.totalStars >= 1) {
-                    playerAchievements.push('firstStar'); 
-                    newUnlock = true;
-                    bonusPoints += 100;
-                    showBonusAnimation(tm('+100 PONTOS! 🌟','+100 POINTS! 🌟'));
-                }
-                if (!playerAchievements.includes('collector10') && gameState.totalStars >= 10) {
-                    playerAchievements.push('collector10'); 
-                    newUnlock = true;
-                    bonusPoints += 250;
-                    showBonusAnimation(tm('+250 PONTOS! ✨','+250 POINTS! ✨'));
-                }
-                if (!playerAchievements.includes('collector50') && gameState.totalStars >= 50) {
-                    playerAchievements.push('collector50'); 
-                    newUnlock = true;
-                    bonusPoints += 500;
-                    showBonusAnimation(tm('+500 PONTOS! 💫','+500 POINTS! 💫'));
-                }
-                if (!playerAchievements.includes('collector100') && gameState.totalStars >= 100) {
-                    playerAchievements.push('collector100'); 
-                    newUnlock = true;
-                    bonusPoints += 1000;
-                    showBonusAnimation(tm('+1000 PONTOS! 🌠','+1000 POINTS! 🌠'));
-                }
-                if (!playerAchievements.includes('combo5') && gameState.maxCombo >= 5) {
-                    playerAchievements.push('combo5'); 
-                    newUnlock = true;
-                    bonusPoints += 200;
-                    showBonusAnimation(tm('+200 PONTOS! 🔥','+200 POINTS! 🔥'));
-                }
-                if (!playerAchievements.includes('combo10') && gameState.maxCombo >= 10) {
-                    playerAchievements.push('combo10'); 
-                    newUnlock = true;
-                    bonusPoints += 500;
-                    showBonusAnimation(tm('+500 PONTOS! ⚡','+500 POINTS! ⚡'));
-                }
-                if (!playerAchievements.includes('sharer1') && gameState.totalShares >= 1) {
-                    playerAchievements.push('sharer1'); 
-                    newUnlock = true;
-                    bonusPoints += 50;
-                    showBonusAnimation(tm('+50 PONTOS! 📱','+50 POINTS! 📱'));
-                }
-                if (!playerAchievements.includes('sharer5') && gameState.totalShares >= 5) {
-                    playerAchievements.push('sharer5'); 
-                    newUnlock = true;
-                    bonusPoints += 250;
-                    showBonusAnimation(tm('+250 PONTOS! 🔥','+250 POINTS! 🔥'));
+            function resetDailyChallenges() {
+                if (typeof loadStreakSystem === 'function') {
+                    loadStreakSystem();
                 }
                 
-                if (bonusPoints > 0) {
-                    gameState.score += bonusPoints;
-                    showMessage(tm(`🏆 Conquistas: +${bonusPoints} pontos!`,`🏆 Achievements: +${bonusPoints} points!`));
-                }
+                const totalDaysCompleted = streakSystem.totalDays || 0;
+                const starsTarget = 500 + (totalDaysCompleted * 10);
                 
-                if (newUnlock) {
-                    updateSkinsUnlocked();
-                    
-                    const skinModal = document.querySelector('.modal');
-                    if (skinModal && skinModal.innerHTML.includes('🎨 Skins')) {
-                        skinModal.remove();
-                        showSkins();
+                dailyChallenges = {
+                    stars: { 
+                        current: 0, 
+                        target: starsTarget, 
+                        completed: false, 
+                        reward: starsTarget * 10
+                    },
+                    combo: { 
+                        current: 0, 
+                        target: 100, 
+                        completed: false, 
+                        reward: 5000 + (totalDaysCompleted * 200) 
+                    },
+                    share: { 
+                        current: 0, 
+                        target: 5, 
+                        completed: false, 
+                        reward: 1000 
                     }
-                    
-                    saveGameProgress();
-                    createAchievementSound();
-                    showMessage(tm('🏆 Nova conquista em Constelândia! A Brilha pulou de alegria!','🏆 New achievement in Constelandia! Brilha jumped for joy!'));
-                    localStorage.setItem('achievements', JSON.stringify(playerAchievements));
-                    updateAchievementsBar();
-                    updateDisplay();
-                }
+                };
+                
+                console.log(`📅 Desafios resetados: ${starsTarget} estrelas (${totalDaysCompleted} dias completos)`);
+                saveDailyChallenges();
             }
 
             function loadDailyChallenges() {
@@ -3968,28 +4872,6 @@
                     resetDailyChallenges();
                 }
                 updateDisplay();
-            }
-
-            function resetDailyChallenges() {
-                const days = gameState.totalChallengesCompleted || 0;
-
-                // Stars: starts 500, grows exponentially — no cap, infinite
-                // Each day adds more than the last, tied to record too
-                const recordBonus = Math.floor((gameState?.record || 0) / 100) * 100;
-                const daysBonus = days * 200;                         // +200 per day
-                const expBonus = days >= 7  ? Math.pow(days, 1.5) * 10 : 0; // exponential after week 1
-                const starsTarget = Math.floor(Math.max(500, recordBonus + daysBonus + expBonus));
-
-                // Combo: starts 20, grows with days and personal best
-                const comboBase = Math.max(20, Math.floor((gameState?.maxCombo || 1) * 1.5));
-                const comboTarget = comboBase + Math.floor(days * 2);  // +2 per day
-
-                dailyChallenges = {
-                    stars: { current: 0, target: starsTarget, completed: false, reward: starsTarget * 10 },
-                    combo: { current: 0, target: comboTarget, completed: false, reward: 5000 + (days * 500) },
-                    share: { current: 0, target: 5, completed: false, reward: 1000 }
-                };
-                saveDailyChallenges();
             }
 
             function saveDailyChallenges() {
@@ -4015,8 +4897,167 @@
                 }
             }
 
+            const STREAK_STORAGE_KEY = 'starrush_streak';
+
+            let streakSystem = {
+                totalDays: 0,
+                currentStreak: 0,
+                maxStreak: 0,
+                lastPlayed: null,
+                milestones: {
+                    7: false,
+                    30: false,
+                    100: false,
+                    365: false
+                },
+                monthlyHistory: []
+            };
+
+            function loadStreakSystem() {
+                const saved = localStorage.getItem(STREAK_STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        streakSystem = { ...streakSystem, ...parsed };
+                        
+                        if (!streakSystem.milestones) {
+                            streakSystem.milestones = { 7: false, 30: false, 100: false, 365: false };
+                        }
+                        
+                        if (!streakSystem.monthlyHistory) {
+                            streakSystem.monthlyHistory = [];
+                        }
+                    } catch (e) {
+                        console.error('Erro ao carregar streak system:', e);
+                    }
+                }
+                
+                checkMilestoneUnlocks();
+                updateStreakDisplay();
+                return streakSystem;
+            }
+
+            function saveStreakSystem() {
+                localStorage.setItem(STREAK_STORAGE_KEY, JSON.stringify(streakSystem));
+                updateStreakDisplay();
+            }
+
+            function registerPlayDay() {
+                loadStreakSystem();
+                
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().split('T')[0];
+                
+                if (streakSystem.lastPlayed === todayStr) {
+                    return false;
+                }
+                
+                if (streakSystem.lastPlayed === yesterdayStr) {
+                    streakSystem.currentStreak++;
+                } else if (streakSystem.lastPlayed) {
+                    streakSystem.currentStreak = 1;
+                } else {
+                    streakSystem.currentStreak = 1;
+                }
+                
+                if (streakSystem.currentStreak > streakSystem.maxStreak) {
+                    streakSystem.maxStreak = streakSystem.currentStreak;
+                }
+                
+                if (streakSystem.totalDays < 365) {
+                    streakSystem.totalDays++;
+                }
+                
+                streakSystem.lastPlayed = todayStr;
+                
+                checkStreakMilestones();
+                updateMonthlyHistory();
+                
+                saveStreakSystem();
+                showStreakMessage();
+                
+                return true;
+            }
+
+            function checkStreakMilestones() {
+                const milestones = [7, 30, 100, 365];
+                let newMilestoneUnlocked = false;
+                
+                milestones.forEach(milestone => {
+                    if (streakSystem.totalDays >= milestone && !streakSystem.milestones[milestone]) {
+                        streakSystem.milestones[milestone] = true;
+                        newMilestoneUnlocked = true;
+                        
+                        const reward = milestone * 1000;
+                        if (typeof gameState !== 'undefined' && gameState.gameActive) {
+                            gameState.score += reward;
+                            if (typeof showBonusAnimation === 'function') {
+                                showBonusAnimation(tm(`🎉 MARCO DE ${milestone} DIAS! +${reward}`, `🎉 ${milestone}-DAY MILESTONE! +${reward}`));
+                            }
+                        }
+                        
+                        const messages = {
+                            7: tm('🌟 7 DIAS! A Luminara te agradece!', '🌟 7 DAYS! Luminara thanks you!'),
+                            30: tm('🌙 30 DIAS! Você é uma lenda!', '🌙 30 DAYS! You are a legend!'),
+                            100: tm('☀️ 100 DIAS! Constelação mais brilhante!', '☀️ 100 DAYS! Brightest constellation!'),
+                            365: tm('✨ 365 DIAS! UM ANO! Fúria se rendeu!', '✨ 365 DAYS! A YEAR! Furia surrendered!')
+                        };
+                        
+                        if (typeof showMessage === 'function' && messages[milestone]) {
+                            showMessage(messages[milestone]);
+                        }
+                    }
+                });
+                
+                if (newMilestoneUnlocked) {
+                    checkMilestoneUnlocks();
+                }
+            }
+
+            function updateMonthlyHistory() {
+                const today = new Date();
+                const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+                
+                let monthEntry = streakSystem.monthlyHistory.find(m => m.month === monthKey);
+                
+                if (!monthEntry) {
+                    if (streakSystem.monthlyHistory.length >= 12) {
+                        streakSystem.monthlyHistory = streakSystem.monthlyHistory.slice(0, 11);
+                    }
+                    
+                    monthEntry = { month: monthKey, days: 0, maxStreak: 0 };
+                    streakSystem.monthlyHistory.unshift(monthEntry);
+                }
+                
+                monthEntry.days++;
+                if (streakSystem.currentStreak > monthEntry.maxStreak) {
+                    monthEntry.maxStreak = streakSystem.currentStreak;
+                }
+            }
+
+            function updateStreakDisplay() {
+                const challengeDisplay = document.getElementById('challengeDisplay');
+                if (challengeDisplay) {
+                    challengeDisplay.textContent = `${streakSystem.totalDays}/365`;
+                }
+            }
+
+            function showStreakMessage() {
+                if (streakSystem.currentStreak > 1) {
+                    const msg = tm(
+                        `🔥 Streak de ${streakSystem.currentStreak} dias! (${streakSystem.totalDays}/365)`,
+                        `🔥 ${streakSystem.currentStreak}-day streak! (${streakSystem.totalDays}/365)`
+                    );
+                    if (typeof showMessage === 'function') showMessage(msg);
+                }
+            }
+
+            loadStreakSystem();
+
             function addToRanking() {
-                // Always use the most current name (popup may have updated localStorage)
                 const savedName = localStorage.getItem('starrush_player_name');
                 if (savedName && savedName !== 'Jogador' && savedName !== 'Player') {
                     gameState.playerName = savedName;
@@ -4058,7 +5099,6 @@
                     .then(response => {
                         if (!response.error) {
                             console.log('✅ Score enviado para ranking global!');
-                            
                             
                             const activeChallenge = localStorage.getItem('active_challenge');
                             if (activeChallenge) {
@@ -4180,29 +5220,98 @@
                 const _sEN = typeof currentLanguage !== 'undefined' && currentLanguage === 'en';
                 let skinsHTML = `<div class="modal-content"><h2 style="color:#ffd700; text-align:center;">🎨 Skins</h2>`;
                 
-                Object.entries(skins).forEach(([key, skin]) => {
+                const sortedSkins = Object.entries(skins).sort((a, b) => {
+                    if (a[1].unlocked && !b[1].unlocked) return -1;
+                    if (!a[1].unlocked && b[1].unlocked) return 1;
+                    return 0;
+                });
+                
+                sortedSkins.forEach(([key, skin]) => {
                     const isUnlocked = skin.unlocked;
-                    const skinNameI18n = {
-                        classico: _sEN ? 'Classic' : 'Clássico',
-                        neon: 'Neon',
-                        cosmos: _sEN ? 'Cosmic' : 'Cósmico',
-                        arcoiris: _sEN ? 'Rainbow' : 'Arco-Íris'
-                    };
+                    const skinName = _sEN ? (skin.nameEN || skin.name) : skin.name;
+                    const skinDesc = _sEN ? (skin.descriptionEN || '') : (skin.description || '');
+                    
+                    let unlockRequirement = '';
+                    let unlockProgress = '';
+                    
+                    switch(key) {
+                        case 'classico':
+                            unlockRequirement = _sEN ? '✓ Always available' : '✓ Sempre disponível';
+                            break;
+                        case 'neon':
+                            unlockRequirement = _sEN ? '🔓 Play 7 different days' : '🔓 Jogue 7 dias diferentes';
+                            unlockProgress = isUnlocked ? '' : `${streakSystem?.totalDays || 0}/7 ${_sEN ? 'days' : 'dias'}`;
+                            break;
+                        case 'brilha':
+                            unlockRequirement = _sEN ? '🔓 Play 30 different days' : '🔓 Jogue 30 dias diferentes';
+                            unlockProgress = isUnlocked ? '' : `${streakSystem?.totalDays || 0}/30 ${_sEN ? 'days' : 'dias'}`;
+                            break;
+                        case 'luminara':
+                            unlockRequirement = _sEN ? '🔓 Play 100 different days' : '🔓 Jogue 100 dias diferentes';
+                            unlockProgress = isUnlocked ? '' : `${streakSystem?.totalDays || 0}/100 ${_sEN ? 'days' : 'dias'}`;
+                            break;
+                        case 'furia':
+                            unlockRequirement = _sEN ? '🔓 Play 365 different days (one year!)' : '🔓 Jogue 365 dias diferentes (um ano!)';
+                            unlockProgress = isUnlocked ? '' : `${streakSystem?.totalDays || 0}/365 ${_sEN ? 'days' : 'dias'}`;
+                            break;
+                        case 'cosmos':
+                            unlockRequirement = _sEN ? '🔓 Collect 100 stars' : '🔓 Colete 100 estrelas';
+                            unlockProgress = isUnlocked ? '' : `${gameState.totalStars || 0}/100`;
+                            break;
+                        case 'arcoiris':
+                            unlockRequirement = _sEN ? '🔓 Reach combo x10' : '🔓 Alcance combo x10';
+                            unlockProgress = isUnlocked ? '' : `${gameState.maxCombo || 0}/10`;
+                            break;
+                    }
+                    
                     skinsHTML += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">
-                            <div>
-                                <span style="font-size:1.5em; margin-right:10px;">${isUnlocked ? '✅' : '🔒'}</span>
-                                <span>${skinNameI18n[key] || skin.name}</span>
-                                ${!isUnlocked ? `<br><small style="color:#888;">${_sEN ? 'Progress:' : 'Progresso:'} ${getSkinProgress(key)}</small>` : ''}
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid rgba(255,255,255,0.1); ${isUnlocked && gameState.currentSkin === key ? 'background: rgba(255,215,0,0.2);' : ''}">
+                            <div style="flex:2;">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span style="font-size:2em;">${isUnlocked ? '✅' : '🔒'}</span>
+                                    <div>
+                                        <span style="font-size:1.2em; font-weight:bold; color:${isUnlocked ? '#ffd700' : '#888'};">${skinName}</span>
+                                        ${skinDesc ? `<br><small style="color:#aaa;">${skinDesc}</small>` : ''}
+                                        ${!isUnlocked ? `
+                                            <br><small style="color:#888;">${unlockRequirement}</small>
+                                            ${unlockProgress ? `<br><small style="color:#ffd700;">${unlockProgress}</small>` : ''}
+                                        ` : ''}
+                                    </div>
+                                </div>
                             </div>
-                            ${isUnlocked ?
-                                `<button class="consent-btn" style="padding:5px 15px;" onclick="window.selectSkin('${key}')">${_sEN ? 'Select' : 'Selecionar'}</button>` :
-                                `<span style="color:#888;">${getUnlockRequirement(key)}</span>`}
+                            <div style="flex:1; text-align:right;">
+                                ${isUnlocked ?
+                                    `<button class="consent-btn" style="padding:8px 20px; background:${gameState.currentSkin === key ? 'rgba(255,215,0,0.3)' : 'rgba(255,255,255,0.2)'};" onclick="window.selectSkin('${key}')">
+                                        ${gameState.currentSkin === key ? (_sEN ? '✓ Selected' : '✓ Selecionado') : (_sEN ? 'Select' : 'Selecionar')}
+                                    </button>` :
+                                    `<span style="color:#666; font-size:0.9em;">🔒</span>`
+                                }
+                            </div>
                         </div>
                     `;
                 });
                 
-                skinsHTML += `<button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">${_sEN ? 'Close' : 'Fechar'}</button></div>`;
+                skinsHTML += `
+                    <div style="margin-top:20px; padding:10px; background:rgba(255,215,0,0.1); border-radius:15px;">
+                        <p style="color:#ffd700; text-align:center; margin-bottom:5px;">
+                            ${_sEN ? '✨ Milestone Skins ✨' : '✨ Skins de Milestone ✨'}
+                        </p>
+                        <p style="color:#aaa; text-align:center; font-size:0.9em;">
+                            ${_sEN 
+                                ? 'Play for 7, 30, 100 and 365 days to unlock special character skins!' 
+                                : 'Jogue por 7, 30, 100 e 365 dias para desbloquear skins especiais dos personagens!'}
+                        </p>
+                        <div style="display:flex; justify-content:center; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                            <span style="color:#ff00ff;">7d: Neon</span>
+                            <span style="color:#ffaa00;">30d: Brilha</span>
+                            <span style="color:#ffd700;">100d: Luminara</span>
+                            <span style="color:#ff4444;">365d: Fúria</span>
+                        </div>
+                    </div>
+                    <button class="consent-btn" style="margin-top:20px; width:100%;" onclick="this.closest('.modal').remove()">
+                        ${_sEN ? 'Close' : 'Fechar'}
+                    </button>
+                </div>`;
                 
                 modal.innerHTML = skinsHTML;
                 document.body.appendChild(modal);
@@ -4210,9 +5319,17 @@
 
             function getSkinProgress(skinKey) {
                 const _pEN = currentLanguage === 'en';
+                const totalDays = streakSystem?.totalDays || 0;
+                
                 switch(skinKey) {
                     case 'neon':
-                        return `${gameState.totalStars}/50 ${_pEN ? 'stars' : 'estrelas'}`;
+                        return `${totalDays}/7 ${_pEN ? 'days' : 'dias'}`;
+                    case 'brilha':
+                        return `${totalDays}/30 ${_pEN ? 'days' : 'dias'}`;
+                    case 'luminara':
+                        return `${totalDays}/100 ${_pEN ? 'days' : 'dias'}`;
+                    case 'furia':
+                        return `${totalDays}/365 ${_pEN ? 'days' : 'dias'}`;
                     case 'cosmos':
                         return `${gameState.totalStars}/100 ${_pEN ? 'stars' : 'estrelas'}`;
                     case 'arcoiris':
@@ -4224,11 +5341,22 @@
 
             function getUnlockRequirement(skinKey) {
                 const _uEN = currentLanguage === 'en';
+                
                 switch(skinKey) {
-                    case 'neon': return _uEN ? 'Collect 50 stars' : 'Colete 50 estrelas';
-                    case 'cosmos': return _uEN ? 'Collect 100 stars' : 'Colete 100 estrelas';
-                    case 'arcoiris': return 'Combo x10';
-                    default: return '';
+                    case 'neon': 
+                        return _uEN ? 'Play 7 different days' : 'Jogue 7 dias diferentes';
+                    case 'brilha': 
+                        return _uEN ? 'Play 30 different days' : 'Jogue 30 dias diferentes';
+                    case 'luminara': 
+                        return _uEN ? 'Play 100 different days' : 'Jogue 100 dias diferentes';
+                    case 'furia': 
+                        return _uEN ? 'Play 365 different days (one year!)' : 'Jogue 365 dias diferentes (um ano!)';
+                    case 'cosmos':
+                        return _uEN ? 'Collect 100 stars' : 'Colete 100 estrelas';
+                    case 'arcoiris':
+                        return _uEN ? 'Reach combo x10' : 'Alcance combo x10';
+                    default:
+                        return '';
                 }
             }
 
@@ -4239,8 +5367,41 @@
                     saveGameProgress();
                     showMessage(tm(`✨ Skin ${skins[skinKey].name} selecionada!`,`✨ Skin ${skins[skinKey].name} selected!`));
                     document.querySelector('.modal').remove();
+                    
+                    // ===== ATIVAR EFEITO DA LUMINARA AO SELECIONAR =====
+                    if (skinKey === 'luminara') {
+                        activateSkinPower('luminara');
+                    }
+                    if (skinKey === 'furia') {
+                        activateSkinPower('furia');
+                    }
                 } else {
                     showMessage(tm(`🔒 Desbloqueie primeiro: ${getUnlockRequirement(skinKey)}`,`🔒 Unlock first: ${getUnlockRequirement(skinKey)}`));
+                }
+            }
+
+            function createSpecialEffect(type) {
+                switch(type) {
+                    case 'neon':
+                    case 'brilha':
+                        if (typeof createStarRainEffect === 'function') createStarRainEffect();
+                        break;
+                    case 'luminara':
+                        if (typeof createCometEffect === 'function') {
+                            for (let i = 0; i < 3; i++) {
+                                setTimeout(() => createCometEffect(), i * 300);
+                            }
+                        }
+                        break;
+                    case 'furia':
+                        const container = document.getElementById('livesContainer');
+                        if (container) {
+                            container.style.animation = 'starPulse 1s';
+                            setTimeout(() => {
+                                container.style.animation = '';
+                            }, 1000);
+                        }
+                        break;
                 }
             }
 
@@ -4252,9 +5413,15 @@
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         
                         if (distance < gameState.player.radius + star.radius) {
+                            // ===== EFEITO VISUAL DA SKIN BRILHA AO COLETAR =====
+                            if (gameState.currentSkin === 'brilha') {
+                                createParticles(star.x, star.y, '#ffd700', 5);
+                                playSkinSound('brilha');
+                            }
+                            
                             star.collected = true;
                             
-                            let points = 0.01 * gameState.combo * gameState.eventMultiplier;
+                            let points = 0.01 * gameState.combo * gameState.eventMultiplier * getSkinPointMultiplier();
                             if (gameState.weekendBonus) points *= 1.5;
                             gameState.achievementStars += 0.01;
                             
@@ -4274,7 +5441,12 @@
                                 gameState.record = gameState.score;
                                 showBonusAnimation(tm('🏆 NOVO RECORDE!','🏆 NEW RECORD!'));
                                 addToRanking();
-                                // Offer rewarded ad to triple the new record
+                                
+                                // ===== ATIVAR PODER DA BRILHA AO BATER RECORDE =====
+                                if (gameState.currentSkin === 'brilha' && !brilhaPowerUsed) {
+                                    activateSkinPower('brilha');
+                                }
+                                
                                 if (checkAdCooldown('rewarded')) {
                                     setTimeout(() => {
                                         if (gameState.gameActive) {
@@ -4292,6 +5464,9 @@
                             
                             checkAchievements();
                             updateDisplay();
+                            
+                            // ===== ATUALIZAR HISTÓRICO MENSAL =====
+                            updateMonthlyHistory();
                         }
                     }
                 });
@@ -4322,6 +5497,11 @@
                             gameState.player.y = Math.random() * (canvas.height - 40) + 20;
                         } 
                         else if (LIFE_SYSTEM.lose()) {
+                            // ===== EFEITO SONORO DA FÚRIA AO PERDER VIDA =====
+                            if (gameState.currentSkin === 'furia') {
+                                playSkinSound('furia');
+                            }
+                            
                             gameState.hitFlash = 8;
                             gameState.player.x = canvas.width / 2;
                             gameState.player.y = canvas.height / 2;
@@ -4331,6 +5511,7 @@
                             gameState.hitFlash = 12;
                             gameState.gameOverTime = Date.now();
                             gameState.gameActive = false;
+                            gameState.bonusAvailable = false;
                             createComboBreakSound();
                             createGameOverSound();
                             stopAdaptiveMusic();
@@ -4342,7 +5523,6 @@
                             
                             showMessage(tm('🔴 A Fúria venceu... todas as estrelas do meu colar se apagaram...','🔴 Furia won... all stars from my necklace went out...'));
                             
-                            // Free revive — always available, no ad required
                             const continueBtn = document.createElement('div');
                             continueBtn.style.cssText = `
                                 position: fixed;
@@ -4385,10 +5565,11 @@
                                 clearInterval(timerInterval);
                                 if (document.body.contains(timer)) timer.remove();
                                 if (document.body.contains(continueBtn)) continueBtn.remove();
-                                // Free revive — restore a life and continue
+                                
                                 LIFE_SYSTEM.current = Math.min(LIFE_SYSTEM.current + 1, LIFE_SYSTEM.max);
                                 updateLivesDisplay();
                                 gameState.gameActive = true;
+                                gameState.bonusAvailable = true;
                                 gameState.player.x = canvas.width / 2;
                                 gameState.player.y = canvas.height / 2;
                                 gameState.obstacles = [];
@@ -4463,7 +5644,6 @@
                 const url = getGameUrl();
                 const imageData = captureRecordScreenshot();
 
-                // Tenta Web Share API com screenshot (mobile)
                 if (navigator.share && navigator.canShare) {
                     fetch(imageData)
                         .then(res => res.blob())
@@ -4478,7 +5658,6 @@
                         })
                         .catch(() => {});
                 } else {
-                    // Desktop: baixa screenshot e abre rede social
                     const link = document.createElement('a');
                     link.download = 'starrush-score.png';
                     link.href = imageData;
@@ -4733,7 +5912,14 @@
                 ctx.shadowBlur = 0;
                 ctx.shadowColor = 'transparent';
 
-                // Hit flash
+                // ===== CHAMADAS PARA EFEITOS VISUAIS =====
+                updateParticles();
+                updateShootingStars();
+                createShootingStar();
+                drawParticles();
+                drawShootingStars();
+                drawFuriaAura();
+
                 if (gameState.hitFlash > 0) {
                     const alpha = (gameState.hitFlash / 12) * 0.45;
                     ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
@@ -4741,7 +5927,6 @@
                     gameState.hitFlash--;
                 }
 
-                // Bonus ativo: indicador de tempo restante
                 if (activeBoosts.hideObstacles && gameState.hideObstaclesEnd) {
                     const remaining = Math.max(0, Math.ceil((gameState.hideObstaclesEnd - Date.now()) / 1000));
                     ctx.save();
@@ -4758,7 +5943,6 @@
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     
-                    // Animação de entrada do GAME OVER
                     const elapsed = Date.now() - (gameState.gameOverTime || Date.now());
                     const scale = elapsed < 400 ? 0.4 + (elapsed / 400) * 0.6 : 1.0;
                     const alpha = elapsed < 400 ? elapsed / 400 : 1.0;
@@ -4808,6 +5992,11 @@
                 
                 updateLastActive();
                 
+                if (typeof loadStreakSystem === 'function') {
+                    loadStreakSystem();
+                    updateStreakDisplay();
+                }
+                
                 initGame();
                 gameLoop();
                 
@@ -4828,6 +6017,7 @@
                         }
                         LIFE_SYSTEM.reset();
                         gameState.gameActive = true;
+                        gameState.bonusAvailable = true;
                         initGame();
                         showMessage(tm('🌟 De volta a Constelândia! A Brilha está te esperando!','🌟 Back to Constelandia! Brilha is waiting for you!'));
                     });
@@ -4840,12 +6030,25 @@
                 musicBtn.addEventListener('click', toggleMusic);
                 
                 bonusBtn.addEventListener('click', () => {
+                    if (!gameState.gameActive) {
+                        showMessage(tm('⏳ Espere a partida terminar ou renasça primeiro!','⏳ Wait for the game to end or reborn first!'));
+                        return;
+                    }
+                    if (!gameState.bonusAvailable) {
+                        showMessage(tm('⏳ Bônus indisponível no momento','⏳ Bonus unavailable right now'));
+                        return;
+                    }
                     safeButtonClick('bonusBtn', showBonusMenu);
                 });
                 
                 rankingBtn.addEventListener('click', showRanking);
                 skinBtn.addEventListener('click', showSkins);
                 historyBtn.addEventListener('click', showMonthlyHistory);
+                
+                // ===== BOTÃO DE BÔNUS DIÁRIO =====
+                dailyBonusBtn.addEventListener('click', () => {
+                    safeButtonClick('dailyBonusBtn', showDailyBonusPopup);
+                });
 
                 document.body.addEventListener('click', function initAudio() {
                     if (audioCtx.state === 'suspended') {
@@ -4861,16 +6064,87 @@
             if (typeof cookieScript !== 'undefined') {
                 window.__cmpLoaded = true;
             }
-            
-            (async function init() {
-                // Detectar idioma do navegador
-                currentLanguage = detectBrowserLanguage();
 
-                // Mostrar página da história como primeira tela
-                showStoryPage();
+            function checkAchievements() {
+                if (gameState.totalStars >= 1 && !playerAchievements.includes('firstStar')) {
+                    playerAchievements.push('firstStar');
+                    createAchievementSound();
+                    showMessage(tm('🌟 Primeira estrela coletada! A Brilha está comemorando!','🌟 First star collected! Brilha is celebrating!'));
+                }
+                if (gameState.totalStars >= 10 && !playerAchievements.includes('collector10')) {
+                    playerAchievements.push('collector10');
+                    createAchievementSound();
+                }
+                if (gameState.totalStars >= 50 && !playerAchievements.includes('collector50')) {
+                    playerAchievements.push('collector50');
+                    createAchievementSound();
+                }
+                if (gameState.totalStars >= 100 && !playerAchievements.includes('collector100')) {
+                    playerAchievements.push('collector100');
+                    createAchievementSound();
+                }
+                
+                if (gameState.maxCombo >= 5 && !playerAchievements.includes('combo5')) {
+                    playerAchievements.push('combo5');
+                    createAchievementSound();
+                }
+                if (gameState.maxCombo >= 10 && !playerAchievements.includes('combo10')) {
+                    playerAchievements.push('combo10');
+                    createAchievementSound();
+                }
+                
+                if (gameState.totalShares >= 1 && !playerAchievements.includes('sharer1')) {
+                    playerAchievements.push('sharer1');
+                    createAchievementSound();
+                }
+                if (gameState.totalShares >= 5 && !playerAchievements.includes('sharer5')) {
+                    playerAchievements.push('sharer5');
+                    createAchievementSound();
+                }
+                
+                updateAchievementsBar();
+                saveGameProgress();
+            }
 
-                // TermsFeed continua funcionando normalmente em background
-            })();
+            function updateAchievementsBar() {
+                const bar = document.getElementById('achievementsBar');
+                bar.innerHTML = '';
+                
+                playerAchievements.forEach(achId => {
+                    const ach = achievements[achId];
+                    if (ach) {
+                        const div = document.createElement('div');
+                        div.className = 'achievement-icon';
+                        div.innerHTML = `${ach.icon}<span>${ach.name}</span>`;
+                        bar.appendChild(div);
+                    }
+                });
+            }
+
+            function checkDailyChallenges() {
+                const challenges = ['stars', 'combo', 'share'];
+                
+                challenges.forEach(type => {
+                    if (!dailyChallenges[type].completed && dailyChallenges[type].current >= dailyChallenges[type].target) {
+                        dailyChallenges[type].completed = true;
+                        gameState.score += dailyChallenges[type].reward;
+                        gameState.totalChallengesCompleted++;
+                        
+                        createAchievementSound();
+                        showBonusAnimation(tm(`🏆 DESAFIO DIÁRIO! +${dailyChallenges[type].reward}`,`🏆 DAILY CHALLENGE! +${dailyChallenges[type].reward}`));
+                        
+                        showChallengeSharePopup(type);
+                        
+                        registerPlayDay();
+                        
+                        // ===== OFERECER BÔNUS POR MARCO =====
+                        offerMilestoneBoost(gameState.totalChallengesCompleted);
+                        
+                        saveDailyChallenges();
+                        saveGameProgress();
+                    }
+                });
+            }
 
             window.showRanking = showRanking;
             window.showSkins = showSkins;
@@ -4878,10 +6152,22 @@
             window.hideStoryPage = hideStoryPage;
             window.setLanguage = setLanguage;
             window.showPrivacyPolicyModal = showPrivacyPolicyModal;
+
+            (async function init() {
+                currentLanguage = detectBrowserLanguage();
+
+                if (typeof gameState !== 'undefined') {
+                    gameState.bonusAvailable = true;
+                    gameState.adPaused = false;
+                    gameState.hitFlash = 0;
+                    gameState.gameOverTime = null;
+                }
+
+                showStoryPage();
+            })();
+
         })();
     </script>
     
-    <!-- Link da política de privacidade no rodapé (já incluso no CSS acima) -->
-    <!-- O link está no estilo .legal-links definido no CSS -->
 </body>
 </html>
